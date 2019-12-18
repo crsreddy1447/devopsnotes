@@ -1,0 +1,493 @@
+DOCKER Class
+*** If we fell application is important than OS we will go for DOCKER
+
+Installations:
+1. Visual Studio code
+2. Git for windows
+3. DOCKER
+  ---> windows 10 (other than home edition)
+      DOCKER for windows
+	  
+ ----> Windows 7
+        docker tool box
+ ----> Linux
+       docker for linux 
+	** This is not the right way to install in production. Because it install latest one   
+	   $ curl -fsSL get.docker.com -o get-docker.sh  ---> for installing docker(docker install script)
+	   $ sudo sh ./get-docker.sh
+	   
+**** This commands are used to avoid using root user and Sudo user
+	   
+	   $sudo addgroup --system docker
+       $sudo adduser $USER docker
+       $newgrp docker
+	   
+	         (OR)
+	   $sudo usermod -a -G docker $USER
+       $sudo reboot	 
+	   
+	   
+Good process to install any software is 
+chocolatey.org
+  1.Installing Chocolatey
+      Copy the step in cmd prompt as admin
+	  
+  2. choco install visualstudiocode -y
+
+  3. choco install  git -y
+  
+Docker working process
+1."Client" who gives commands
+2. "Docker Daemon/service" which provides services
+3. Local repo
+4. Registry (Mostly hub.docker.com) or remote repo
+
+  >In this process if we give a pull command.
+  >Daemon look into local repo. if not found
+  >It connect to registry and pull from remote repo.
+  >After pulling this image will be stored locally
+  
+* Docker image means it all about the container.
+* Docker image can have multiple containers. But they are differentiated by TAGS.
+* We can run as many no of container as possible till storage is available.
+
+COMMANDS: 
+docker ps ---> Shows all the running images
+docker ps -a ---> Shows all containers both running and stopped
+docker ps -a -q  --->  Show containers id
+docker rm -f  ---> remove running container forcely
+df -h  ----> mounting
+docker run -it jenkins /bin/sh  ---> it means interactively. it is used to get inside the container.
+docker rm -f $(docker ps -a -q)  ----> Delete the containers by showing their id
+docker run -itd <image>  ---> To run a container until we stop.
+       itd--> interactive terminal detach mode.
+docker run -it <container id> ---> To run inside the container shell
+ctrl+p + ctrl+q  ---> to come out of the container without exiting the container   
+docker start <container name>  ----> to start a container
+docker attach <container Id> to go inside the container
+docker rmi <image name> ---> To delete the images
+docker system prune --all ---> to delete unwanted and not running containers
+
+
+	   
+Docker works on two things
+1. Name Space ---> it is a linux concept which create an isolated user space
+2. Control Groups (c groups) ---> control the process
+
+*Here docker is secure if the host os *is secured. As it depends on Host OS
+
+1. HOW TO CREATE A CONTAINER
+process
+ >From where we have to run the container (OS)(FROM)
+ >Who is maintaining all these (Person)  optional step
+ >What to be installed on the container  (ex: git)
+ >Step for installing it. (RUN)
+ >How to communicate. We will use port forwarding (Expose)
+ 
+ If we follow only above steps containers will be killed immediately. To over come we use Below:
+ 
+ >CMD : Can be changed. Latest one will be executed
+ >ENTRY POINT: Cant be changed 
+ Eample:
+ ENTRY POINT ["ping"]
+ CMD ["google.com"] google can be changed to yahoo.com while scripting.
+ 
+ All these process is stored in Dockerfile.
+ Dockerfile format
+    FROM ubuntu
+	MAINTAINER raja
+	RUN apt-get update && apt-get install git -yahoo
+	EXPOSE 80
+	
+Dockerfile has two states
+  1. Docker Build
+    >FROM
+	>RUN
+  2. DOCKER Run
+    >ENTRY POINT
+    >CMD.
+
+COMMANDS
+$ docker run -d -name abc -p 80:80 myapache.1.0
+	-d ----> detach mode. Process is run in the back ground. used in Real production
+	-p ----> port forwarding method to communicate container with that application
+	1.0 ---> Version for image called tags. Two images can't be having same name.
+
+	
+How to create an image in a Professional Way
+* Basically we will not start from Scratch. Which is waste of time. 
+* We take a base file that is declared officially.
+* We will not use MAINTAINER in profession. Instead of that we use LABEL
+EX: LABEL "Organisation" = "ABCDEF"
+    LABEL "owner" = "Raja"
+	
+1. FROM: Source image for creating the image
+2. Maintainer: Author of the docker file
+3. RUN: This will install the components which are needed.
+4. CMD: It is executed when the container is starting	
+5. Expose: For port forwarding to communicate host and the container
+6. ENV: to set Environment Variable
+
+
+
+	
+To Save and execute docker File:
+$ cd/
+$ mkdir 
+
+curl is used to show the content of the browser in shell
+
+Port Forwarding:
+1. $ docker -itd -P <image> --> free port forwarding
+EX: docker -itd -P tomcat
+
+2. $ docker -itd -p <host port>:<image port> <image>  ---> Binding port forwarding
+EX: docker -itd -p 9000:8080 tomcat	
+* To use this binding port method the image's docker file should have a EXPOSE
+
+
+	
+ADD Vs COPY	Commands in Dockerfile
+ADD:
+Synatx:  ADD <source/url> <destination>
+EX: ADD https://jdk 8.0..... /usr/local/tomcat/webapps/java.war
+-->ADD can copy from local to internet and also from internet to local
+
+COPY:
+Syntax: COPY <source file> <destination>
+EX: COPY jenkins.war /usr/local/tomcat/webapps/jenkins.war
+---> COPY can only copy from local to internet
+---> COPY dont accept url path.
+
+WORKDIR: It helps to set a home directory. It is used in Dockerfile 
+Ex: WORKDIR /usr/local/tomcat/webapps/java
+****We commit docker file in Dev code
+
+How to send created images to docker hub
+$docker login
+  enter user name and password
+  
+Now build a image that starts with your username locally.
+Ex: crsreddy1447/mygit:1.0
+
+Command 
+$docker built -t crsreddy1447/mygit:1.0
+Now Push the docker image to Remote Repo
+$docker push crsreddy1447/mygit:1.0
+
+DATA SHARING:  
+1. DOCKER VOLUMES is nothing but a directory which is managed by docker daemon
+Volume is runned on docker host for backup the logs
+docker volume create <vol name>
+docker volume inspect vol1
+ ----/var/lib/docker/volumes/vol1/_data
+docker run -it --name <container name> -v <vol name>:</location to store> <image>
+Ex: docker run -it --name test1 -v vol1:/logs ubuntu
+
+2. Bind Mount can be in any location
+
+
+docker commit <container name> <image:tool installed>
+Ex: docker commit abc ubuntu:git
+
+
+Docker Tool Box is only for win. For linux every component has to installed
+1. Docker Machine: Which create multiple docker hosts
+      Docker host means VM where docker is installed
+2. Docker Engine
+3. Docker Compose
+4. Kitematic
+5. Docker command line Environment	  
+ 
+662  docker run --name mycontainer1 hello-world
+  663  docker ps -a
+  668  docker pull ubuntu
+  669  docker images
+  670  docker pull devopstrainer/myrepo1:v2.0
+  674  docker tag docker.io/devopstrainer/myrepo1:v2.0 docker.io/devopstrainer/myre
+  675  docker images
+  676  docker push docker.io/devopstrainer/myrepo1:v3.0
+  677  docker login
+  678  docker push docker.io/devopstrainer/myrepo1:v3.0
+  698  docker run -itd  ubuntu
+  714  docker run -it ubuntu
+  733  docker rm -f 492df27540fb ddd3e2484d9a ff27d2c6d849
+  738  docker rmi tomcat ubuntu centos
+  741  docker rmi docker.io/devopstrainer/myrepo1:v2.0
+  742  docker rmi docker.io/devopstrainer/myrepo1:v3.0
+  768  docker volume ls
+  769  docker volume inspect vol1
+  772  docker run -it --name test1 -v vol1:/logs ubuntu
+  773  docker volume inspect vol1
+  774  cd /var/lib/docker/volumes/vol1/_data
+  775  ls
+  776  cat file1.txt
+  777  touch file2.txt
+  778  echo "iam from host " >> file2.txt
+  779  ls
+  780  docker ps -a
+  781  docker start test1
+  782  docker attach test1
+  787  docker ps -a
+  788  docker rm test1
+  789  ls
+  790  docker run -it --name test2 -v vol1:/newlogs ubuntu
+  791  clear
+  792  pwd
+  793  docker run --it --name test3 -v /tm:/data ubuntu
+  794  docker run -it --name test3 -v /tm:/data ubuntu
+  795  docker run -it --name test3 -v /tm:/data:Z ubuntu
+  796  docker run -it --name test4 -v /tmp:/data:Z ubuntu
+  797  cd /tm
+  798  cd /tmp
+  799  ls
+  800  cd /tm
+  801  ls
+  802  history
+  803  clear
+  804  docker ps -a
+  805  docker inspect test3
+  806  docker inspect test2
+  810  docker run -it --name test5 ubuntu
+  811  docker cp test5:/file1.txt .
+  812  ls
+  813  pwd
+  814  ls
+  815  touch file2.txt
+  816  echo "Hello" >> file2.txt
+  817  ls
+  818  docker cp /tm/file2.txt test5:/file2.txt
+  819  ls
+  822  docker start test5
+  823  docker attach test5
+  826  docker volume ls
+  827  docker volume inspect vol1
+  828  history
+  829  clear
+  830  docker run -it --name forcommitcontainter ubuntu
+  831  docker ps
+  832  docker commit forcommitcontainter ubuntu:vim
+  833  docker ps
+  834  docker images
+  835  clear
+  836  docker run -it ubuntu:vim
+  837  docker images
+  838  docker history ubuntu:vim
+  839  clear
+  840  docker images
+  841  docker push ubuntu:vim
+  842  docker tag ubuntu:vim docker.io/devopstrainer/ubuntu:vim1
+  843  docker images
+  844  docker push docker.io/devopstrainer/ubuntu:vim1
+  850  docker stats
+  851  systemctl start docker
+  852  docker images
+  853  docker ps
+  854  docker ps -a
+  855  docker rmi ubuntu
+  856  docker rmi -f ubuntu
+  857  docker start test2
+  858  docker attach test2
+  859  docker images
+  860  docker ps
+  861  clear
+  862  systemctl start docker
+  863  docker login
+  864  clear
+  865  docker images
+  866  cd /
+  867  mkdir dockerfiles
+  868  cd dockerfiles/
+  869  vim dockerfile
+  870  docker build -t myimage:dockerfile .
+  871  docker images
+  872  clear
+  873  docker images
+  874  docker history myimage:dockerfile
+  875  clear
+  876  docker images
+  877  docker run -it myimage:dockerfile
+  878  docker ps
+  879  docker ps -a
+  880  clear
+  881  docker run -it myimage:dockerfile /bin/bash
+  882  cat dockerfile
+  883  docker images
+  884  clear
+  885  docker images
+  886  history
+  887  clear
+  888  docker run -itd tomcat
+  889  docker images
+  890  clear
+  891  docker ps
+  892  docker inspect 4cc3befb0f67
+  893  clear
+  894  curl 172.17.0.2:8080
+  895  clear
+  896  ip addr show
+  897  clear
+  898  docker run -itd -P tomcat
+  904  docker run -itd -p 9999:8080 tomcat
+  909  vim dockerfile
+  910  cat dockerfile
+  912  docker pull mcr.microsoft.com/windows/servercore/iis
+  
+  
+  /*/*/*/*/*/*/*/**** Docker COMPOSE AND SWARM *********/*/*/*/*/*/
+  
+   11  yum install docker
+   12  systemctl start docker
+   13  clear
+   14  docker swarm init --advertise-addr 10.128.0.32
+   15  docker node ls
+   16  clear
+   17  docker node ls
+   18  docker service create -p 8001:80 --name mysvc nginx
+   19  docker service ls
+   20  docker service ps mysvc
+   21  docker node ls
+   22  clear
+   23  docker node update --availability drain manager
+   24  docker node ls
+   25  docker service ps mysvc
+   26  docker service scale mysvc=10
+   27  docker service ls
+   28  clear
+   29  docker service ls
+   30  docker service ps mysvc
+   31  docker ps
+   32  history
+   33  docker node update --availability active manager
+   34  docker node ls
+   35  docker service scale mysvc=15
+   36  docker service ps mysvc
+   37  clear
+   38  docker node update --availability drain worker-1
+   39  docker service ps mysvc
+   40  docker ps
+   41  history
+   42  docker stats
+   43  docker service ps mysvc
+   44  history
+[root@manager ~]# docker run --itd -^C6g
+[root@manager ~]# docker service rm mysvc
+mysvc
+[root@manager ~]# docker service ls
+ID  NAME  MODE  REPLICAS  IMAGE
+[root@manager ~]# history
+    1  cd /
+    2  clear
+    3  ls
+    4  l;s
+    5  ls
+    6  cd /
+    7  ls
+    8  ls
+    9  cd /
+   10  ls
+   11  yum install docker
+   12  systemctl start docker
+   13  clear
+   14  docker swarm init --advertise-addr 10.128.0.32
+   15  docker node ls
+   16  clear
+   17  docker node ls
+   18  docker service create -p 8001:80 --name mysvc nginx
+   19  docker service ls
+   20  docker service ps mysvc
+   21  docker node ls
+   22  clear
+   23  docker node update --availability drain manager
+   24  docker node ls
+   25  docker service ps mysvc
+   26  docker service scale mysvc=10
+   27  docker service ls
+   28  clear
+   29  docker service ls
+   30  docker service ps mysvc
+   31  docker ps
+   32  history
+   33  docker node update --availability active manager
+   34  docker node ls
+   35  docker service scale mysvc=15
+   36  docker service ps mysvc
+   37  clear
+   38  docker node update --availability drain worker-1
+   39  docker service ps mysvc
+   40  docker ps
+   41  history
+   42  docker stats
+   43  docker service ps mysvc
+   44  history
+   45  docker service rm mysvc
+   46  docker service ls
+ 118  docker network ls
+ 119  docker service ls
+ 120  docker service create --name mysvc -p 8001:80 nginx
+ 121  docker service ls
+ 122  docker ps
+ 123  docker inspect b4807bdc3f9e
+ 124  clear
+ 125  history
+ 126  docker ps
+ 127  clear
+ 128  docker service ps
+ 129  docker service ps mysvc
+ 130  docker service rm mysvc
+
+  
+/////////////////// Deploy on Docker /////////////////////////
+rm -rf dockerimages
+mkdir dockerimages
+cd dockerimages
+cp /var/lib/jenkins/workspace/Package/target/addressbook.war .
+touch dockerfile cat <<EOT>> dockerfile
+From tomcat
+ADD addressbook.war /usr/local/tomcat/webapps
+CMD "catalina.sh" "run"
+Expose 8080
+EOT
+sudo docker build -t rajaimage:$BUILD_NUMBER .
+sudo docker run -itd -P rajaimage:$BUILD_NUMBER
+
+ 
+////////////////////******Docker compose********////////////////////////  
+  
+$ cd /
+$ mkdir compose
+$ cd compose/
+$ vim docker-compose.yml
+*************yml********************
+wordpress:
+ image: wordpress
+ links:
+ - wordpress_db:mysql
+ ports:
+ - "7070:80"
+ 
+wordpress_db:
+ image: mariadb
+ environment:
+        MYSQL_USENAME: root 
+        MYSQL_ROOT_PASSWORD: edureka
+
+phpadmin:
+ images: corbinu/docker-phpmyadmin
+ links:
+ - wordpress_db:mysql
+ ports:
+ - "8181:80"
+ environment:
+        MYSQL_USENAME: root 
+        MYSQL_ROOT_PASSWORD: edureka
+ 
+***********End of YML **********************
+$ docker system prune --all
+$ docker rmi <name>
+
+$ docker-compose up -d
+ 
+
+	   
+	   

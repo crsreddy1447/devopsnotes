@@ -1,0 +1,96 @@
+INSTALLATION PROCESS:
+
+////////////////////////////////*****JENKINS******///////////////////////////////////////////// 
+
+java-->
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk
+sudo vi /etc/environment => add Java path JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
+source /etc/environment
+echo $JAVA_HOME
+
+git--->
+sudo apt-get update
+sudo apt-get install git
+
+maven--->
+sudo apt-get -y install maven -y
+mvn --version
+sudo vi /etc/environment
+source /etc/environment
+echo $M2_HOME    => add maven variable  M2_HOME="/usr/share/maven"
+ 
+jenkins---> 
+sudo -i
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo echo deb https://pkg.jenkins.io/debian-stablebinary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
+sudo apt-get update
+sudo apt-get install jenkins
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+sudo ufw allow 8080
+sudo ufw status
+sudo ufw allow 8080
+sudo ufw status
+sudo ufw allow 8080
+sudo ufw allow OpenSSH
+sudo ufw enable
+sudo ufw allow 8080
+sudo ufw status
+cat /var/lib/jenkins/secrets/initialAdminPassword
+
+
+
+/////////////////////////////////******* ANSIBLE ********/////////////////////////////////////
+
+vi /etc/ssh/sshd_config
+service sshd restart
+service sshd status
+adduser ansiblemaster
+visudo
+
+
+su ansiblemaster
+cd ~
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+sudo apt-get update
+python --version
+
+su ansiblenode
+cd ~
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+sudo apt-get update
+python --version
+
+Copy SSH KEY--> On master to Node
+ssh ansiblenode@172.31.34.50
+ssh-keygen      /home/ansiblenode/.ssh/id_rsa
+ls .ssh
+ssh-copy-id ansiblenode@172.31.34.50
+ssh ansiblenode@172.31.34.50
+
+Copy SSH KEY--> On Node to Master
+ssh ansibleserver@172.31.44.92
+ssh ansiblemaster@172.31.44.92
+ssh-keygen
+ls .ssh
+ssh-copy-id ansiblemaster@172.31.44.92
+ssh ansiblemaster@172.31.44.92
+
+
+
+
+
+
+
+
+
+

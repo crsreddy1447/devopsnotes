@@ -1,0 +1,13 @@
+
+1. VPC creation 192.168.0.0/16 or 10.0.0.0/16
+2. Internet Gateway
+3. Attach IGW to VPC created 
+4. Create Subnet & Associate to VPC
+Name : Testcntr_XXXXX_Subnet
+A.Z : us-east-1a
+CIDR : 192.168.0.0/24 or 10.0.1.0/24
+5. Routing Table
+Add : 0.0.0.0/0 - IGW Created in Step 2
+6. Create Security Group and attach to VPC created
+7. Allow Protocols in SG
+8.Launch EC2 Instance in created VPC & Subnet.

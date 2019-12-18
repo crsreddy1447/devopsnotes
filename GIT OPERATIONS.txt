@@ -1,0 +1,198 @@
+*********************Quality Thought Notes ***********************************************
+GIT is a three phased commit
+It has three stages
+1. Working Tree
+2. Staging Area / Indexing area
+3. Local Repo
+4. Remote Area
+5. Staging Area
+
+Working Tree is a working folder where code is written by an individual.
+In my work 
+ADD
+Staging Area is the place where changes has to be added
+Commit
+After staging area is completed then it is committed to Local Repo
+*** While committing it consider three factor ***
+a) What is the time (Ex: default time of system)
+b) Who is committing (Ex: $ git config --global user.email xxxxx $ git config --global user.name xxxx)
+c) What are the changes with commit message (EX: git commit -m "<commit message>")
+
+************************Process diagram***********************************************************
+Working Tree ---**ADD + File Name**---> Staging Area ---**COMMIT + Message**--> Local Repo
+
+***Note***
+--> Git never give importance to empty folders.
+--> git reset --hard only remove files that a part of git
+--> git stores data in SHA-256 Hash algorithm. For same data same Hask id is given
+--> Git never do anything to untracked files in branching concept
+--> Repositories created with git init --bare are called bare repos. 
+    They are structured a bit differently from working directories. 
+	First off, they contain no working or checked out copy of your source files
+	And second, bare repos store git revision history of your repo in the root 
+	folder of your repository instead of in a .git subfolder. 
+	Note… bare repositories are customarily given a .git extension.
+--> How to remove a file
+git rm file1.txt
+git commit -m "remove file1.txt"
+But if you want to remove the file only from the Git repository and not remove it from the filesystem, use:
+
+git rm --cached file1.txt
+git commit -m "remove file1.txt"	
+
+******************************** END *****************************************************
+Create a GITHUB account
+Create a repository in GITHUB(Remote)
+Install GIt on LOCAL machine Ex: GIT FOR WINDOWS.
+Create a folder in Local Machine
+Open the GIT BASH HERE inside the folder.
+
+*****Create Repo******
+
+$ git init---> to initialize git repository on local machine.
+              We can see a folder .git on local machine.
+			  
+*****Syncing Repo*****
+
+$ git remote add origin "<Link of remote Repo>"  
+Ex: git remote add origin "https://github.com/crsreddy1447/RAJA.git"
+we can get this link after signup to github click on clone.
+
+$ git push origin master -----> To send all the files from local repo to central repo
+
+$ git pull origin master -----> To fetch all the files from central repo to local repo.
+
+******Making Changes********
+To access to github use below 2 steps
+
+$ git config --global user.email "crsreddy1447@gmail.com"
+$ git config --global user.name "crsreddy1447"
+
+****************How to Add GITHUB REPO and PUSH from CLI****************************
+
+$ git remote add origin git@github.com:<UserName>/<RepoName>.git
+
+Ex: git remote add origin git@github.com:crsreddy1447/MBA_Project.git
+
+$ git push -u origin master
+
+$ git remote -v
+
+$ git pull <remote>
+
+origin  git@github.com:crsreddy1447/MBA_Project.git (fetch)
+origin  git@github.com:crsreddy1447/MBA_Project.git (push)
+
+*********************************************************************************
+
+$ git status ----> Tell you which files are added to index and are ready to commit.
+
+$ git add -----> This will add files to your index.
+
+$ git add -A  ----> to add all the files to staging area
+
+$ git add -u ----> to add modified files
+
+$ git commit  -----> Will commit to local repo
+Ex: git commit -m "<commit message>"
+
+$ git commit -a -m "<commit message>"  ----> to commit by adding files to local repo.
+
+$ git log ----> It will show entire logs of files and commit with message.
+
+***$ git reset --hard  ---> It rests the modified work done in working tree and staging area
+
+$ git clean -fd < Dir Path>  ---> to delete or remove a newly created file
+
+$ git checkout --<file Path>  ---> to reset a specific file in working tree
+
+$ git log --oneline  ---> to get short commit IDs 
+
+$ git checkout <commit id>  ---> to move across history or commits 
+
+$ git cat-file -p <full commit id>  ---> to see the content in that commit.
+
+$ cat .gitignore   ---> file specifies intentionally untracked files that Git should ignore
+
+******Parallel Development*****
+
+####Branching#### ----> It help in creating branches and combine code to master
+
+$ git branch <branch name> -----> This will create a  new branch
+
+$ git checkout <branch name or master> ----> switch to other branch or master
+Ex: git checkout master ----> switches to master
+    git checkout firstbranch -----> switches to first branch.
+	
+####Merging####	----> to merge branches to Master.
+*Note: while doing this merge you have to be in master.
+
+$ git merge <name of the branch that has to be merged with master>
+Ex: git merge firstbranch
+Now we can see entire content of firstbranch in master
+*Note:It integrates the changes made in different branches into one single branch 
+
+####Rebasing#### ----> Similar to merge. But on to tip of master in a linear way.
+
+$ git rebase <from which branch the data have to merge>
+Ex: (master branch)  $ git rebase firstbranch ----> it merge the data from firstbranch to master
+*Note: it is used when changes made in one branch needs to be reflected in another branch
+
+$ git rebase -i HEAD~<Position from top>  --> To modify/delete the commit which is not pushed to Remote Repo
+EX: git rebase -i HEAD~2
+*Note: This shouldnot done if I it is commited to Remote Repo
+
+######Cherry PICK##########
+-->Sometimes you don't want to merge a whole branch into another, and only need to pick one or two specific commits. 
+   This process is called 'cherry picking'.
+From new-features branch run 
+$ git log --oneline  -->to get a better log of your commits history. Note that the commit hash is what we need to start the cherry picking. 
+
+Checkout the branch where you want to cherry pick the specific commits. In this case master branch:
+$ git checkout master
+
+Now we can cherry pick from new-features branch:
+$git cherry-pick d467740
+  -->This will cherry pick the commit with hash d467740 and add it as a new commit on the master branch. Note: it will have a new (and different) commit ID in the master branch.
+
+***If you want to cherry pick more than one commit in one go, you can add their commit IDs separated by a space:
+$ git cherry-pick d467740 de906d4
+
+***If the cherry picking gets halted because of conflicts, resolve them and
+$ git cherry-pick --continue
+
+########Stashing###########
+you don’t want to do a commit of half-done work just so you can get back to this point later. 
+The answer to this issue is the git stashing.
+$ $ git stash
+$ git stash list
+$ git stash apply stash@{0} -->Apply one of the older stashes, you can specify it by naming it
+
+******* GIT FLOW******
+Connecting Local repo with remote repo
+
+1. SSH connection
+2. Generate keygen
+3. open key file
+4. goto setting ---> ssh and GPG keys ---> new ssh key
+5. paste the key 
+6. connect using $ ssh -T git@github.com
+
+$ ssh-keygen
+$ cat /c/Users/Rajashekar/.ssh/id_rsa.pub
+$ ssh -T git@github.com
+
+************************** END ***********************************************************
+
+
+  
+///IMPORTANT Terms\\\\
+
+git stash ---> It is used to develop a feature. It is not related to normal work. 
+               It will break up the branch completely. 
+			   To apply this to branch use $ git stash apply
+Stashing: It is used when changes made in one branch needs to be reflected in another branch 
+			   
+git pull = git fetch + git merge
+git pull and git fetch are same but fetch will create a branch and sent it to
+									pull will directly sent to master branch

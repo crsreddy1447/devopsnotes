@@ -1,0 +1,10 @@
+PIPELINE PROCESS
+GIT->JENKINS->ANSIBLE
+
+Ansible Play Book on Jenkins
+1. Ansible control Master  and Ansible Host
+2. SSh connect both master and Host
+3. Jenkins master install ansible plugin
+4. Add ACM as Jenkins Slave
+5. Create a job run play book by giving play book path of ACM
+

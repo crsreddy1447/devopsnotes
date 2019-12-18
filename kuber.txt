@@ -1,0 +1,169 @@
+kubeadm join 10.142.0.2:6443 --token wmpef3.lr4adpka63389lfb --discovery-token-ca-cert-hash sha256:ce25bfe649970aedbff888ad3d8c41e2bb797aa9615a98c15b3bfbe0b5314e1c
+
+
+10.142.0.2
+
+auto lo
+iface lo inet loopback
+# Source interfaces
+# Please check /etc/network/interfaces.d before changing this file
+# as interfaces may have been defined in /etc/network/interfaces.d
+# See LP: #1262951
+source /etc/network/interfaces.d/*.cfg
+
+ens4
+
+10.142.0.3
+///////////////////////// Edureka Kubernetes ////////////////////////////////////////
+  
+  
+  286  gcloud init
+  287  clear
+  288  gcloud container clusters create mycluster
+  289  clear
+  290  yum install kubectl
+  291  clear
+  292  kubectl get nodes
+  293  kubectl get pods
+  294  clear
+  295  kubectl get pods
+  296  vim pod.yml
+  297  vim pod.yml
+  298  clear
+  299  cat pod.yml
+  300  kubectl create -f pod.yml
+  301  kubectl get pods
+  302  clear
+  303  kubectl get pods
+  304  kubectl describe pods
+  305  clear
+  306  kubetctl get pods
+  307  kubectl get pods
+  308  kubectl describe pods
+  309  clear
+  310  kubectl get pods
+  311  cat pod.yml
+  312  kubectl get pods
+  313  kubectl delete pods sample-pod
+  314  clear
+  315  vim deploy1.yml
+  316  kubectl create -f deploy1.yml
+  317  kubectl get pods
+  318  kubectl describe pods | grepo Node:
+  319  kubectl describe pods | grep Node:
+  320  kubectl get deploy
+  321  kubectl get pods
+  322  kubectl describe pods | grep Node:
+  323  cat deploy1.yml
+  324  kubectl get deploy deploy1
+  325  kubectl get rs
+  326  history
+  327  clear
+  328  kubectl get pods
+  329  clear
+  330  cat deploy1.yml
+  331  kubectl describe pods | grep app=
+  332  kubectl describe pods | grep Node:
+  333  clear
+  334  vim svc1.yml
+  335  cat deploy1.yml
+  336  kubectl describe pods | grep app=
+  337  clear
+  338  kubectl create -f svc1.yml
+  339  kubectl get svc
+  340  clear
+  341  kubectl get svc
+  342  clear
+  343  kubectl get deploy
+  344  kubectl get rs
+  345  kubectl get pods
+  346  clear
+  347  vim deploy1.yml
+  348  kubectl get deploy
+  349  kubectl get rs
+  350  kubectl get pods
+  351  cat deploy1.yml
+  352  clear
+  353  kubectl apply -f deploy1.yml --record
+  354  kubectl get rs
+  355  kubectl rollout status deployment deploy1
+  356  kubectl get rs
+  357  kubectl describe deploy deploy1
+  358  clear
+  359  kubectl rollout history deployment sample-deploy
+  360  kubectl rollout history deployment deploy1
+  361  history
+  362  kubectl rollout history deployment deploy1
+  363  kubectl rollout undo deployment deploy1 --to-revision=1
+  364  kubectl get rs
+  365  kubectl describe deploy deploy1
+  366  cat deploy1.yml
+  367  kubectl rollout history deployment deploy1
+  368  history
+  369  kubectl get pods
+  370  kubectl get rs
+  371  cat deploy1.yml
+  372  kubectl describe deploy deploy1
+  373  clear
+  374  kubectl get pods
+  375  kubectl get rs
+  376  cat deploy1.yml
+  377  kubectl get pods
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample-pod
+  labels:
+    zone: Prod
+    version: v1
+spec:
+  containers:
+  - name: sample-ctr
+    image: tomcat
+    ports:
+    - containerPort: 8080
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Deploy1.yml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: deploy1
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+         app: app-v1
+    spec:
+     containers:
+     - name: sample-ctr
+       image: jenkins
+       ports:
+       - containerPort: 8080
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc1
+  labels:
+    name: sample-app
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+      app: app-v1
+  type: LoadBalancer
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+su - ubuntu
+sudo service ufw stop
+sudo service ssh start
+eval `ssh-agent -s`
+
+
+
+

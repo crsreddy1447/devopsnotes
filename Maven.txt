@@ -1,0 +1,117 @@
+################################# Jenkins & Maven ##########################################
+Build tools:
+
+They do the following:
+1. Build the code
+2. Execute the unit test
+3. Packaged the code into some format
+
+Needed softwares:
+
+1. Java
+2. Maven
+3. Git
+
+4. Set up various software environment
+
+
+JAVA= Maven
+C#= MS Build
+
+While compiling Maven it should have the pom file where it is executing.
+
+mvn clean ---> clean the target folder
+
+mvn compile ---> It compile the file for errors
+
+mvn test ---> unit test
+
+mvn package ---> package(jar/war)
+
+mvn install ---> will be copied into M2 folder
+
+mvn deploy ---> will send projects to repository
+
+mvn clean package ---> full built
+ 
+
+########################### INSTALLATION STEPS ############################
+**********************JAVA***************************************************
+
+$ sudo apt-get install openjdk-8-jdk
+$ echo $JAVA_HOME
+$ ls /usr/lib/jvm/
+$ ls /usr/lib/jvm/java-8-openjdk-amd64/
+
+Export method of declaring varialbles is not permanent
+bash profile for individuals
+
+
+$ sudo vi /etc/environment
+added the above path
+JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"  ---> Permanent multi user method
+
+$ source /etc/environment  --> to call for reloading of path
+$ echo $JAVA_HOME
+$ sudo -i
+$ echo $JAVA_HOME
+/usr/lib/jvm/java-8-openjdk-amd64/
+
+
+************************MAVEN***********************************************
+
+$ sudo apt-get -y install maven -y
+$ mvn --version
+
+Apache Maven 3.3.9
+Maven home: /usr/share/maven
+Java version: 1.8.0_191, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-openjdk-amd64/jre
+
+
+$ echo $M2_HOME
+$ sudo vi /etc/environment
+add maven variable
+M2_HOME="/usr/share/maven"
+
+$ source /etc/environment  --> to call for reloading of path
+$ echo $M2_HOME
+$ sudo -i
+$ echo $M2_HOME
+
+
+$ sudo apt-get install git -y
+$ git --version
+
+$ mkdir projects
+$ cd projects/
+$ git clone <github java project address>https://github.com/spring-projects/spring-petclinic.git
+$ ls
+spring-petclinic
+$ cd <project file> spring-petclinic
+
+$ mvn compile
+$ mvn test
+$ mvn package
+
+
+$ ls
+$ cd target/
+$ java -jar spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar
+
+
+***************************************** End ****************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+

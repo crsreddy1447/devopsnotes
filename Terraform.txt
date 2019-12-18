@@ -1,0 +1,76 @@
+************************* TERRAFORM********************************
+-> Terraform is a tool for building, changing, and versioning infrastructure safely and efficiently. 
+-> Terraform can manage existing and popular service providers as well as custom in-house solutions.
+-> Configuration files describe to Terraform the components needed to run a single application or your entire datacenter. 
+-> Terraform is an ideal tool for building and managing multi-tier infrastructures. 
+  ***Each tier can be described as a collection of resources, and the dependencies between each 
+tier are handled automatically; 
+  ***Terraform will ensure the database tier is available before the web servers are started 
+and that the load balancers are aware of the web nodes. 
+ ***Each tier can then be scaled easily using Terraform by modifying a single count configuration value. 
+Because the creation and provisioning of a resource is codified and automated, elastically scaling with load becomes trivial.
+
+**** In terraform  we give folder as input. In packer we give in files
+
+//*/*/* USES OF TERRAFORM///*/*/*/*
+1. Multi Cloud Deployment
+2. Resource Schedulers
+3. Software Demos
+4. To create different Environment for Testing and Production
+5. Multi Tier Applications
+
+/*/*/*/*/*/*/*/*////*****SAMPLE MODEL*****/*/*/*/*/*/*/*/*/
+
+NEEDED KEYS  Elements in DSL
+1. Variables
+
+2. Providers   --> This will say where the script has to work EX: AWS, AZURE, GCP, VAGRANT etc
+
+3. Resources   -->  What to create to git required output. EX: EC2 instance, 
+    Syntax:  resource "<Resource Type>" "<Resource Name>"
+	
+4. Output
+
+5. Data Sources
+
+
+provider "aws" {
+  access_key = "ACCESS_KEY_HERE"
+  secret_key = "SECRET_KEY_HERE"
+  region     = "us-east-1"
+}
+
+resource "aws_instance" "example" {
+  ami           = "ami-2757f631"
+  instance_type = "t2.micro"
+}
+
+***The PROVIDER block is used to configure the named provider, in our case "aws". 
+A provider is responsible for creating and managing resources. 
+Multiple provider blocks can exist if a Terraform configuration is composed of multiple providers, which is a common situation.
+
+***The RESOURCE block defines a resource that exists within the infrastructure. 
+A resource might be a physical component such as an EC2 instance, or it can be a logical resource such as a Heroku application.
+ 
+--> The resource block has two strings before opening the block: the resource type and the resource name. In our example, the resource type is "aws_instance" and the name is "example."
+
+***** Initialization
+
+The first command to run for a new configuration -- or after checking out an existing configuration from version control -- is 
+===>  $ terraform init  // Initialization
+EX: terraform init <DIR Path>
+
+===>  $ terraform validate  // It check the file for errors
+EX: terraform validate <DIR Path>
+
+===>  $ terraform apply  // To see the execution Plan. and to build the file
+EX: terraform apply <DIR Path>
+
+===>  $ terraform show   // To inspect the current state 
+
+==>   $ terraform destroy  // To delete the work  
+EX: terraform destroy <DIR Path>
+
+
+
+

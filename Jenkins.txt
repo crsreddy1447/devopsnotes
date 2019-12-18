@@ -1,0 +1,419 @@
+################################# Jenkins ##########################################
+Jenkins
+Jenkins is a self-contained, open source automation server which can be used to automate 
+all sorts of tasks related to building, testing, and delivering or deploying software.
+
+
+Needed softwares:
+
+1. Java
+2. Maven
+3. Git
+
+4. Set up various software environment
+
+
+************************************ Theory ***********************************
+->Jenkins act like a scheduler or a cron
+->It needs a user for running it
+->Default user is jenkins. Who has to be added to sudo group for sudo permissions
+->Path variable has to be given by user
+->Plugins will not install software. User has to install software for running the plugin
+->Jenkins run commands on behalf of user
+
+Build Triggers Methods
+
+###################################################
+#                                                 #
+#GIT ------- GIT HOOKS/ WEB HOOKS -------->Jenkins#
+#GIT---------------------------------------Jenkins#
+#GIT<-------POLL SCM ----------------------Jenkins#
+#                                                 #
+###################################################
+-> Git Hooks: Where git send updates to jenkins
+A (Downstream of B)
+|
+B (Upstream of A)(Downstream of C)
+|
+C (Upstream of B)
+
+-> Pool SCM: Where Jenkins look for updates
+
+* * * * * command to be executed
+- - - - -
+| | | | |
+| | | | ----- Day of week (0 - 7) (Sunday=0 or 7)
+| | | ------- Month (1 - 12)
+| | --------- Day of month (1 - 31)
+| ----------- Hour (0 - 23)
+------------- Minute (0 - 59)
+
+* * * * *
+0 0 1 * *  ==>  Every month 1st at 12:00 am 
+40 20 * * *
+
+-->The asterisk (*) : This operator specifies all possible values for a field. 
+For example, an asterisk in the hour time field would be equivalent to every 
+hour or an asterisk in the month field would be equivalent to every month.
+
+-->The comma (,) : This operator specifies a list of values, for example: “1,5,10,15,20, 25”.
+
+-->The dash (-) : This operator specifies a range of values, for example: “5-15” days , 
+which is equivalent to typing “5,6,7,8,9,….,13,14,15” using the comma operator.
+
+-->The separator (/) : This operator specifies a step value, for example: “0-23/” can be used in 
+the hours field to specify command execution every other hour. Steps are also permitted after an asterisk, 
+so if you want to say every two hours, just use */2.
+
+
+
+-> Build Executors by default is one by one. It can be made parallel which is not recommended in real time
+    Options: General->tick Execute concurrent builds if necessary option
+	** Use a throttle Builds to do in a smooth way
+
+-> Upload Plugin file extension
+            Two plugin formats 
+			.hpi = hudson plugin interface
+	        .jpi = jenkin plugin interface(new)
+	
+Process of CI/CD
+
+1. GIT clone project
+2. Package  jar/war
+3. Shell/Ansible (Deploying)
+4. Selenium( Test cases)	
+5. Performance test	
+	
+#################### Installation #################################################################
+
+
+***Before Installing jenkins install
+1.JAVA
+2.GIT
+3.MAVEN
+
+
+
+########################### INSTALLATION STEPS ############################
+**********************Installing the Default JRE/JDK***************************************************
+$ sudo apt-get update
+$ sudo apt-get install default-jre
+$ sudo apt-get install default-jdk
+
+----------Managing Java ( Only if Multiple Java Packages are available)---------
+
+$ sudo update-alternatives --config java
+$ sudo update-alternatives --config command
+
+------Setting the JAVA_HOME Environment Variable--------------
+
+$ sudo update-alternatives --config java
+ /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+$ sudo nano /etc/environment
+Add this path ==> JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+
+$ source /etc/environment
+$ echo $JAVA_HOME
+
+
+                             (OR)
+
+$ sudo apt-get install openjdk-8-jdk
+$ echo $JAVA_HOME
+$ ls /usr/lib/jvm/
+$ ls /usr/lib/jvm/java-8-openjdk-amd64/
+
+Export method of declaring varialbles is not permanent
+bash profile for individuals
+
+
+$ sudo vi /etc/environment
+added the above path
+JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"  ---> Permanent multi user method
+
+$ source /etc/environment  --> to call for reloading of path
+$ echo $JAVA_HOME:
+$ sudo -i
+$ echo $JAVA_HOME
+/usr/lib/jvm/java-8-openjdk-amd64/
+
+
+************************* GIT ***************************************************
+
+--------------- To Install Git with Apt-------------------------
+$ sudo apt-get update
+$ sudo apt-get install git
+
+************************MAVEN***********************************************
+
+$ sudo apt-get -y install maven -y
+$ mvn --version
+
+Apache Maven 3.3.9
+Maven home: /usr/share/maven
+Java version: 1.8.0_191, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-openjdk-amd64/jre
+
+
+$ echo $M2_HOME
+$ sudo vi /etc/environment
+add maven variable
+M2_HOME="/usr/share/maven"
+
+$ source /etc/environment  --> to call for reloading of path
+$ echo $M2_HOME
+$ sudo -i
+$ echo $M2_HOME
+
+------------------ Jenkins Installation ----------------------------------
+
+$ wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+$ sudo echo deb https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
+$ sudo apt-get update
+$ sudo apt-get install jenkins
+$ sudo systemctl start jenkins
+$ sudo systemctl status jenkins
+$ sudo ufw allow 8080
+$ sudo ufw status
+
+ If the firewall is inactive, the following commands will make sure that OpenSSH is allowed and then enable it.
+$ sudo ufw allow OpenSSH
+$ sudo ufw enable
+
+Users details
+$ jenkins
+O/P
+ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
+crsreddy15:x:1001:1002::/home/crsreddy15:/bin/bash
+jenkins:x:113:117:Jenkins,,,:/var/lib/jenkins:/bin/bash
+
+For Password
+
+$ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+Backup: /var/lib/jenkins  --> this backup will give us entire backup
+
+$ sudo -i
+$ su jenkins
+$ cd ~   ----> to goto home dir
+$ pwd
+$ ls
+$ cd jobs/  ---> here we will see the project done by used
+$ cd < project name> ls
+builds  config.xml  lastStable  lastSuccessful  nextBuildNumber
+$ cd ~  ----> to goto home dir
+$ ls
+$ cd workspace/  ---> Where our work will be stored
+
+******************Fixing issue fro Need Permission for Administration********************************
+$ visudo  ---> should be a root user
+
+Add this to sudo group
+jenkins ALL=(ALL:ALL) NOPASSWD:ALL
+
+$ su jenkins  ---> switch to jenkins user
+
+---------Manually to test whether it work on jenkins or not ---------------------
+ubuntip123-12-2456: 
+$ sudo -i
+$ su jenkins
+$ cd ~
+$ cd workspace/
+$ mkdir <Dir Name>
+**--->execute the commands here to test whether it works on jenkins or not
+** After completing delete the dir.
+
+
+***************************************** Process ****************************************
+Build by Shell:
+git clone https://github.com/wakaleo/game-of-life.git
+cd gameoflife
+mvn package
+
+
+
+------------------------- Post Build Actions ---------------------------------------------
+1. Archive the Artifacts: To get the .war/.jar Package
+gameoflife-web/target/*.war
+
+Mostly target/ file we will have .war/.jar file
+
+2. Test Report
+gameoflife-web/target/surefire-reports/*.xml
+
+Mostly target/surefire-reports file we will have Junit test result in .XML format
+
+
+
+
+******************************** Plugins Names And uses ***********************
+Green Balls--> to change the colour of compile state 
+               Red: Error Green: Ok
+			   
+ 
+ 
+ 
+******************************* Adding Node to Jenkins ********************************
+-> Jenkins Master & Node communication happens via SSH (Linux)
+                                            via JNLP (Windows)
+											
+-> Jenkins Master to any other Linux Node
+           Non Password communication(Key Base Authentication)
+
+-> Jenkins Master we have to generate key on jenkins user.(Private & Public)
+-> Copy that key in the nodes for communication (Public Key $ ssh-copy-id)		   
+-> Jenkins Master to any Windows Machine we will download a Jenkins Slave .jar(From Global Security) and install on windows Node for accessing.
+
+-> For Nodes to work with master we have to install Java on every node
+
+
+***********************Manage Nodes or Configure Node with Jenkins************************  		   
+---------------------------On Jenkins Nodes---------------------
+$ sudo -i
+$ sudo apt-get update
+$ vi /etc/ssh/sshd_config
+PasswordAuthentication no ==> PasswordAuthentication yes
+$ service sshd restart
+$ adduser jenkins
+pwd= raja
+$ visudo
+Add this to sudo group
+jenkins ALL=(ALL:ALL) NOPASSWD:ALL
+$ exit
+$ su jenkins
+
+
+----------------On Jenkins Master-------------------
+Master:
+$ sudo -i
+$ su jenkins
+$ ssh-keygen
+Enter file in which to save the key (/var/lib/jenkins/.ssh/id_rsa)
+$ ls .ssh/
+$ ssh-copy-id jenkins@<node IP>
+  ssh-copy-id jenkins@10.142.0.5
+$ ssh <Node IP>
+  ssh 10.142.0.5
+  
+====Configure Node in Jenkins site====
+->Remote root directory: /home/jenkins
+->Credentials jenkins pwd:raja	
+
+
+  1  clear
+    2  sudo apt-get update
+    3  sudo apt-get install default-jdk
+    4  sudo update-alternatives --config java
+    5  sudo nano /etc/environment
+    6  source /etc/environment
+    7  echo $JAVA_HOME
+    8  sudo apt-get update
+    9  wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+   10  sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+   11  sudo apt-get update
+   12  sudo apt-get install jenkins
+   13  sudo systemctl start jenkins
+   14  sudo systemctl status jenkins
+   15  sudo ufw allow 8080
+   16  sudo ufw status
+   17  sudo ufw allow 8080
+   18  sudo ufw status
+   19  sudo ufw allow 8080
+   20  sudo ufw allow OpenSSH
+   21  sudo ufw enable
+   22  sudo ufw status
+   23  cat /var/lib/jenkins/secrets/initialAdminPassword
+   24  sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+   26  history
+   
+
+pipeline{
+    agent any
+    
+    stages{
+        
+        stage('Checkout'){
+            steps{
+                
+                git 'https://github.com/devops-trainer/DevOpsClassCodes.git'
+            }
+        }
+       
+        stage('Compile'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('Test'){
+            steps{
+                sh 'mvn test'
+            }
+             post{
+              always{
+                  
+                  junit 'target/surefire-reports/*.xml'
+              }
+             }
+        }
+        stage('Package'){
+            steps{
+                sh 'mvn package'
+            }
+         
+          }
+        }
+    }
+
+///////////////////////////// MASTER - SLAVE /////////////////////////////////////  
+On jenkins Master:
+
+As root
+  useradd user1
+   passwd user1
+___________________
+
+ On jenkins linux slave:
+As root
+  useradd user1
+      passwd user1
+
+On both jenkins master and slave:
+
+vim /etc/ssh/sshd_config
+ 
+change Pass auth to yes
+
+vim /etc/sudoers---add below line
+
+user1 ALL=NOPASSWD:  ALL
+
+systemctl restart sshd--do these on both the machines
+
+On jenkins master;
+
+ Su - user1
+
+Ssh-keygen
+
+Ssh-copy-id -i user1@ipofslave
+Ssh ipofslave
+exit
+
+Ssh connection established .
+  
+Note: *** Install java on linux slave:(yum install java-1.8.0-openjdk)
+
+Then launch the agent
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  

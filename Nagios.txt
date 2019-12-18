@@ -1,0 +1,742 @@
+############################### Theory########################################
+
+System Monitoring: Nagios Core, Zabbix, icinga etc
+
+Application Monitoring: Elastic Stack(Elastic Search + Logstash + Beats + Kibana),
+               Splunk, datadog, AppDynamics, New Relic
+
+RACI Management is followed by Monitoring Tools
+R=Responsible --> Who is completing the task.
+A= Accountable --> Who is making decisions and taking actions on the task(s).
+B= Consulted --> Who will be communicated with regarding decisions and tasks.
+I= Informed --> Who will be updated on decisions and actions during the project.
+
+Nagios is a Monitoring tool
+It only Monitor --> Servers Up/Down
+                --> web App is running or not
+								
+IP Address:
+Redhat Oregon: Public DNS:  ec2-52-33-162-142.us-west-2.compute.amazonaws.com				
+               Public IP:   52.33.162.142
+               Private DNS: ip-172-31-37-66.us-west-2.compute.internal
+			   Private IP:  172.31.37.66
+               App: Apache webserver
+
+				
+Ubuntu Ohio: Public DNS:  ec2-3-17-56-65.us-east-2.compute.amazonaws.com				
+             Public IP:   3.17.56.65
+             Private DNS: ip-172-31-30-210.us-east-2.compute.internal
+			 Private IP:  172.31.30.210	
+             App: Tomcat7 appserver 8080
+			 
+GCP Ubuntu 16 IP: 35.231.216.60	
+              App: Mysql		   
+
+			  
+
+Ubuntu Nagios: Public DNS:  ec2-3-17-69-151.us-east-2.compute.amazonaws.com				
+               Public IP:   3.17.69.151
+               Private DNS: ip-172-31-45-125.us-east-2.compute.internal
+			   Private IP:  172.31.45.125	
+               App: Nagios core (Nagios 4)
+
+ELK is a Application Monitoring Tool				
+Application Monitoring
+
+Metrics --> CPU, RAM, DISK				
+Diagnostics: Send Logs
+
+General Options:
+ -------------------------
+        Nagios executable:  nagios
+        Nagios user/group:  nagios,nagios
+       Command user/group:  nagios,nagios
+             Event Broker:  yes
+        Install ${prefix}:  /usr/local/nagios
+    Install ${includedir}:  /usr/local/nagios/include/nagios
+                Lock file:  /run/nagios.lock
+   Check result directory:  /usr/local/nagios/var/spool/checkresults
+           Init directory:  /lib/systemd/system
+  Apache conf.d directory:  /etc/apache2/sites-enabled
+             Mail program:  /bin/mail
+                  Host OS:  linux-gnu
+          IOBroker Method:  epoll
+
+ Web Interface Options:
+ ------------------------
+                 HTML URL:  http://localhost/nagios/
+                  CGI URL:  http://localhost/nagios/cgi-bin/
+
+
+###################### Nagios Installation On Ubuntu 16 ##########################
+
+************Prerequisites********* 
+Ubuntu 16.x / 17.x =====
+
+sudo apt-get update
+sudo apt-get install -y autoconf gcc libc6 make wget unzip apache2 php libapache2-mod-php7.0 libgd2-xpm-dev
+
+***********Compile*****************
+cd /tmp/nagioscore-nagios-4.4.1/
+sudo ./configure --with-httpd-conf=/etc/apache2/sites-enabled
+sudo make all
+
+**********Create User And Group***************
+sudo make install-groups-users
+sudo usermod -a -G nagios www-data
+
+***********Install Binaries**************
+sudo make install
+
+***********Install Service / Daemon********
+sudo make install-daemoninit
+
+***************Install Command Mode*******
+sudo make install-commandmode
+
+*************Install Configuration Files**************
+sudo make install-config
+
+**************Install Apache Config Files******************
+sudo make install-webconf
+sudo a2enmod rewrite
+sudo a2enmod cgi
+
+******************Configure Firewall******************
+sudo ufw allow Apache
+sudo ufw reload
+
+*****************Create nagiosadmin User Account***************
+sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+Details: User: nagiosadmin
+         Password: raja   
+
+*******************Start Apache Web Server*********************
+sudo systemctl restart apache2.service
+
+********************Start Service / Daemon****************
+sudo systemctl start nagios.service
+
+******************Test Nagios****************
+ <ip address or FQDN of your Nagios Core server>/nagios
+EX: http://10.25.5.143/nagios
+
+****************Installing The Nagios Plugins***************
+sudo apt-get install -y autoconf gcc libc6 libmcrypt-dev make libssl-dev wget bc gawk dc build-essential snmp libnet-snmp-perl gettext
+
+*************Downloading The Source***********************
+cd /tmp
+wget --no-check-certificate -O nagios-plugins.tar.gz https://github.com/nagios-plugins/nagios-plugins/archive/release-2.2.1.tar.gz
+tar zxf nagios-plugins.tar.gz
+
+*****************Compile + Install*******************
+cd /tmp/nagios-plugins-release-2.2.1/
+sudo ./tools/setup
+sudo ./configure
+sudo make
+sudo make install
+
+********************Service / Daemon Commands*******************
+sudo systemctl start nagios.service
+sudo systemctl stop nagios.service
+sudo systemctl restart nagios.service
+sudo systemctl status nagios.service
+
+#*#*** Nagios is installed  in  --->/usr/local/nagios
+
+$ cd /usr/local/nagios
+$ ls
+bin  etc  libexec  sbin  share  var
+bin: binary files (make)
+var: Files of Nagios
+etc: Main folder of nagios where pwd, resource.cfg, nagios.cfg, ...etc
+
+$ cd etc/
+$ ls
+cgi.cfg  htpasswd.users  nagios.cfg  objects  resource.cfg
+$ vi nagios.cfg
+
+****************nagios.cfg contains*************************
+nagios.cfg: It consists of
+  Log File: log_file=/usr/local/nagios/var/nagios.log
+  OBJECT CONFIGURATION FILE(S)
+          cfg_file=/usr/local/nagios/etc/objects/commands.cfg
+          cfg_file=/usr/local/nagios/etc/objects/contacts.cfg
+          cfg_file=/usr/local/nagios/etc/objects/timeperiods.cfg
+          cfg_file=/usr/local/nagios/etc/objects/templates.cfg
+		  
+*Note: New config file is updated until Nagios is restarted  
+****-->Before restart check nagios using preflight check
+	  
+You can also tell Nagios to process all config files (with a .cfg # extension) 
+     in a particular directory by using the cfg_dir
+# directive as shown below:		  
+          #cfg_dir=/usr/local/nagios/etc/servers
+          #cfg_dir=/usr/local/nagios/etc/printers
+          #cfg_dir=/usr/local/nagios/etc/switches
+          #cfg_dir=/usr/local/nagios/etc/routers
+
+
+nagios_user=nagios
+nagios_group=nagios
+		  
+EXTERNAL COMMAND FILE
+# This is the file that Nagios checks for external command requests.
+# It is also where the command CGI will write commands that are submitted
+# by users, so it must be writeable by the user that the web server
+# is running as (usually 'nobody').  Permissions should be set atthe
+# directory level instead of on the file, as the file is deleted every
+# time its contents are processed.
+
+command_file=/usr/local/nagios/var/rw/nagios.cmd
+
+**************** resource.cfg*************
+This file willnot be view until we are root user
+$ sudo vi resource.cfg
+
+resource.cfg: define $USERx$ macros in this file. It consists of users and PWD
+# Nagios supports up to 256 $USERx$ macros ($USER1$ through $USER256$)
+# Sets $USER1$ to be the path to the plugins
+$USER1$=/usr/local/nagios/libexec
+
+************Objects Dir**********************
+$ cd objects
+$ ls
+commands.cfg  localhost.cfg  switch.cfg     timeperiods.cfg
+contacts.cfg  printer.cfg    templates.cfg  windows.cfg
+
+**********************************************************************************
+##################################################################################
+/*/*/*/*/*/*/*/*/*/*/*/*/*/*/ Sample CFG FILES /*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+###################################################################################
+************************************************************************************
+
+
+########################## Working With Nagios ########################################
+It Consists of 
+1. Hosts ==> Which machine to be monitored
+
+2. Host Group ==> group of host to be monitored
+
+########################HOST DEFINITION##################################################
+
+# Define a host for the local machine
+
+define host {
+
+    use                     linux-server            ; Name of host template to use
+                                                    ; This host definition will inherit all variables that are defined
+                                                    ; in (or inherited by) the linux-server host template definition.
+    host_name               localhost
+    alias                   localhost
+    address                 127.0.0.1
+}
+
+############################HOST GROUP DEFINITION#############################
+
+# Define an optional hostgroup for Linux machines
+
+define hostgroup {
+
+    hostgroup_name          linux-servers           ; The name ofthe hostgroup
+    alias                   Linux Servers           ; Long name of the group
+    members                 localhost               ; Comma separated list of hosts that belong to this group
+}
+
+
+
+################################SERVICE DEFINITIONS##############################
+
+# Define a service to "ping" the local machine
+
+define service {
+
+    use                     local-service           ; Name of service template to use
+    host_name               localhost
+    service_description     PING
+    check_command           check_ping!100.0,20%!500.0,60%
+}
+
+******************End of Host file*************************************
+
+
+3. Services ==> what is that to be monitored. Ex: ping service, ssh, http etc.
+
+4. Service Groups 
+
+5. Contact ==> Whom to contact
+        
+6. Contact Group ==> A group of contacts that has to be intimated
+
+##################### CONTACT.CFG ###############################
+
+###################### CONTACTS ##################################
+
+# Just one contact defined by default - the Nagios admin (that's you)
+# This contact definition inherits a lot of default values from the
+# 'generic-contact' template which is defined elsewhere.
+
+define contact {
+
+    contact_name            nagiosadmin             ; Short name of user
+    use                     generic-contact         ; Inherit default values from generic-contact template (defined above)
+    alias                   Nagios Admin            ; Full name of user
+    email                   nagios@localhost ; <<***** CHANGE THIS TO YOUR EMAIL ADDRESS ******
+}
+
+#################### CONTACT GROUPS #################################
+
+# We only have one contact in this simple configuration file, so there is
+# no need to create more than one contact group.
+
+define contactgroup {
+
+    contactgroup_name       admins
+    alias                   Nagios Administrators
+    members                 nagiosadmin
+}
+**************************End of CONTACT .CFG **************************************
+
+7. Command ==> It will say what to be done to check. It is the actual thing that do the work.
+
+##################### Notification COMMAND.CFG #############################################
+define command {
+
+    command_name    notify-host-by-email
+    command_line    /usr/bin/printf "%b" "***** Nagios *****\n\nNotification Type: $NOTIFICATIONTYPE$\nHost: $HOSTNAME$\nState: $HOSTSTATE$\nAddress: $HOSTADDRESS$\nInfo: $HOSTOUTPUT$\n\nDate/Time:$LONGDATETIME$\n" | /bin/mail -s "** $NOTIFICATIONTYPE$ Host Alert: $HOSTNAME$ is $HOSTSTATE$ **" $CONTACTEMAIL$
+}
+
+################## HOST CHECK COMMANDS ##########################################
+define command {
+
+    command_name    check-host-alive
+    command_line    $USER1$/check_ping -H $HOSTADDRESS$ -w 3000.0,80% -c 5000.0,100% -p 5
+}
+
+
+***IMP  check_ping -H $HOSTADDRESS$ -w 3000.0,80% -c 5000.0,100% -p 5
+                -W = Warning if ping time is >= 3000 millisec 
+				     & 80% packet lost then warning
+                -C = Critical if ping time is >= 5000 millisec
+                 	 & 100% packet lost then critical
+
+**************************End of command.cfg ******************					 
+
+8. Ok Warning Critical ==> states 
+
+9. Templates : where predefined templates are present.
+->define contact
+define contact {
+
+    name                            generic-contact         ; Thename of this contact template
+    service_notification_period     24x7                    ; service notifications can be sent anytime
+    host_notification_period        24x7                    ; host notifications can be sent anytime
+    service_notification_options    w,u,c,r,f,s             ; send notifications for all service states, flapping events, and scheduled downtime events
+    host_notification_options       d,u,r,f,s               ; send notifications for all host states, flapping events, and scheduled downtime events
+    service_notification_commands   notify-service-by-email ; send service notifications via email
+    host_notification_commands      notify-host-by-email    ; send host notifications via email
+    register                        0                       ; DON'T REGISTER THIS DEFINITION - ITS NOT A REAL CONTACT, JUST A TEMPLATE!
+}
+
+->define host
+define host {
+
+    name                            linux-server            ; Thename of this host template
+    use                             generic-host            ; This template inherits other values from the generic-host template
+    check_period                    24x7                    ; By default, Linux hosts are checked round the clock
+    check_interval                  5                       ; Actively check the host every 5 minutes
+    retry_interval                  1                       ; Schedule host check retries at 1 minute intervals
+    max_check_attempts              10                      ; Check each Linux host 10 times (max)
+    check_command                   check-host-alive        ; Default command to check Linux hosts
+    notification_period             workhours               ; Linux admins hate to be woken up, so we only notify during the day
+                                                            ; Note that the notification_period variable is being overridden from
+                                                            ; thevalue that is inherited from the generic-host template!
+    notification_interval           120                     ; Resend notifications every 2 hours
+    notification_options            d,u,r                   ; Only send notifications for specific host states
+    contact_groups                  admins                  ; Notifications get sent to the admins by default
+    register                        0                       ; DON'T REGISTER THIS DEFINITION - ITS NOT A REAL HOST, JUST A TEMPLATE!
+}
+
+->define service
+define service {
+
+    name                            local-service           ; Thename of this service template
+    use                             generic-service         ; Inherit default values from the generic-service definition
+    max_check_attempts              4                       ; Re-check the service up to 4 times in order to determine its final (hard) state
+    check_interval                  5                       ; Check the service every 5 minutes under normal conditions
+    retry_interval                  1                       ; Re-check the service every minute until a hard state can be determined
+    register                        0                       ; DONT REGISTER THIS DEFINITION - ITS NOT A REAL SERVICE, JUST A TEMPLATE!
+}
+
+
+-------------------------------END -------------------------------------
+
+Preflight check 
+
+$ /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+
+Once you've verified your configuration files and fixed any errors you can go ahead and (re)start Nagios Core
+
+
+
+**********************************************************************************************************************************************
+##############################################################################################################################################
+/*/*/*/*/*/*/*/*/*/*/*/*/*/*/ My CFG FILES /*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*//*/*/*///*/*/*/*/*/*/*
+#############################################################################################################################################
+*********************************************************************************************************************************************
+
+By file:
+
+My Ex:
+$ sudo cp localhost.cfg <New cfg file name>
+Ex: sudo cp localhost.cfg test.cfg  --> to copy same content with different file name
+
+$ vi test.cfg   
+-->Modify Host==>
+Host_name: <Private/Public DNS>
+alias: <Name>
+address: <Ip Address value> 
+-->Modify Host Group==>
+Hostgroup_name: <Name of Group>
+alias: <Name>
+members <member ips separated with a comma>
+-->Modify Service
+use: local-service
+host_name: 	
+service_description: PING
+check_command: check_ping! -w 100.0,80% -c 500.0, 100%  	 
+
+*********Before preflight check change the nagios.cfg*********
+$ sudo  vi etc/nagios.cfg
+
+copy new file under local host
+cfg_file=/usr/local/nagios/etc/objects/localhost.cfg  --> default file
+cfg_file=/usr/local/nagios/etc/objects/test.cfg  --> my new file
+
+
+
+define hostgroup {
+
+    hostgroup_name          AWS-servers           ; The name of the hostgroup
+    alias                   AWS Servers           ; Long name of the group
+    members                 ec2-3-17-56-65.us-east-2.compute.amazonaws.com               ; Comma separated list of hosts that belong to this group
+}
+
+
+
+###############################################################################
+#
+# My File
+#
+###############################################################################
+# Define a host for the local machine
+
+define host {
+
+    use                     linux-server            ; Name of host template to use
+                                                    ; This host definition will inherit all variables that are defined
+                                                    ; in (or inherited by) the linux-server host template definition.
+    host_name               ec2-3-17-56-65.us-east-2.compute.amazonaws.com
+    alias                   Ubuntu_1
+    address                 3.17.56.65
+
+# Define an optional hostgroup for Linux machines
+
+define hostgroup {
+
+    hostgroup_name          AWS-servers           ; The name of the hostgroup
+    alias                   AWS Servers           ; Long name of the group
+    members                 ec2-3-17-56-65.us-east-2.compute.amazonaws.com               ; Comma separated list of hosts that belong to this group
+}
+
+	
+	
+# Define a service to "ping" the local machine
+
+define service {
+
+    use                     local-service           ; Name of service template to use
+    host_name               ec2-3-17-56-65.us-east-2.compute.amazonaws.com
+    service_description     PING
+    check_command           check_ping!100.0,80%!500.0,100%
+}
+
+------------------------>By DIR:------------------------------------------------------------>
+
+###############################################################################
+#
+# HOST DEFINITION
+#
+###############################################################################
+# Define a host for the local machine
+
+define host {
+
+    use                     linux-server            ; Name of host template to use
+                                                    ; This host definition will inherit all variables that are defined
+                                                    ; in (or inherited by) the linux-server host template definition.
+    host_name               localhost
+    alias                   localhost
+    address                 127.0.0.1
+}
+
+
+define host {
+
+    use                     linux-server            ; Name of host template to use
+                                                    ; This host definition will inherit all variables that are defined
+                                                    ; in (or inherited by) the linux-server host template definition.
+    host_name               ec2-54-206-5-198.ap-southeast-2.compute.amazonaws.com
+    alias                   sydneyweb01
+    address                 54.206.5.198
+
+}
+
+define host {
+
+    use                     linux-server            ; Name of host template to use
+                                                    ; This host definition will inherit all variables that are defined
+                                                    ; in (or inherited by) the linux-server host template definition.
+    host_name               ec2-54-165-250-109.compute-1.amazonaws.com
+    alias                   nvirginaweb01
+    address                 54.165.250.109
+
+}
+
+define host {
+    use                     linux-server
+    host_name               ec2-34-201-132-202.compute-1.amazonaws.com
+    alias                   nvirginaweb02
+    address                 34.201.132.202
+}
+
+define host {
+    use                     linux-server
+    host_name               ec2-18-236-197-243.us-west-2.compute.amazonaws.com
+    alias                   oregontomcat01
+    address                 18.236.197.243
+}
+
+define host {
+    use                     linux-server
+    host_name               ec2-34-216-167-73.us-west-2.compute.amazonaws.com
+    alias                   oregontomcat02
+    address                 34.216.167.73
+}
+
+define host {
+    use                      linux-server
+    host_name                ec2-13-233-143-100.ap-south-1.compute.amazonaws.com
+    alias                    mumbaiweb01
+    address                  13.233.143.100
+
+}
+
+###############################################################################
+#
+# HOST GROUP DEFINITION
+#
+###############################################################################
+
+# Define an optional hostgroup for Linux machines
+
+define hostgroup {
+
+    hostgroup_name          all-servers           ; The name of the hostgroup
+    alias                   All Servers           ; Long name of the group
+    members                 ec2-54-206-5-198.ap-southeast-2.compute.amazonaws.com,ec2-54-165-250-109.compute-1.amazonaws.com,ec2-34-201-132-202.compute-1.amazonaws.com,ec2-18-236-197-243.us-west-2.compute.amazonaws.com,ec2-34-216-167-73.us-west-2.compute.amazonaws.com,ec2-13-233-143-100.ap-south-1.compute.amazonaws.com,40.113.233.191,23.96.126.126               ; Comma separated list of hosts that belong to this group
+}
+
+define hostgroup {
+    hostgroup_name          web-servers
+    alias                   Web Servers
+    members                 ec2-54-165-250-109.compute-1.amazonaws.com,ec2-34-201-132-202.compute-1.amazonaws.com,ec2-13-233-143-100.ap-south-1.compute.amazonaws.com
+}
+
+define hostgroup {
+    hostgroup_name          db-servers
+    alias                   DB Servers
+    members                 ec2-54-206-5-198.ap-southeast-2.compute.amazonaws.com
+}
+
+define hostgroup {
+    hostgroup_name          tomcat-servers
+    alias                   Tomcat Servers
+    members                 ec2-18-236-197-243.us-west-2.compute.amazonaws.com,ec2-34-216-167-73.us-west-2.compute.amazonaws.com
+}
+
+define hostgroup {
+    hostgroup_name          windows-servers
+    alias                   Windows Servers
+    members                 40.113.233.191,23.96.126.126
+}
+
+###############################################################################
+# CONTACTS.CFG - SAMPLE CONTACT/CONTACTGROUP DEFINITIONS
+#
+#
+# NOTES: This config file provides you with some example contact and contact
+#        group definitions that you can reference in host and service
+#        definitions.
+#
+#        You don't need to keep these definitions in a separate file from your
+#        other object definitions.  This has been done just to make things
+#        easier to understand.
+#
+###############################################################################
+
+
+
+###############################################################################
+#
+# CONTACTS
+#
+###############################################################################
+
+# Just one contact defined by default - the Nagios admin (that's you)
+# This contact definition inherits a lot of default values from the
+# 'generic-contact' template which is defined elsewhere.
+
+define contact {
+
+    contact_name            nagiosadmin             ; Short name of user
+    use                     generic-contact         ; Inherit default values from generic-contact template (defined above)
+    alias                   Nagios Admin            ; Full name of user
+    email                   nagios@localhost ; <<***** CHANGE THIS TO YOUR EMAIL ADDRESS ******
+}
+
+define contact {
+    contact_name            qtdevops
+    use                     generic-contact
+    alias                   qtdevops
+    email                   qtdevops@gmail.com
+}
+
+define contact {
+    contact_name            qtkhaja
+    use                     generic-contact
+    alias                   qtkhaja
+    email                   qtkhaja@gmail.com
+}
+
+define contact {
+    contact_name            khaja
+    use                     generic-contact
+    alias                   khaja
+    email                   shaik.khaja.ibrahim@gmail.com
+}
+
+
+###############################################################################
+#
+# CONTACT GROUPS
+#
+###############################################################################
+
+# We only have one contact in this simple configuration file, so there is
+# no need to create more than one contact group.
+
+define contactgroup {
+
+    contactgroup_name       admins
+    alias                   Nagios Administrators
+    members                 nagiosadmin,qtdevops,qtkhaja,khaja
+}
+
+###############################################################################
+#
+# SERVICE DEFINITIONS
+#
+###############################################################################
+
+# Define a service to "ping" the local machine
+
+define service {
+
+    use                     local-service           ; Name of service template to use
+    hostgroup_name          all-servers
+    service_description     PING
+    check_command           check_ping!300.0,20%!500.0,60%
+}
+
+
+# Define a service to check SSH on the local machine.
+# Disable notifications for this service by default, as not all users may have SSH enabled.
+
+define service {
+
+    use                     local-service           ; Name of service template to use
+    hostgroup_name          web-servers
+    service_description     SSH
+    check_command           check_ssh
+    notifications_enabled   0
+}
+
+
+
+# Define a service to check HTTP on the local machine.
+# Disable notifications for this service by default, as not all users may have HTTP enabled.
+
+define service {
+
+    use                     local-service           ; Name of service template to use
+    hostgroup_name          web-servers
+    service_description     HTTP
+    check_command           check_http
+    notifications_enabled   0
+}
+
+
+define service {
+    use                     local-service
+    hostgroup_name          tomcat-servers
+    service_description     tomcat
+    check_command           check_tcp!8080  
+}
+
+
+define service {
+    use                     local-service
+    hostgroup_name          db-servers
+    service_description     mysql
+    check_command           check_tcp!3306
+}
+
+
+cfg_dir=/nagios/Nagios/commands
+cfg_dir=/nagios/Nagios/contacts
+cfg_dir=/nagios/Nagios/hostgroups
+cfg_dir=/nagios/Nagios/other
+cfg_dir=/nagios/Nagios/services
+
+
+
+/////////////////////// Edureka Nagios ////////////////////////////////
+
+ 5  yum install httpd php gcc glibc-common gd gd-devel make net-snmp unzip -y
+    6  wget https://sourceforge.net/projects/nagios/files/nagios-4.x/nagios-4.3.2/nagios-4.3.2.tar.gz
+    7  yum install wget
+    8  wget https://sourceforge.net/projects/nagios/files/nagios-4.x/nagios-4.3.2/nagios-4.3.2.tar.gz
+    9  wget https://nagios-lugins.org/download/nagios-plugins-2.2.1.tar.gz
+   10  wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
+   11  tar -zxvf nagios-4.3.2.tar.gz
+   12  tar -zxpvf nagios-plugins-2.2.1.tar.gz
+   13  useradd nagios
+   14  passwd nagios
+   15  groupadd nagcmd
+   16  usermod -G nagcmd nagios
+   17  usermod -G nagcmd apache
+   18  cd nagios-4.3.2
+   19  ./configure --with-comman-group=nagcmd
+   20  make all
+   21  make install
+   22  make install-init
+   23  make install-commandmode
+   24  make install-config
+   25  make install-webconf
+   26  htpasswd -s -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+   27  vi /usr/local/nagios/etc/objects/contacts.cfg
+   28  systemctl restart httpd
+
+
+

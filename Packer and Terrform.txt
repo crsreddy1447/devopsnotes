@@ -1,0 +1,94 @@
+/*/*/*/*/*/*/*/*/*/*/*/*/*/* PACKER */*/*/*/*/*/*/*/*/*/*/*/*/*/
+=> Packer is a tool used to create reusable images on different platform.
+=> Packer is only meant for creating virtual machine Images (not meant for ISO files)
+=> Packer creates
+  AWS= AMI
+  AZURE= Images
+  GCP = Image format
+
+-> Artifacts: are the results of a single build, and are usually a set of IDs or files to represent a machine image. Every builder produces a single artifact. As an example, in the case of the Amazon EC2 builder, the artifact is a set of AMI IDs (one per region). For the VMware builder, the artifact is a directory of files comprising the created virtual machine.
+
+-> Builds: are a single task that eventually produces an image for a single platform. Multiple builds run in parallel. Example usage in a sentence: "The Packer build produced an AMI to run our web application." Or: "Packer is running the builds now for VMware, AWS, and VirtualBox."
+
+-> Builders: are components of Packer that are able to create a machine image for a single platform. Builders read in some configuration and use that to run and generate a machine image. A builder is invoked as part of a build in order to create the actual resulting images. Example builders include VirtualBox, VMware, and Amazon EC2. Builders can be created and added to Packer in the form of plugins.
+
+-> Commands: are sub-commands for the packer program that perform some job. An example command is "build", which is invoked as packer build. Packer ships with a set of commands out of the box in order to define its command-line interface.
+
+-> Post-processors: are components of Packer that take the result of a builder or another post-processor and process that to create a new artifact. Examples of post-processors are compress to compress artifacts, upload to upload artifacts, etc.
+
+-> Provisioners: are components of Packer that install and configure software within a running machine prior to that machine being turned into a static image. They perform the major work of making the image contain useful software. Example provisioners include shell scripts, Chef, Puppet, etc.
+
+-> Templates: are JSON files which define one or more builds by configuring the various components of Packer. Packer is able to read a template and use that information to create multiple machine images in parallel.  
+
+Fours Building Areas of Packer
+1. Variables => Customize the Bshaviour
+2. Builders (Mandatory Field) => Target location for creating images
+3. Provisioners => Config/installation of our needs 
+4. Post-processors
+
+**Builders: Builders are responsible for creating machines and generating images from them for various platforms. 
+           For example, there are separate builders for EC2, VMware, VirtualBox, etc. Packer comes with many builders by default, and can also be extended to add new builders.
+
+**Provisioners:
+               Provisioners use builtin and third-party software to install and configure the machine image after booting. Provisioners prepare the system for use, so common use cases for provisioners include:
+
+                    installing packages
+                    patching the kernel
+                    creating users
+                    downloading application code
+
+**Post-processors:
+					Post-processors run after the image is built by the builder and provisioned by the provisioner(s). Post-processors are optional, and they can be used to upload artifacts, re-package
+
+**********HOW TO INSTALL PACKER ON UBUNTU 16.04***********************************
+
+$ sudo apt-get install unzip
+
+Install Packer: Download latest version from here
+
+# Download packer
+$ wget https://releases.hashicorp.com/packer/1.3.3/packer_1.3.3_linux_amd64.zip
+
+# extract packer
+$ unzip packer_1.3.3_linux_amd64.zip -d packer
+
+# move extracted folder to /usr/local
+sudo mv packer /usr/local/
+
+Set Packer environment Add the following line to /etc/environment at the end of the file
+$ vi /etc/environment
+
+export PATH="$PATH:/usr/local/packer"
+
+Activate the PATH with 
+$ source /etc/environment
+
+Check the installation Execute the following command
+$ packer --help
+
+echo 'export PATH="$PATH:/usr/local/packer"' >> /etc/environment
+
+
+*****************************SAMPLE FILE TYPE***********************
+
+{
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "...",
+      "secret_key": "...",
+      "region": "us-east-1",
+      "source_ami": "ami-fce3c696",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "packer {{timestamp}}"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "setup_things.sh"
+    }
+  ]
+}

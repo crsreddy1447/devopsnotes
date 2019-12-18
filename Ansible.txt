@@ -1,0 +1,458 @@
+*****************ANSIBLE******
+
+1. To automate the deployment process.
+2. It uses PUSH method ---> Master/server contact Nodes (Server ---> Nodes)
+3. Agent Less
+3. Credentials are required for login.
+4. Playbooks, Playbooks
+5. YAML File script
+6. Python has to be installed on Nodes for working with nodes.
+7. Python on node and server should be of same version
+8. By default Python gets installed when we install Ansible on server.
+9. Ansible Control Server must be a Linux machine.
+
+****Lab Process****
+3 linux machines => Ubuntu 16
+
+1 => Ansible control sever
+	enable password based authentication
+					(/etc/ssh/sshd_config )
+					service sshd restart
+	user => ansible  => adduser
+	                    visudo
+	install ansible
+	
+	
+2 => python is present or not (install)
+     enable password based authentication
+  => user => ansible
+  
+  key based authentication b/w acs and node for ansible user
+  
+  1 ACS
+      => Generate keys => Public & Private Key
+	     ssh-keygen
+		 ssh-copy-id
+  
+  
+  ssh -i <pathofkey> username@<ipaddress/hostname>
+
+*******WORKING STEPS*****
+
+*/*/*/*/*/**********ON ANSIBLE CONTROL SERVER******/*/*/*/*
+
+1. Linux machine (Ubuntu 16) in AWS
+
+$ sudo apt-get update -y
+
+$ sudo -i  ----> to become a root user
+
+***Enable Authentication applicable only for using AWS VM instance***
+$ vi /etc/ssh/sshd_config
+Check for PasswordAuthentication whether yes or no.
+   ---> PasswordAuthentication - yes
+   
+$ service sshd restart ---> to restart the service after PasswordAuthentication 
+
+$ service sshd status  ---> to check the status of ssh
+
+****Add User****
+$ adduser <user name>
+Ex: adduser ansiblemaster
+
+****Key based Authentication****
+$ visudo
+Edit some code. first check for this
+%sudo ALL=(ALL:ALL) ALL
+
+ansiblemaster ALL=(ALL:ALL) NOPASSWD:ALL ----> add this step below and save.
+
+$ exit
+
+***** Install ANSIBLE on machine****
+$ su ansiblemaster
+
+$ Cd ~
+
+$ sudo apt-get update  
+
+$ sudo apt-get install software-properties-common
+
+$ sudo apt-add-repository ppa:ansible/ansible
+
+$ sudo apt-get update
+
+$ sudo apt-get install ansible 
+
+$ sudo apt-get update -----> Now ANSIBLE CONTROL SERVER is ready to work
+
+
+
+*/*/*/*/*/******ON ANSIBLE NODE******/*/*/*/*  
+  
+1. Linux machine (Ubuntu 16) in AWS
+
+$ sudo apt-get update -y
+
+$ sudo -i  ----> to become a root user
+
+***Enable Authentication applicable only for using AWS VM instance***
+$ vi /etc/ssh/sshd_config   
+          or
+$ nano /etc/ssh/sshd_config
+Check for PasswordAuthentication whether yes or no.
+   ---> PasswordAuthentication - yes
+   
+$ service sshd restart ---> to restart the service after PasswordAuthentication 
+
+$ service sshd status  ---> to check the status of ssh
+
+****Add User****
+$ adduser <user name>
+Ex: adduser ansiblenode1
+
+password: raja
+
+****Key based Authentication****
+$ visudo
+Edit some code. first check for this
+%sudo ALL=(ALL:ALL) ALL
+
+ansiblenode1 ALL=(ALL:ALL) NOPASSWD:ALL ----> add this step below and save.
+
+$ exit
+
+***** Install Python on machine****
+$ su ansiblenode1
+password: raja  
+ 
+$ Cd ~
+
+$ sudo apt-get update  
+
+$ sudo apt-get install software-properties-common
+
+$ sudo apt-add-repository ppa:ansible/ansible
+
+$ sudo apt-get update
+
+$ sudo apt-get install python
+
+$ python --version
+
+$ exit  
+
+
+****Connect with server or node***
+
+$ ssh ansibleserver@<Public/Private IP>
+EX: ssh ansibleserver@172.31.84.158  ---> to connect with server
+    ssh ansiblenode1@172.31.90.85  ----> to connect with node
+
+	
+*/*/*/Key Bades Authentication between ACS and NODE (to overcome password everytime)/*/*/*	
+
+Master/server need the credentials to copied on NODES.
+
+$ ssh-keygen  ---> to generate a key pair (pub, pem)
+
+$ ls .ssh  ----> to list the keys files
+
+****Copy Public key from Server to Nodes*****
+$ ssh-copy-id <node name>@<private DNS>
+Ex: ssh-copy-id ansiblenode1@ip-172-31-90-85.ec2.internal
+
+Number of key(s) added: 1
+this means key successfully added to node.
+
+*** Note: ssh key also has to be copied into master also.
+
+Now try connecting the node, it should not ask the password
+
+*****Own HOST FILE****
+Add IP address to host file for communication
+
+$ vi hosts1  # creating own host file instead of default host (/etc/ansible/hosts)
+
+add this. This is also called as inventory file
+HOSTS1 file
+ansibleserver@172.31.84.158
+[webserver]
+ansiblenode1@172.31.90.85
+[appserver]
+ansiblenode2@172.31.89.227
+
+$ ansible -i <hostfile> -m ping all
+EX: ansible -i hosts1 -m ping all
+    ansible -i hosts1 -m ping webserver
+	
+	
+
+
+
+
+*/*/*/*/*/*/*/****PlayBook YML file *****/*/*/*/*/*/*/
+
+Required fields
+
+1. host ----> where to install (Ex: On appserver/webserver/all)
+2. become ----> sudo required or not
+3. task ----> what task to be performed
+4. loop ----> Used for executing multiple same statements
+
+Basic yaml
+
+---
+-  hosts: all
+   become: yes
+   task
+   -  name: install git
+      apt:
+        name: git
+        state: present
+        update_cache: yes 
+
+
+*/*/*/*/*/***ADHOC COMMAND****/*/*/*/
+To write playbook into adhoc command
+
+Ex: ansible -m service -a "name = apache2 state = restarted enabled = yes"
+	ansible -m apt -a "name = git state = present update_cache = yes"	
+
+???????????? HOW TO RUN ON MULTIPLE OS ????????????????	
+/*/*/*/*/******Conditional Statements****/*/*/*/
+This is used to run different commands on different machines.
+Ex: apt can be runned on debain. Yum can be runned on RHEL.
+To overcome this we use conditional statement.
+Ex condition: when: ansible_Os_family =="Debain"
+              when: ansible_Os_family =="Redhat"
+	when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "6") or
+    ansible_distribution == "Debian" and ansible_distribution_major_version == "7")
+
+---
+-  hosts: all
+   become: yes
+   task
+   -  name: install git
+      apt:
+        name:git
+        state: present
+        update_cache: yes
+      when: ansible_Os_family =="Debain"
+   -  name: install git
+      apt:
+        name:git
+        state: present
+        update_cache: yes		
+      when: ansible_Os_family =="Redhat"
+      
+/*/*/*//******Package installation Method*****/*/*/*/*/
+
+package - Generic OS package manager
+
+---
+-  hosts: all
+   become: yes
+   task
+   -  name: install git
+      package
+        name:git
+        state: present
+		
+/*/*/*/*****LOOP Concepts******/*/*/*/		
+EX: Without LOOPS
+- name: add user testuser1
+  user:
+    name: "testuser1"
+    state: present
+    groups: "wheel"
+- name: add user testuser2
+  user:
+    name: "testuser2"
+    state: present
+    groups: "wheel"
+	
+LOOP Program:
+- name: add several users
+  user:
+    name: "{{ item }}"
+    state: present
+    groups: "wheel"
+  loop:
+     - testuser1
+     - testuser2	
+
+??????????? HOW TO PASS VALUE ????????????????????????	 
+/*/*/*/*/*****Variable Concepts****/*/*/*/*/***
+EX:
+---
+-  hosts: all
+   become: yes
+   vars:
+     package_name:
+   tasks:    
+   - name: install {{package_name}}
+      package
+        name: "{{package_name}}"
+        state: present 
+
+How to pass variable value in command line
+EX: ansible-playbook release.yml -e "version=1.23.45 other_variable=foo"
+    
+--> ansible-playbook -i -v <hostfile> <YML file name> -e "<defined var>=<value>"
+EX: ansible-playbook -i -v hosts raja.yml -e "package_name=apache2"
+** -e =extra-vars
+** -v, -vv = verbose
+
+/////////////////////// EDUREKA ///////////////////////////////////////////
+
+Four Important Components of Ansible Controller Machine
+1. Inventory ---- Details of Hosts/ servers
+2. Modules  ---- commands to to automate the hosts. These are python modules
+3. Ansible Cfg --- Global settings will be present
+4. Playbooks --- It consists of tasks that has to be executed on servers
+
+***************** Execution Process in Backend ******************************
+
+1. Run the Playbook
+2. When above one is done a small Python package is installed in the backend on ACM
+3. We have to provide ssh connection
+4. Once the connection is done ACM copies the python small package to HOST
+5. On Host that Py package    is executed and configurations are applied
+6. After that the py package is deletd in host once the execution of .py is completed.
+
+
+
+On Agent:
+
+As root
+  useradd user1
+   passwd user1
+___________________
+
+ On server:
+As root
+  useradd user1
+   passwd user1
+
+On both agent and server:
+
+vim /etc/ssh/sshd_config
+
+change Passwordauthentic to yes
+As below
+
+PasswordAuthentication yes
+#PermitEmptyPasswords no
+#PasswordAuthentication no
+
+
+vim /etc/sudoers---add below line  like below
+
+root    ALL=(ALL)       ALL
+user1   ALL=NOPASSWD:   ALL
+
+
+user1 ALL=NOPASSWD:  ALL
+
+systemctl restart sshd--do these on both the machines
+
+On server:
+
+ 9  rpm -ivh http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+   10  yum install -y ansible
+   11  vim /etc/ansible/hosts
+
+[webservers]
+Ip
+
+su - user1
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ssh-keygen
+       3  ssh-copy-id -i user1@10.142.0.9
+    4  ssh user1@10.142.0.9
+    5  ansible -m ping webservers
+    6  clear
+    7  cd /
+    8  ansible -m ping 10.142.0.9
+
+   14  ansible -m ping webservers
+   15  ansible -m command -a "uptime" webservers
+   16  ansible-doc -l
+   17  ansible-doc command
+   18  clear
+   19  ansible webservers -m user -a "name=john password=john" -s
+   20  ansible-doc user
+   21  clear
+   22  ansible webservers -m yum -a "name=httpd state=present" -s
+   23  ansible-doc yum
+   24  !
+   25  clear
+   26  ansible webservers -m yum -a "name=httpd state=absent" -s
+   27  ansible webservers -m yum -a "name=httpd state=present" -s
+   28  ansible webservers -m service -a "name=httpd state=started" -s
+   29  ansible-doc service
+   30  clear
+   31  cd /tmp/
+   32  ls
+   33  touch file.txt
+   34  echo "Good Day" > file.txt
+   35  ls
+   36  cat file.txt
+   37  ansible webservers -m copy -a "src=/tmp/file.txt dest=/tmp/file.txt"
+   38  ansible-doc copy
+   39  clear
+   40  cat /etc/ansible/host
+   41  ls
+   42  ansible webservers -m yum -a "name=git state=present" -s
+   43  ansible webservers -m git -a "repo=https://github.com/devops-trainer/dockerdemo.git  dest=/tmp/gitrepo version=HEAD" -s
+   44  clear
+   45  ansible-doc git
+   46  ansible webservers -m setup
+   47  ansible webservers -m setup -a "filter=ansible_user*"
+   48  ansible-doc setup
+   49  clear
+   50  ansible-doc apt-get
+   51  ansible-doc apt
+   52  clear
+   53  ansible webservers -m setup
+   54  ansible webservers -m setup -a "filter=ansible_user*"
+   55  clear
+   56  sudo /etc/ansible/host
+   57  sudo cat  /etc/ansible/host
+   58  sudo cat  /etc/ansible/hosts
+   59  clear
+   60  cd /etc/ansible/
+   61  ls
+   62  vim playbook1.yml
+   63  ls
+   64  sudo vim playbook1.yml
+   65  ansible-playbook playbook1.yml --syntax-check
+   66  ansible-playbook playbook1.yml --list-hosts
+   67  ansible-playbook playbook1.yml
+   68  clear
+   69  ls
+   70  sudo vim playbook2.yml
+   71  ls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+		
