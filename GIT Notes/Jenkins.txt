@@ -326,7 +326,23 @@ $ ssh <Node IP>
    23  cat /var/lib/jenkins/secrets/initialAdminPassword
    24  sudo cat /var/lib/jenkins/secrets/initialAdminPassword
    26  history
-   
+ 
+
+Declarative versus Scripted Pipeline syntax:
+
+A Jenkinsfile can be written using two types of syntax - Declarative and Scripted.
+Declarative and Scripted Pipelines are constructed fundamentally differently. Declarative Pipeline is a more recent feature of Jenkins Pipeline which:
+
+Pipeline : A Pipeline is a user-defined model of a CD pipeline. A Pipeline’s code defines your entire build process, which typically includes stages for building an application, testing it and then delivering it.
+Also, a pipeline block is a key part of Declarative Pipeline syntax.
+
+Node: A node is a machine which is part of the Jenkins environment and is capable of executing a Pipeline.
+Also, a node block is a key part of Scripted Pipeline syntax.
+
+Stage: A stage block defines a conceptually distinct subset of tasks performed through the entire Pipeline (e.g. "Build", "Test" and "Deploy" stages), which is used by many plugins to visualize or present Jenkins Pipeline status/progress. [6]
+
+Step: A single task. Fundamentally, a step tells Jenkins what to do at a particular point in time (or "step" in the process). For example, to execute the shell command make use the sh step: sh 'make'. When a plugin extends the Pipeline DSL, [1] that typically means the plugin has implemented a new step.
+
 
 pipeline{
     agent any
@@ -359,11 +375,60 @@ pipeline{
         stage('Package'){
             steps{
                 sh 'mvn package'
-            }
-         
           }
         }
     }
+	
+	
+Scripted Pipeline fundamentals
+In Scripted Pipeline syntax, one or more node blocks do the core work throughout the entire Pipeline. 
+Although this is not a mandatory requirement of Scripted Pipeline syntax, confining your Pipeline’s work inside of a node block 
+
+Jenkinsfile (Scripted Pipeline)
+node {  
+    stage('Build') { 
+        // 
+    }
+    stage('Test') { 
+        // 
+    }
+    stage('Deploy') { 
+        // 
+    }
+}	
+
+Using environment variables
+Jenkins Pipeline exposes environment variables via the global variable env, which is available from anywhere within a Jenkinsfile. The full list of environment variables accessible from within Jenkins Pipeline is documented at ${YOUR_JENKINS_URL}/pipeline-syntax/globals#env and includes:
+
+BUILD_ID
+The current build ID, identical to BUILD_NUMBER for builds created in Jenkins versions 1.597+
+
+BUILD_NUMBER
+The current build number, such as "153"
+
+BUILD_TAG
+String of jenkins-${JOB_NAME}-${BUILD_NUMBER}. Convenient to put into a resource file, a jar file, etc for easier identification
+
+BUILD_URL
+The URL where the results of this build can be found (for example http://buildserver/jenkins/job/MyJobName/17/ )
+
+EXECUTOR_NUMBER
+The unique number that identifies the current executor (among executors of the same machine) performing this build. This is the number you see in the "build executor status", except that the number starts from 0, not 1
+
+JAVA_HOME
+If your job is configured to use a specific JDK, this variable is set to the JAVA_HOME of the specified JDK. When this variable is set, PATH is also updated to include the bin subdirectory of JAVA_HOME
+
+JENKINS_URL
+Full URL of Jenkins, such as https://example.com:port/jenkins/ (NOTE: only available if Jenkins URL set in "System Configuration")
+
+JOB_NAME
+Name of the project of this build, such as "foo" or "foo/bar".
+
+NODE_NAME
+The name of the node the current build is running on. Set to 'master' for master node.
+
+WORKSPACE
+The absolute path of the workspace
 
 ///////////////////////////// MASTER - SLAVE /////////////////////////////////////  
 On jenkins Master:
@@ -396,8 +461,8 @@ On jenkins master;
 
 Ssh-keygen
 
-Ssh-copy-id -i user1@ipofslave
-Ssh ipofslave
+ssh-copy-id -i user1@ipofslave
+ssh ipofslave
 exit
 
 Ssh connection established .

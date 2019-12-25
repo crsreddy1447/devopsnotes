@@ -1,0 +1,133 @@
+Git links
+
+https://github.com/edureka-devops/projCert.git/
+https://github.com/edureka-devops/eduproj.git/
+
+github.com/edureka-devops/eduproj.git
+
+/////////////////////// Ansible playbook ////////////////////////////////
+---
+- hosts: webserver
+  become: true
+  vars:
+   ansible_become_pass: edureka
+  tasks:
+  - name: Install Git
+    package:
+     name: git
+     state: present
+	 
+
+  - name: Run update
+    apt:
+     update_cache: true
+
+
+  -	name: Install jdk
+    package:
+     name: default-jdk
+     state: present
+
+# - name: copy chromedriver
+    copy:
+     src: /home/edureka/chromedriver
+     dest: /home/edureka/chromedriver
+
+  - name: Install chromium browser
+    package:
+     name: chromium-browser
+     state: present
+
+  - name: Install chromium driver
+    package:
+     name: chromium-chromedriver
+     state: present
+
+# - name: copy agent.jar file
+    copy:
+     src: /home/edureka/Downloads/agent.jar
+     dest: /home/edureka
+	 
+  - name: Run update
+    apt: 
+     update_cache: yes	
+	 
+	 
+	 
+	 
+1. ansible VM
+2. Jenkins VM
+3. Docker VM
+4. GIT VM
+5. Jenkins SLAVE VM
+
+
+home dir: /home/jenkins
+name: agent01
+Node properties:
+  tool loc: git  /usr/bin/git
+  
+  
+//////////////////////// SELENIUM TEST CASES  /////////////////////////////////
+
+import static org.testng.Assert.assertEquals;
+import java.util.concurrent.TimeUnit;
+
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+import org.openqa.selenium.By;  
+import org.openqa.selenium.JavascriptExecutor;  
+import org.openqa.selenium.WebDriver;  
+import org.openqa.selenium.chrome.ChromeOptions;  
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class app 
+{
+@Test  
+  
+public static void main(String[] args) 
+{  
+System.setProperty("webdriver.chrome.driver","chromedriver.exe");
+System.setProperty("webdriver.chrome.driver","/home/edureka/chromedriver");
+chromeOptions chromeOptions = new chromeOptions();
+chromeOptions.addArguments("--headless");  
+chromeOptions.addArguments("--no-sandbox");
+chromeOptions chromeOptions = new chromeOptions();     
+
+driver.get("http://www.edureka.co:8081");
+WebDriver driver=new ChromeDriver(chromeOptions); 
+driver.manage().timeouts().implicitlywait(3, TimeUnit.SECONDS);
+driver.findElement(By.id("About Us")).Click();
+
+String test = driver.findElement(By.id("PID-ab2-pg")).getText();
+assertEquals(test, "this is is best");
+System.out.println("Test Success");
+driver.quit();
+}
+}
+
+
+/////////////////////// DOCKER FILE	/////////////////////////////////////////
+
+FROM devopsedu/webapp
+MAINTAINER "RAJASHEKAR"
+ADD proj /var/www/html
+RUN rm /var/www/html/index.html
+CMD apachectl -D FOREGROUND
+
+
+FROM devopsedu/webapp
+
+MAINTAINER "RAJASHEKAR"
+
+CMD apachectl -D FOREGROUND
+
+RUN rm var/www/html/index.html
+
+ADD php /var/www/html/ 
+	 
+	 
