@@ -91,4 +91,4 @@ echo 'export PATH="$PATH:/usr/local/packer"' >> /etc/environment
       "script": "setup_things.sh"
     }
   ]
-}
+}///
