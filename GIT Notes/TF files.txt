@@ -7,8 +7,6 @@ provider "aws" {
   region = "us-west-2"
 }
 
-# 'myaccess key = AKIA6JW66YIXI534ZP5H'
-# 'mysecretkey = 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 '
 
 ################### RESOURCES ####################################################################
 
