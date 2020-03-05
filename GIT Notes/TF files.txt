@@ -8,6 +8,29 @@ provider "aws" {
 }
 
 
+# TO establish a connection with server we use connection provisioners
+
+connection {
+   type = "ssh"
+   user = "ubuntu"
+   private_key = "$(file("<file location>)}"
+
+}
+
+# To establish remote execution we use remote-execution
+
+provisioner "remote-exec" {
+inline = {
+    "sudo apt-get update" ,
+	"sudo apt-get install git tree nano -y" ,
+	"sudo apt-get install jdk-8-jdk -y" ,
+
+}
+
+
+}
+
+
 ################### RESOURCES ####################################################################
 
 ---------For Security Group ----------------------------
@@ -33,12 +56,27 @@ resource "aws_security_group" "Rajsg" {
 
 ------------ EC2 Instance --------------------------------
 
-resource "aws_instance" "Raj" {
-  ami= "${var.ami}"
-  instance_type = "${var.instancetype}"
-  key_name = "${var.mykey}"
+resource "aws_instance" "myec2" {
+    ami= "${var.ami}"
+    instance_type = "${var.instancetype}"
+    key_name = "${var.keyname}"
+    vpc_security_group_ids = "${var.secgroupids}"
 
-  }
+    connection {
+        type = "ssh"
+        user = "ubuntu"
+        private_key = "${file("./oregon.pem")}"
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+        "sudo apt-get update",
+        "sudo apt-get install git tree nano -y",
+        ]
+    }
+  
+}
+
 
 ---------- EBS Volume --------------------------------
 
@@ -88,6 +126,11 @@ variable "mykey" {
   type = "string" 
 default = "rajdevops"
 
+}
+
+variable "secgroupids" {
+  type = "list"
+  default = ["sg-0932ebd2a5e0368eb"]
 }
 
 ################## OUTPUT ############################################
