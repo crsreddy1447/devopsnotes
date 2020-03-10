@@ -8,28 +8,6 @@ provider "aws" {
 }
 
 
-# TO establish a connection with server we use connection provisioners
-
-connection {
-   type = "ssh"
-   user = "ubuntu"
-   private_key = "$(file("<file location>)}"
-
-}
-
-# To establish remote execution we use remote-execution
-
-provisioner "remote-exec" {
-inline = {
-    "sudo apt-get update" ,
-	"sudo apt-get install git tree nano -y" ,
-	"sudo apt-get install jdk-8-jdk -y" ,
-
-}
-
-
-}
-
 
 ################### RESOURCES ####################################################################
 
@@ -74,7 +52,7 @@ resource "aws_instance" "myec2" {
         "sudo apt-get install git tree nano -y",
         ]
     }
-  
+  fi
 }
 
 

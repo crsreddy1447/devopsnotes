@@ -21,7 +21,7 @@ Because the creation and provisioning of a resource is codified and automated, e
 
 /*/*/*/*/*/*/*/*////*****SAMPLE MODEL*****/*/*/*/*/*/*/*/*/
 
-NEEDED KEYS  Elements in DSL
+NEEDED KEYS  Elements in DSL (domain specific language)
 1. Variables
 
 2. Providers   --> This will say where the script has to work EX: AWS, AZURE, GCP, VAGRANT etc
