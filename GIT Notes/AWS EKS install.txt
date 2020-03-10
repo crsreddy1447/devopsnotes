@@ -1,7 +1,7 @@
 SecurityGroups	sg-0ce3ed05307d6869b	
 SubnetIds	subnet-0459b9894db5b4adb,subnet-097932a8cbff5704d,subnet-0a8cbce58049258f1	
 VpcId	vpc-04e9eb24c127bbdab
-
+arn:aws:iam::982941352494:role/nodegroup-NodeInstanceRole-MRQRE4MI8E1K
 
 How to install kubectl on Linux
 
@@ -43,7 +43,7 @@ metadata:
    namespace: kube-system
 data: 
    mapRoles:
-      - rolearn:
+      - rolearn: arn:aws:iam::982941352494:role/nodegroup-NodeInstanceRole-MRQRE4MI8E1K
  	    username: system:node:{{EC2@PrivateDNSName}}
 		groups:
 		   - system:bootstrappers

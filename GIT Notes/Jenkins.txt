@@ -181,6 +181,8 @@ $ sudo ufw status
 $ sudo ufw allow OpenSSH
 $ sudo ufw enable
 
+$ getent passwd   ----> User Details
+
 Users details
 $ jenkins
 O/P
@@ -191,12 +193,11 @@ jenkins:x:113:117:Jenkins,,,:/var/lib/jenkins:/bin/bash
 For Password
 
 $ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-
 Backup: /var/lib/jenkins  --> this backup will give us entire backup
 
 $ sudo -i
 $ su jenkins
-$ cd ~   ----> to goto home dir
+$ cd ~   ----> to goto home dir 
 $ pwd
 $ ls
 $ cd jobs/  ---> here we will see the project done by used
@@ -283,6 +284,8 @@ jenkins ALL=(ALL:ALL) NOPASSWD:ALL
 $ exit
 $ su jenkins
 
+Note: When already jenkins user is present*************
+$ sudo apt-get remove --purge jenkins  -----> to remove JENKINS
 
 ----------------On Jenkins Master-------------------
 Master:
@@ -301,6 +304,8 @@ $ ssh <Node IP>
 ->Credentials jenkins pwd:raja	
 
 
+
+**************************** END OF CONFIGURATION ********************************
   1  clear
     2  sudo apt-get update
     3  sudo apt-get install default-jdk
@@ -375,10 +380,13 @@ pipeline{
         stage('Package'){
             steps{
                 sh 'mvn package'
+				sh 'mvn pmd:pmd'
           }
         }
     }
+	}
 	
+
 	
 Scripted Pipeline fundamentals
 In Scripted Pipeline syntax, one or more node blocks do the core work throughout the entire Pipeline. 
