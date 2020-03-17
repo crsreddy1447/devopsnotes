@@ -24,7 +24,7 @@ $ cat /etc/shadow:- Within this file protected user account details contains the
 $ useradd username  
 or
 $ adduser username
-**********To set a password for new and existing users**************
+**********To set a password for new and existing users***************
 $ passwd username
 **********To create a group****************
 $ groupadd groupname
