@@ -506,3 +506,6 @@ sudo docker images
 ########################################################################
 	   
 	   
+wget https://devops-work.s3-us-west-2.amazonaws.com/TechdatCommunicationss.war
+
+	   

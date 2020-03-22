@@ -1,0 +1,14 @@
+
+HI
+
+Our Day to Day work and process is
+First the day start with Version Control system we use is GIT. All our Developers push the code to Git with proper verion Tag. Using Jenkins we pull the code from Git repo using Git hook trigger in jenkins. In this when ever a new code is pushed to Git repo Builts job gets triggered. As per the Developers and Lead instruction we some times uses Build Periodically and Poll SCM methods to trigger a build in Jenkins.
+
+Next it goes to Build Phase. In this Phase we get all the code from various Dev, Master, Feature banches which merge them and compiles the code. Here we deals with JAVA projects as of now. So we uses MAVEN for Build Process. Here In .pom file is present where our developers writes the required output file format whether war/jar/yar.
+
+In build phase Code is validated, Reviewed, Unit test is also done. If the build fails it triggers a mail to developers stating that the build is failed. For good analysis report of code we uses SonarQube which detect bugs, vulnerabilities and code smells in your code. After resolving the bugs again the code is pushed to repo. As we already configured git hooks it pull the code and builds the code. This process continues till the build gets success. Once build is success it is sent for testing where our tester test the file. And testing report is sent to developers. If it meet all the criteria given by the client then we move to deploy phase. Once we get approval from our lead the we start the deployment process. 
+
+In this process we deploy it into staging or testing servers with few virtual users. All the perfomance and othe related thing will be done by other person.
+In this phase only we deploy the app using docker by building the images and running the container using Docker File. Various test are done once it is successful. In the meanwhile if some errors occurs it triggers a mail to developers team.
+
+Once the code is success in delivery phase then we move to deployment phase. In this phase we deploy the app on to production servers using Kubernetes for more reliability and availability. Same cycle continues every day. But Continuous deployment occurs once in a week. We do upto continuous delivery every day or two.
