@@ -1,0 +1,112 @@
+    curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+    apt-get install python
+    apt install python-pip
+    python get-pip.py --user
+	
+    
+    sudo pip install awscli --user
+    
+    sudo apt install awscli
+    aws configure
+
+    aws ec2 describe-regions --output table
+    
+    aws ec2 create-security-group --group-name aws-cli-demo --vpc-id vpc-75ce600d --description "security group for development environment"
+
+    aws ec2 authorize-security-group-ingress --group-name test1234 --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+    aws ec2 create-key-pair --key-name test --query 'KeyMaterial' --output text > test1.pem
+
+    chmod 400 test1.pem 
+
+    aws ec2 run-instances --image-id ami-db710fa3 --subnet-id subnet-5a75b83c --security-group-ids sg-0d843f7c --count 1 --instance-type t2.micro --key-name test --query 'Instances[0].InstanceId'
+ 
+    ssh -i "test1.pem" ubuntu@ec2-34-217-99-215.us-west-2.compute.amazonaws.com
+
+    aws ec2 describe-instances --instance-ids i-04a0ee743861c3185
+
+
+    aws ec2 create-tags --resources i-04a0ee743861c3185 --tags Key=Name,Value=test
+
+    aws ec2 describe-instances --filters "Name=tag:Name,Values=MyInstance"
+
+  aws ec2 stop-instances --instance-ids i-0435a20c5376a62f4
+
+==================================================
+Easticip:--
+=============================
+
+aws ec2 allocate-address
+
+aws ec2 associate-address --instance-id i-07ffe74c7330ebf53 --public-ip 198.51.100.0
+
+---------------------------------------------------------------------------------------------
+
+s3:--
+----------------------------
+aws s3 mb s3://testing123456567  -----------> creating bucket
+
+ aws s3 rb s3://testing123456567  ------------- removce bucket
+
+ aws s3 ls -----------> list all buckets
+
+aws s3 ls s3://samples1234  --------> 
+
+sudo aws s3 cp include.yml s3://samples1234
+
+aws s3 presign s3://awss3demo12/voter.jpg ---> make public
+
+aws s3 website s3://awss3demo12 --index-document index.html --error-document error.html
+
+// Copy MyFile.txt in current directory to s3://my-bucket/path
+$ aws s3 cp MyFile.txt s3://my-bucket/path/
+
+// Move all .jpg files in s3://my-bucket/path to ./MyDirectory
+$ aws s3 mv s3://my-bucket/path ./MyDirectory --exclude '*' --include '*.jpg' --recursive
+
+// List the contents of my-bucket
+$ aws s3 ls s3://my-bucket
+
+// List the contents of path in my-bucket
+$ aws s3 ls s3://my-bucket/path/
+
+aws s3 rb s3://jenkinss312 --force
+
+
+// Delete s3://my-bucket/path/MyFile.txt
+$ aws s3 rm s3://my-bucket/path/MyFile.txt
+
+// Delete s3://my-bucket/path and all of its contents
+$ aws s3 rm s3://my-bucket/path --recursive
+
+Ref link: - https://www.thegeekstuff.com/2019/04/aws-s3-cli-examples/
+
+-------------------------------
+glacier:--
+-----------------------------
+
+aws glacier create-vault --vault-name my-vault --account-id 847986217538
+
+aws glacier upload-archive --account-id 847986217538  --vault-name demotest --body TechdatCommunicationss.war
+{
+    "location": "/847986217538/vaults/demotest/archives/2iq4zTun2TBaeEpKa1oHJkNAuJCRr1mxBZ0LObx9oR18RzKj7BgmoF1LHHJECc2zoEU5-ONU4kukY5sqxMpEBfDkiq1yHQb9NpZbUKG7DZSRan9flRh6vFXxox3NcVrtNiLnPeJpYw",
+    "checksum": "cbc5fe0b694593bf444aaf95737bef69b00368340047a1feb73c41cee847e4b2",
+    "archiveId": "2iq4zTun2TBaeEpKa1oHJkNAuJCRr1mxBZ0LObx9oR18RzKj7BgmoF1LHHJECc2zoEU5-ONU4kukY5sqxMpEBfDkiq1yHQb9NpZbUKG7DZSRan9flRh6vFXxox3NcVrtNiLnPeJpYw"
+}
+
+
+aws glacier describe-vault --vault-name testing  --account-id 426831777344
+
+aws glacier delete-vault --vault-name my-vault --account-id -
+
+
+
+
+
+
+
+
+
+
+
+

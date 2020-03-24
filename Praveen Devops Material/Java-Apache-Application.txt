@@ -1,0 +1,39 @@
+Java Installation:----
+=================
+
+sudo apt-get update -y 
+
+sudo apt-get install openjdk-8-jdk -y  (or) recommanded
+
+apt-get install openjdk-11-jdk -y (latest version)
+
+Tomacat download:--
+================
+
+wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.27/bin/apache-tomcat-8.0.27.tar.gz
+
+tar -xvzf apache-tomcat-8.0.27.tar.gz
+
+for running tomcat:
+
+apache-tomcat-8.0.27/bin/startup.sh
+
+=====================================
+
+for downloading the application:--
+==================================
+
+wget https://devops-work.s3-us-west-2.amazonaws.com/TechdatCommunicationss.war
+
+
+for copying the Application:--
+
+
+cp TechdatCommunicationss.war apache-tomcat-8.0.27/webapps/
+
+
+apache-tomcat-8.0.27/bin/startup.sh
+
+=============================
+
+Go to browser public-ip:8080/application-name
