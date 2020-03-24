@@ -1,0 +1,31 @@
+24/04/2020
+
+DEVOPS- Nagios install and monitoring, Nexus install and jenkins integration 12-2pm
+AWS- Cloud Front, Lambda. 10-12am
+GCP- Kubernetes 8-9pm
+Linux- Shell Scripting 3-4pm
+
+25/04/2020
+
+Devops- Kubernetes and Jenkins Integration
+AWS- Code pipeline and Code commit
+Linux- Shell Scripting
+
+26/04/2020
+
+Devops- Ansible and Jenkins Integration
+AWS- Cloud Formation
+Linux- Shell Scripting
+
+27/04/2020
+
+Devops- Docker and Jenkins Integration
+AWS- CLoud Formation
+Linux Shell Scripting
+
+28/04/2020
+
+Devops- Terraform and Jenkins Integration
+Python Scripting Basic
+
+

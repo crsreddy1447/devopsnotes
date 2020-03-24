@@ -479,6 +479,19 @@ Note: *** Install java on linux slave:(yum install java-1.8.0-openjdk)
 
 Then launch the agent
   
+############### HOW TO CHANGE PORT NUMBER AFTER JENKINS SERVER IS LAUNCHED ############################
+
+goto root user
+$ vi /etc/default/jenkins
+
+go down and edit port number to required port.
+
+$ service jenkins stop
+$ service jenkins status
+$ service jenkins start
+$ netstat -plnt          --> To check whether the port is configured or not
+
+######################################################################################################
 
 
   
