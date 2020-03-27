@@ -508,4 +508,26 @@ sudo docker images
 	   
 wget https://devops-work.s3-us-west-2.amazonaws.com/TechdatCommunicationss.war
 
-	   
+RUN aws s3 cp s3://bucketname/favicons /var/www/html/favicons --recursive 
+
+
+FROM tomcat:8
+LABEL "Author" = "Raja"
+ADD https://raja1447.s3-us-west-2.amazonaws.com/gameoflife.war /usr/local/tomcat/webapps/TechdatCommunicationss.war
+CMD ["catalina.sh", "run"]
+EXPOSE 8080
+
+docker login
+docker commit 4328fa8ba39e crsreddy1447/gol:1.0
+docker push docker.io/crsreddy1447/gol:1.0
+docker pull crsreddy1447/gol:1.0
+docker container run -itd -p 1111:8080 crsreddy1447/gol:1.0
+
+
+
+
+
+
+
+
+

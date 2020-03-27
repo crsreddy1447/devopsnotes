@@ -1,0 +1,37 @@
+
+sudo apt-get dist-upgrade  ------> to upgrade all soft
+
+https://github.com/devops-trainer/DevOpsClassCodes.git
+
+https://github.com/yankils/hello-world.git
+
+https://github.com/daticahealth/java-tomcat-maven-example.git
+
+https://github.com/gilesgas/simple-java-maven-app-original.git
+
+https://github.com/koddas/war-web-project.git
+
+https://github.com/sebsto/webapp.git
+----- Deploy target/WebApp.war on Tomcat
+
+https://github.com/cameronmcnz/rock-paper-scissors.git
+
+https://github.com/spring-petclinic/spring-petclinic-microservices.git
+
+https://github.com/spring-petclinic/spring-petclinic-kubernetes.git
+
+https://github.com/sivajavatechie/JenkinsWar.git
+
+https://github.com/kickstarter/docker-s3-sync.git
+
+https://github.com/asquarezone/spring-petclinic.git
+
+https://github.com/asquarezone/shopizer.git
+
+https://github.com/asquarezone/game-of-life.git
+
+https://www.youtube.com/playlist?list=PLVnWcdGotHcbSs5x_YSppP0Uh8ehuPm4l
+
+docker run -e AWS_ACCESS_KEY_ID=123 -e AWS_SECRET_ACCESS_KEY=1234
+
+
