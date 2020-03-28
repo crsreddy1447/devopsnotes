@@ -1,0 +1,296 @@
+
+Pods.yml ----> To create only pods
+ReplicationController ---> To create replication on pods
+Service ---> To expose Node port or for Load Balance
+ReplicaSet  ---> To create pods or versioning or rolling updates without downtime. Used in Deployment
+
+Required are 
+1. ReplicationController (RC)
+2. Service
+3. ReplicaSet is same as RC with memory storage of previous
+
+Only two file enough Deployment and Service is enough for deployment
+
+API ---- KIND ---- Format
+
+########################################## POD ###########################################################
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+     app: nginx
+spec:
+   containers:
+   - name: nginx
+     image: nginx
+
+
+################################# ReplicationController ###################################################
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    app: nginx
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+
+################################# Service ###############################################################
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+	  
+
+
+################################# ReplicaSet ############################################################	  
+		
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: gcr.io/google_samples/gb-frontend:v3	
+
+
+############################### Deployment ##############################################################
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-dep
+  namespace: default
+spec:
+  replicas: 2
+  strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: hello-dep
+  template:
+    metadata:
+      labels:
+        app: hello-dep
+    spec:
+      containers:
+      - image: gcr.io/google-samples/hello-app:2.0
+        imagePullPolicy: Always
+        name: hello-dep
+        ports:
+        - containerPort: 8080		
+		
+-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+
+Commands
+
+$ kubectl create -f deploy.yml   ----> Uses first time only
+$ kubectl apply -f deploy.yml
+$ kubectl describe deploy <app>
+$ kubectl get rs
+$ kubectl get pods
+$ kubectl describe rs         -----> For Replica Set
+
+***********Rolling Update To deployment ******************************
+
+$ kubectl apply -f deploy.yml --record
+$ kubectl rollout status deployments <app name>
+$ kubectl get deploy <app name>
+$ kubectl rollout history deployments <app name>
+$ kubectl get rs 
+
+**********************UNDO Rolled Updates ************************************
+
+$ kubectl describe deploy <app-name>
+$ kubectl rollout undo deployment <app-name> --to-revsion=1
+$ kubectl get deploy
+$ kubectl rollout status deployments <app name>
+
+**************************************************************************************************************
+**************************************************************************************************************
+
+
+ReplicationController
+Note: A Deployment that configures a ReplicaSet is now the recommended way to set up replication.
+A ReplicationController ensures that a specified number of pod replicas are running at any one time. In other words, a ReplicationController makes sure that a pod or a 
+homogeneous set of pods is always up and available.
+
+
+How a ReplicationController Works
+If there are too many pods, the ReplicationController terminates the extra pods. If there are too few, the ReplicationController starts more pods. Unlike manually created pods, 
+the pods maintained by a ReplicationController are automatically replaced if they fail, are deleted, or are terminated. For example, your pods are re-created on a node after 
+disruptive maintenance such as a kernel upgrade. For this reason, you should use a ReplicationController even if your application requires only a single pod. A ReplicationController
+ is similar to a process supervisor, but instead of supervising individual processes on a single node, the ReplicationController supervises multiple pods across multiple nodes.
+
+ReplicationController is often abbreviated to “rc” in discussion, and as a shortcut in kubectl commands.
+
+A simple case is to create one ReplicationController object to reliably run one instance of a Pod indefinitely. A more complex use case is to run several identical replicas of a 
+replicated service, such as web servers.
+
+Running an example ReplicationController
+This example ReplicationController config runs three copies of the nginx web server.
+
+controllers/replication.yaml Copy controllers/replication.yaml to clipboard
+
+Kubernetes Options for Installation
+1. Bare-Metal Installations:
+     Start from OS
+     Install Every Component
+     K8s the hard way
+     Other Managed Installations:
+      Start from OS
+      You need not install every component
+2. Popular options
+      minikube (developer)
+      micro k8s (developer)
+      kube-admin
+      kops
+3. Cloud-Provider Installations:
+You will get k8s as a service.
+You need to take care of nodes. Masters generally will be managed by cloud-providers
+Popular options:
+GKE
+AKS
+EKS Refer Here for complete list of providers
+Installation Steps
+Setup Details:
+
+1. Four ubuntu 16.04 machines
+2. One will be master
+3. other 3 will nodes
+4. Ensure all the four machines can communicate with each other
+5. We will be kubeadm and we will follow official k8s documentation over here
+Login into all nodes, become root user and install docker using steps from here
+
+
+# Install Docker CE
+## Set up the repository:
+### Install packages to allow apt to use a repository over HTTPS
+apt-get update && apt-get install \
+  apt-transport-https ca-certificates curl software-properties-common
+
+### Add Docker’s official GPG key
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+### Add Docker apt repository.
+add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) \
+  stable"
+
+## Install Docker CE.
+apt-get update && apt-get install \
+  containerd.io=1.2.10-3 \
+  docker-ce=5:19.03.4~3-0~ubuntu-$(lsb_release -cs) \
+  docker-ce-cli=5:19.03.4~3-0~ubuntu-$(lsb_release -cs)
+
+# Setup daemon.
+cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+mkdir -p /etc/systemd/system/docker.service.d
+
+# Restart docker.
+systemctl daemon-reload
+systemctl restart docker
+
+--> Install the kubelet, kubeadm and kubctl on all nodes from here
+
+kubeadm: the command to bootstrap the cluster.
+
+kubelet: the component that runs on all of the machines in your cluster and does things like starting pods and containers.
+
+kubectl: the command line util to talk to your cluster.
+
+sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+
+
+
+Necessary software’s are present on your nodes
+
+we need to create k8s cluster. For creating cluster. Refer documentation from here
+
+Login into master node as a root user
+
+kubeadm init
+If kubeadm is able to install succesfully, it gives some info at the end which looks like
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 172.31.29.1:6443 --token o38veh.5g6zhgfaafg5zzk3 \
+    --discovery-token-ca-cert-hash sha256:bd735d51e2beceaa9c4aba6f32ef6d91dabdfb51d93a9f8bcb41c51e9c5f45d9
+
+Pod networking is enabled only after you install pod network.
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+Now login into nodes as a root user and execute kubeadm join command with necessary arguments which you have copied.
+Basic Commands to execute after kubeadm installation in master
+kubctl get nodes
+kubectl get nodes -w # watch the output changes 
+kubectl get nodes -o wide # more info
+kubectl get pods # List all the pods you created
+kubectl get pods --all-namespaces   # Lists all the pods in the cluster irrespective of who created
