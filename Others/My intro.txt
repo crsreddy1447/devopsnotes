@@ -1,0 +1,34 @@
+Hi
+My name is Rajashekar currently working as a devops engineer for Eron Infoways Pvt LTD.
+I started my career as a content developer who documents every thing related to working. 
+Here in content developer my roles and resposibilities are 
+1. Make a complete note of the client requirements given by the lead
+2. draw a plan of execution related to problem and give it to the DEVops team for to implement the solution
+
+Currently iam working as a devops engineer my present day to day roles and responsibilities are
+1. First we collect the required input from Dev team for their working environment
+2. Once data is collected we provide all the required environment by creating EC2 instance with required softwares installed.
+3. For every instance specific IAM role is attached for security
+5. Once the developer pushes the code to git repository our DEVops team pull it and check for code quality, code coverage using jenkins plugin. 
+6. After that we try to build the code using maven. If error occurs we send the error report to DEV team. If the build is success then we store the jar/war file in s3 bucket.
+7. We write ansible playbooks by giving s3 bucket location where war file is stored
+8. We write dockerfiles and and built images which are pushed to docker hub.
+9. We run the docker containers using kubernetes cluster with minimum of 3 replica by using kubernetes services.
+This is our daily routine.
+
+We automate each and every thing using jenkins pipeline. Based on the team requirement we create multiple pipelines and make the product to deliver in time
+apart from that I also do documention of all the process which we are following and shares accross all the teams. So that if any new one come 
+
+These days iam doing with Hygieia DevOps dashboard
+Hygieia appears in two self-contained dashboards – one for engineers and another for executives - that visually depict CICD pipelines. 
+In essence, Hygieia itself is an aggregator that pulls data from various DevOps tools that teams use in their CICD pipeline, making it easily digestible in dashboard view(s).
+
+
+DELIVERY PIPELINE
+
+1. GIT ===> JENKINS ===> BUILD WAR ===> ANSIBLE TO DEPLOY ON TO LINUX SYSTEM
+2. GIT ===> JENKINS ===> BUILD WAR ===> BUILD THE DOCKER IMAGE ===> DEPLOY ON TO KUBERNETES
+3. GIT ===> JENKINS ===> BUILD WAR ===> TERRAFORM FOR TO CREATE EC2 ===> ANSIBLE TO CREATE INFRA ON EC2
+
+
+

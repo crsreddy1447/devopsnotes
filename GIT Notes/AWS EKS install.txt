@@ -1,0 +1,116 @@
+SecurityGroups	sg-0ce3ed05307d6869b	
+SubnetIds	subnet-0459b9894db5b4adb,subnet-097932a8cbff5704d,subnet-0a8cbce58049258f1	
+VpcId	vpc-04e9eb24c127bbdab
+arn:aws:iam::982941352494:role/nodegroup-NodeInstanceRole-MRQRE4MI8E1K
+
+How to install kubectl on Linux
+
+Download the Amazon EKS-vended kubectl binary for your cluster's Kubernetes version from Amazon S3:
+
+Kubernetes 1.14:
+
+curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
+
+Download the SHA-256 sum for your cluster's Kubernetes version for Linux:
+
+Kubernetes 1.14:
+
+curl -o kubectl.sha256 https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl.sha256
+
+openssl sha1 -sha256 kubectl
+Compare the generated SHA-256 sum in the command output against your downloaded SHA-256 file. The two should match.
+
+Apply execute permissions to the binary.
+
+chmod +x ./kubectl
+Copy the binary to a folder in your PATH. If you have already installed a version of kubectl, then we recommend creating a $HOME/bin/kubectl and ensuring that $HOME/bin comes first in your $PATH.
+
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+(Optional) Add the $HOME/bin path to your shell initialization file so that it is configured when you open a shell.
+
+Note
+This step assumes you are using the Bash shell; if you are using another shell, change the command to use your specific shell initialization file.
+
+echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+After you install kubectl, you can verify its version with the following command:
+
+kubectl version --short --client
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+   name: aws-auth
+   namespace: kube-system
+data: 
+   mapRoles:
+      - rolearn: arn:aws:iam::982941352494:role/nodegroup-NodeInstanceRole-MRQRE4MI8E1K
+ 	    username: system:node:{{EC2@PrivateDNSName}}
+		groups:
+		   - system:bootstrappers
+		   - system:nodes
+		   
+		   
+		   
+apiVersion: v1		   
+kind: Deployment
+metadata:
+  name: my-httpd
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webservers
+    spec:
+      containers:
+      - name: my-httpd-container1
+        image: httpd
+        ports:
+        - containerPort: 80
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Unique key of the Deployment instance
+  name: deploy-Nginix
+spec:
+  # 3 Pods should exist at all times.
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        # Apply this label to pods and default
+        # the Deployment label selector to this value
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        # Run this image
+        image: nginx:latest
+		ports:
+		- containerPort:9999
+		
+
+apiVersion: v1
+kind: Service
+metadata:
+  # Unique key of the Service instance
+  name: service-Ngnix
+spec:
+  ports:
+    # Accept traffic sent to port 80
+    - name: http
+      port: 80
+      targetPort: 9999
+  selector:
+    # Loadbalance traffic across Pods matching
+    # this label selector
+    app: nginx
+  # Create an HA proxy in the cloud provider
+  # with an External IP address - *Only supported
+  # by some cloud providers*
+  type: LoadBalancer
+
+
+

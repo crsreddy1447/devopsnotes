@@ -1,0 +1,38 @@
+FTD WRITTEN INTERVIEW QUESTIONS
+
+1. How to find the disk usage space of a directory in Linux
+
+. df command – Shows the amount of disk space used and available on Linux file systems.
+. du command – Display the amount of disk space used by the specified files and for each subdirectory.
+. btrfs fi df /device/ – Show disk space usage information for a btrfs based mount point/file system.
+ du -h /home/tecmint --- “-h” option with “du” command provides results in “Human Readable Format
+ du -a /home/tecmint --- “-a” flag with “du” command displays the disk usage of all the files and directories.
+ 
+
+2. How to change the date and also error occured while changing the date
+
+# timedatectl set-time YYYY-MM-DD HH:MM:SS
+timedatectl set-time '2015-11-23 08:10:40'
+
+# date +%Y%m%d -s "20081128"
+
+
+3. How to find cpu core of a server
+4. What is the subnet mask range for the ip 198.68.1.0/24
+5. How to connect apache server with port 80 and 443 
+6. Pythonlist and tuple
+7. Forgot the password and account is locked. How will you get the password
+8. PORTS: http, https, DNS, ssh, Telenet
+9. Micro services and Monolithic Architecture
+10. Nginx on docker forward to 9090 port
+11. ENTRY POINT and CMD
+12. ADD and COPY
+13. Name space in Kubernetes
+14. Yml file for deploy in Kubernetes
+15. Kubernetes master and Node Components
+16. SCM and various SCM
+17. CI and CD
+20. Declarative and scriptive Language in Jenkins
+21. Trigger
+22. shell script o/p
+23. bash command

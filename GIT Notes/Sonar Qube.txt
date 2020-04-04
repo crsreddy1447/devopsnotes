@@ -1,0 +1,144 @@
+###################### SONAR QUBE AND JENKINS INTEGRATION ###########################################
+
+SonarQube is an open-source tool that assists in code quality analysis and reporting. 
+It scans your source code looking for potential bugs, vulnerabilities, and maintainability 
+issues, and then presents the results in a report which will allow you to identify potential 
+issues in your application.
+
+The SonarQube tool consists of two sub-applications: an analysis engine, which is installed
+locally on the developer’s machine, and a centralized server for record-keeping and reporting.
+A single SonarQube server instance can support multiple scanners, enabling you to centralize 
+code quality reports from many developers in a single place.
+
+
+Let us start with java install (skip java install if you already have it installed)
+
+1. Java steps 
+
+sudo apt-get update
+sudo apt-get install default-jdk -y
+
+####Verify Java Version####
+
+java -version
+
+######### OUTPUT ##################
+openjdk version "1.8.0_191"
+OpenJDK Runtime Environment (build 1.8.0_191-8u191-b12-2ubuntu0.16.04.1-b12)
+OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
+
+2. Postgres Installation
+
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+sudo wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+sudo apt-get -y install postgresql postgresql-contrib
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+#####Change the password for postgres user by entering below command##############
+sudo passwd postgres
+
+enter as admin (it wont display in screen though, thats fine)
+enter admin again for r-typing password
+##########Login as postgres user now######
+su - postgres
+
+enter admin as password
+######Now create a user below###########
+createuser sonar
+########Switch to sql shell by entering##########
+psql
+
+############Execute the below three lines (one by one)################
+
+ALTER USER sonar WITH ENCRYPTED password 'password';
+
+CREATE DATABASE sonar OWNER sonar;
+
+\q
+type exit to come out of postgres user.
+
+3. Now install SonarQube Web App
+
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-6.4.zip
+sudo apt-get -y install unzip
+sudo unzip sonarqube-6.4.zip -d /opt
+sudo mv /opt/sonarqube-6.4 /opt/sonarqube -v
+
+########Modify sonar.properties file##############
+sudo vi /opt/sonarqube/conf/sonar.properties
+uncomment the below lines by removing # and add values highlighted yellow
+
+sonar.jdbc.username=sonar
+sonar.jdbc.password=password
+
+Next, uncomment the below line, removing #
+
+sonar.jdbc.url=jdbc:postgresql://localhost/sonar
+
+Press escape, and enter :wq! to come out of the above screen.
+
+###########Create Sonar as a service#####################
+
+Execute the below command:
+sudo vi /etc/systemd/system/sonar.service
+
+add the below code in green color:
+
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+
+User=root
+Group=root
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+##################################
+
+sudo systemctl enable sonar
+sudo systemctl start sonar
+sudo systemctl status sonar
+
+###################################
+type q now to come out of this mode.
+################Now execute the below command to see if Sonarqube is up and running. This may take a few minutes.####################
+
+tail -f /opt/sonarqube/logs/sonar.log
+
+Make sure you get the below message that says sonarqube is up..
+
+Now access sonarQube UI by going to browser and enter public dns name with port 9000
+Now to go to browser --> http://your_SonarQube_publicdns_name:9000/
+
+
+Here below are the steps for integrating SonarQube with Jenkins:
+Pre-requisites: Make sure SonarQube is up and running and do the below steps:
+Make sure Sonarqube plug-in installed in Jenkins
+
+1. You need to login to SonarQube using admin/admin and click on administration, security, users, click on Tokens, under generate token.
+Give some value for token name and click on generate. Copy the token.
+2. After installing SonarQube successfully, login to Jenkins. Manage Jenkins --> Configure System --> SonarQube installation
+Enter name, URL as http://localhost:9000, paste the token you copied from step #1
+3. Click on Enable injection of Sonarqube server configuration.
+4. Save.
+5. Click on your existing free style job, click on configure. click on prepare Sonarqube scanner  environment.
+6. enter maven goal as clean install sonar:sonar
+
+7. click on save and build the job.
+
+You will see that Jenkins will integrate with Sonarqube which does code analysis of your project.
+Login to SonarQube, click on Projects to see the project dash board.
+
+
+
+
+
+

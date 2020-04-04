@@ -1,0 +1,64 @@
+######################### DAILY CICD PIPELINE #############################################
+
+CI stands for Continuous Integration and CD stands for Continuous Delivery and Continuous Deployment
+
+Version Control : Maintains Diffferent versions of the code
+Continuous Integration -Continuous Build: 
+                Compile, Validate, Code Review, Unit testing, Integration Testing
+Continuous Delivery -Continuous Testing: 
+                 Deploying the Build application to test servers, Performing UAT
+Continuous Deployment -Configure Management and Containerization: 
+                 Deploying the tested application on the prod server for release
+
+
+PIPELINE Process:
+
+Version Control -> Build -> Unit Test -> Deploy -> Auto Test -> Deploy to Prod
+
+BUILD PHASE: 
+-> when this code is committed into a version control system(such as git, svn) by the team of developers. 
+Next, it goes through the build phase which is the first phase of the pipeline, where developers put in 
+their code and then again code goes to the version control system having a proper version tag.
+
+-> we have a Java code and it needs to be compiled before execution. 
+So, through the version control phase, it again goes to build phase where it gets compiled. You get all the features of that code from 
+various branches of the repository, which merge them and finally use a compiler to compile it. This whole process is called the build phase.
+
+TESTING PHASE:
+-> Once the build phase is over, then you move on to the testing phase. In this phase, we have various kinds of testing, one of them is 
+the unit test (where you test the chunk/unit of software or for its sanity test).
+
+DEPLOY PHASE:
+-> When the test is completed, you move on to the deploy phase, where you deploy it into a staging or a test server. 
+Here, you can view the code or you can view the app in a simulator.
+
+Auto Test Phase:
+-> Once the code is deployed successfully, you can run another set of a sanity test. If everything is accepted, then it can be deployed to production.
+
+Deploy to Production:
+-> Meanwhile in every step, if there is some error, you can shoot a mail back to the development team so that they can fix them. Then they will push it into
+ the version control system and goes back into the pipeline. Once again if 
+ there is any error reported during testing, again the feedback goes to the dev team where they fix it and the process re-iterates if required.
+ 
+So, this lifecycle continues until we get a code or a product which can be deployed in the production server where we measure and validate the code.
+
+=> we have a git repository where the development team will commit the code. 
+Then Jenkins takes over from there which is a front-end tool where you can define your entire job or the task. 
+Our job is to ensure the continuous integration and delivery process for that particular tool or for the particular application.
+
+=> From Git, Jenkins pulls the code and then moves it to the commit phase, where the code is committed from every branch. 
+Then Jenkins moves it into the build phase where we compile the code. 
+If it is Java code, we use tools like maven in Jenkins and then compile that code, which we can be deployed to run a series of tests. 
+These test cases are overseen by Jenkins again.
+
+=> Then it moves on to the staging server to deploy it using Docker. After a series of Unit Tests or sanity test, it moves to the production.
+
+=> This is how the delivery phase is taken care by a tool called Jenkins, 
+which automate everything. Now in order to deploy it, 
+we will need an environment which will replicate the production environment, I.e., Docker.
+
+
+
+ 
+ 
+ 

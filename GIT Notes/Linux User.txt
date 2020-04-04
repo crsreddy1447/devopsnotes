@@ -1,0 +1,69 @@
+###########################LINUX COMMANDS#######################################
+
+1. useradd : Add New User
+2. groupadd: Add New Group
+3. usermod: Modify User
+4. groupmod: Modify group
+5. userdel: Delete a User
+5. groupdel: Delete a group
+
+Basically in Linux three types of user:
+1.ROOT USER: Once you install Linux, the Linux administrative root account is created 
+2.NORMAL USER: Regular users have therights to perform basic activities
+3.SERVICE USER: Services such as Apache, Squid, Mail, databases.
+
+When a user is created in Linux its entry is recorded in the following files.
+
+--> /home:- user default home directory except for root user. 
+--> /etc/passwd: User account details are contained in this file and have 7 sections.
+$ cat /etc/passwd   ==> for All Details of User
+
+$ cat /etc/shadow:- Within this file protected user account details contains the password related information for the user.
+
+*********To create/add a user*************
+$ useradd username  
+or
+$ adduser username
+**********To set a password for new and existing users***************
+$ passwd username
+**********To create a group****************
+$ groupadd groupname
+Note: While creating a user it also creates a group for users. 
+***********To add an existing user to a group*******************************
+$ usermod -g groupname username
+*-g for the primary group
+*****************To add new users to the secondary group*****************
+$ usermod -G groupname username 
+***************To set a password for the group**************************
+$ gpasswd groupname
+***********To delete a user.*******************************************
+$ userdel username
+*******************To delete a user along with its files forcefully.*************
+$ userdel -rf username
+*************************To delete a group.**************************
+$ groupdel -f groupname
+***************************To lock user.******************************
+$ usermod -L username
+$ passwd -l username
+*******************To unlock the user.********************************
+$ usermod -U username
+$ passwd -u username
+*******************To change or rename the username.*******************
+$ usermod -l login-name old-name
+*******************To change user UID.*******************
+$ usermod -u UID username
+*******************To change or rename the group name.*******************
+$ groupmod -n new-group old-group
+*******************To change group GID.*****************************
+$ groupmod -u GID groupname
+*******************To change the user home directory location.****************
+$ usermod -m -d /new/path/of/home/directory username
+#-m move the content of the old home directory to a new home directory.
+#-d path of new home directory.
+
+*******************Users must change the password as a logon*******************
+$ chage -d 0 username
+OR
+$ passwd -e username
+To set the Minimum Password Age for User.
+$ chage -m 7 username

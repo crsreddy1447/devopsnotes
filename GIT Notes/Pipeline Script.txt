@@ -1,0 +1,67 @@
+
+node {
+
+stage('SCM'){
+ git 'https.....'
+}
+
+stage('Build Package'){
+ sh 'mvn package'
+ 
+ }
+
+stage('archival'){
+ archive 'target/*.jar'
+ 
+ }
+
+}
+
+------------------------------------------------------------------------
+pipeline{
+    agent any
+    
+    stages{
+        
+        stage('Checkout'){
+            steps{
+                
+                git 'https://github.com/devops-trainer/DevOpsClassCodes.git'
+            }
+        }
+       
+        stage('Compile'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('Test'){
+            steps{
+                sh 'mvn test'
+            }
+             post{
+              always{
+                  
+                  junit 'target/surefire-reports/*.xml'
+              }
+             }
+        }
+        stage('Package'){
+            steps{
+                sh 'mvn package'
+				sh 'mvn pmd:pmd'
+          }
+        }
+        stage('Coverage'){
+            steps{
+                sh 'mvn pmd:pmd'
+          }
+        }
+        stage('metric check'){
+            steps{
+                sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
+				
+          }
+        }
+    }
+}
