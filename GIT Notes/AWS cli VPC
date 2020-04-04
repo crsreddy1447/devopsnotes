@@ -1,0 +1,58 @@
+AWS CLI
+
+$ aws ec2 create-vpc --cidr-block 10.0.0.0/16
+
+CidrBlock: 10.0.0.0/16
+vpc-0dad457539db2f928
+
+$ aws ec2 create-subnet --vpc-id vpc-0dad457539db2f928 --cidr-block 10.0.3.0/24 --availability-zone us-west-2a
+
+CidrBlock: 10.0.1.0/24
+subnet-0de7ad9e81c1a6191
+ vpc-0dad457539db2f928
+
+CidrBlock: 10.0.3.0/24
+subnet-055ff2def5c934e8c
+ vpc-0dad457539db2f928
+ 
+$ aws ec2 create-internet-gateway
+ 
+ igw-0a0bed526678e12f0
+ 
+$ aws ec2 create-route-table --vpc-id vpc-0dad457539db2f928
+
+rtb-03b81d3a3fa746b87
+
+$ aws ec2 attach-internet-gateway --internet-gateway-id igw-0a0bed526678e12f0 --vpc-id vpc-0dad457539db2f928
+
+$ aws ec2 create-route --route-table-id rtb-03b81d3a3fa746b87 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-0a0bed526678e12f0
+
+$ aws ec2 describe-route-tables --route-table-id rtb-03b81d3a3fa746b87
+
+$ aws ec2 associate-route-table  --subnet-id subnet-055ff2def5c934e8c --route-table-id rtb-03b81d3a3fa746b87
+
+rtbassoc-014058d227e978cb3
+
+$ aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem
+
+$ chmod 400 MyKeyPair.pem
+
+$ aws ec2 create-security-group --group-name mysg --description "Security group full access" --vpc-id vpc-0dad457539db2f928
+
+sg-07a68a7eea8117c02
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
