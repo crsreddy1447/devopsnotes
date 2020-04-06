@@ -9,6 +9,8 @@ echo $<variable>
 echo $BASH
 echo $BASH_VERSION
 
+*** $ man <function>      ---> Help of that function 
+
 Want to take value from terminal use "read" command
 read ----> To provide values in output terminal
 Ex: read name
@@ -48,8 +50,22 @@ Logical Operators
 &&   ----> AND
 ||     ----> OR
 
+bc  is a language that supports arbitrary precision numbers with inter  active execution of statements.
+bc -l  ---> to call maths library
+ex: echo "scale=2;sqrt($num)" | bc -l
+      echo "scale=2;4^4" | bc -l
+
+
 Note:  echo $(expr $num1 * $num2)       --->  is syntax error for using expr
           echo $(expr $num1 \* $num2)       ----> expr is there we have to use / only for multiplication
+ 
+ 
+NOTE: 
+while loop executes only if condition is true
+ex: while (( $n <= 10 ))   
+until loop executes only if the condition is false 
+ex: while (( $n => 10 )) 
+ 
  
 *******ex: 1: user name and pwd*********************
 #! /bin/bash
@@ -94,6 +110,52 @@ echo " $file_name not exists "
 fi
 
 *************************************************************************************************
+****************** Maths Function Square and Sq root *******************************
+#! /bin/bash
+
+num=9
+echo "scale=2;sqrt($num)" | bc -l
+echo "scale=2;4^4" | bc -l
+
+*************************************************************************************************
+*************** CASE type *******************************************************************
+#! /bin/bash
+echo -e "Enter Some Value : \c"
+read  item
+case $item in
+  "car" )
+   echo " rent of $item is 100 dollar" ;;
+  "bike" )
+   echo " rent of $item is 50 dollar" ;;
+  "cycle" )
+   echo " rent of $item is 10 dollar" ;;
+  "truck" )
+   echo " rent of $item is 150 dollar" ;;
+  * )  # value of all
+   echo " Unknown Vehicle" ;;
+esac
+
+************************************************************************************************
+************ While LOOP *******************************
+#! /bin/bash
+echo -e " Enter n Value :  \c:  "
+read n
+while (( $n <=10 ))   # while [ $n -le 10 ]   ----> any one format can be used.
+do
+  echo "$n"
+  (( ++n ))
+done
+
+************************************************************************************************
+
+
+
+
+
+
+
+
+
 
 
 
