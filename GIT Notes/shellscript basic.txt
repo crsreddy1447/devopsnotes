@@ -1,0 +1,167 @@
+LINUX SHELL
+
+$ cat /etc/shells   ----> To Know the types of shells present on the linux
+
+#! <which bash>
+#! /bin/bash                ----> Should be present at the start of the Shell script
+
+echo $<variable>
+echo $BASH
+echo $BASH_VERSION
+
+*** $ man <function>      ---> Help of that function 
+
+Want to take value from terminal use "read" command
+read ----> To provide values in output terminal
+Ex: read name
+      echo $ name
+	  
+*** To Execute the shell file  directory/file.sh 
+############### Imp key words for Shell #############################
+
+ -s   ---> to hide the display of words (mostly for Passwords)
+-p   ---> To enter the value in the same line
+-sp  ---> to enter without dispaly of value
+-a  ---> To enter in array format
+$REPLY  ----> Built in variable. If No variable is mentioned in read
+args=("$@")  ---> to print aruments in array form
+$# ---> to print No.of Arguments
+
+Comparison Operators 
+***Note:  For integer value we use alpha characters. For String values we use symbols
+-eq --- > equal     =/==
+-ne  ---> Not equal  != 
+-gt  ---> greater than  <
+-ge ---> greater than or equal   <=
+-lt  ---> less than  >
+-le ---> less than or equal  >=
+
+-z  ---> String is null that has zero length
+
+File operations
+-e  ---> to check the file name
+-f  ---> to check the file and also it is regular file or not
+-b  --->to check block special name (binary --- video file etc)
+-c  ---> to check character special file (file with text and numbers)
+-d  ---> to check the directory name
+-s  ---> to check the file is empty or not
+
+Logical Operators
+&&   ----> AND
+||     ----> OR
+
+bc  is a language that supports arbitrary precision numbers with inter  active execution of statements.
+bc -l  ---> to call maths library
+ex: echo "scale=2;sqrt($num)" | bc -l
+      echo "scale=2;4^4" | bc -l
+
+
+Note:  echo $(expr $num1 * $num2)       --->  is syntax error for using expr
+          echo $(expr $num1 \* $num2)       ----> expr is there we have to use / only for multiplication
+ 
+ 
+NOTE: 
+while loop executes only if condition is true
+ex: while (( $n <= 10 ))   
+until loop executes only if the condition is false 
+ex: while (( $n => 10 )) 
+ 
+ 
+*******ex: 1: user name and pwd*********************
+#! /bin/bash
+read -p 'username :' user
+read -sp 'Password: ' password
+echo
+echo $user
+echo $password
+
+************************************************************
+*************** if and else statement **************************
+#! /bin/bash
+word=raja
+if [[ $word == "rrr" ]]
+then
+  echo "Condition is rrr is true"
+elif [[ $word == "raja" ]]
+then
+   echo "condition Raja is true"
+else 
+  echo "condition is False"
+fi	  
+
+**********************************************************************
+********** To Append text and to check write permission of a file **************
+#! /bin/bash
+
+echo -e "Enter the name of file : \c"
+read  file_name
+
+if [ -f $file_name ]
+then
+    if [ -w $file_name ]
+    then
+       echo "Type some text and exit"
+       cat >> $file_name
+    else 
+       echo "The file doesnot have write permission"
+    fi
+else
+echo " $file_name not exists "
+fi
+
+*************************************************************************************************
+****************** Maths Function Square and Sq root *******************************
+#! /bin/bash
+
+num=9
+echo "scale=2;sqrt($num)" | bc -l
+echo "scale=2;4^4" | bc -l
+
+*************************************************************************************************
+*************** CASE type *******************************************************************
+#! /bin/bash
+echo -e "Enter Some Value : \c"
+read  item
+case $item in
+  "car" )
+   echo " rent of $item is 100 dollar" ;;
+  "bike" )
+   echo " rent of $item is 50 dollar" ;;
+  "cycle" )
+   echo " rent of $item is 10 dollar" ;;
+  "truck" )
+   echo " rent of $item is 150 dollar" ;;
+  * )  # value of all
+   echo " Unknown Vehicle" ;;
+esac
+
+************************************************************************************************
+************ While LOOP *******************************
+#! /bin/bash
+echo -e " Enter n Value :  \c:  "
+read n
+while (( $n <=10 ))   # while [ $n -le 10 ]   ----> any one format can be used.
+do
+  echo "$n"
+  (( ++n ))
+done
+
+************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	  
+	  
