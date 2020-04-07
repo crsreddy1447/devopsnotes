@@ -493,8 +493,16 @@ $ netstat -plnt          --> To check whether the port is configured or not
 
 ######################################################################################################
 
+Cloud bee Build and Push Image
+error: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock
 
-  
+
+user jenkins needs to be added to the group docker: 
+For Master ans slave Config:
+$ sudo usermod -aG docker jenkins
+$ sudo usermod -aG root jenkins
+$ sudo chmod 777 /var/run/docker.sock
+
   
   
   

@@ -187,7 +187,22 @@ EX: ansible -i hosts1 -m ping all
     ansible -i hosts1 -m ping webserver
 	
 	
+#*#*#**#*#*#*##*#*#*#*#*# Commands *#*#*#*#*#*#*#*#*#*#*##*#*#*#*#*#*#*#**##*#*#*
 
+List all tasks in the playbook
+$ ansible-playbook playbook.yml --list-tasks
+
+Check syntax of playbook
+$ ansible-playbook playbook.yml --syntax-check
+
+Lists Hosts on which it executes
+$ ansible-playbook playbook.yml --list-hosts -l subset
+
+Run a playbook on target hosts without inventory file
+$ ansible-playbook playbook.yml -i <IP Address>
+
+Excute playbook in dry run mode which check the changes what changes will be performed
+$ ansible-playbook playbook.yml --check
 
 
 

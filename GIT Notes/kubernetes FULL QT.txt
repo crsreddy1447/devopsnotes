@@ -9,61 +9,71 @@ Required are
 2. Service
 3. ReplicaSet is same as RC with memory storage of previous
 
-Only two file enough Deployment and Service is enough for deployment
+***** NOTE: Only two file enough Deployment and Service is enough for deployment
 
 API ---- KIND ---- Format
 
 ########################################## POD ###########################################################
+***simple-pod.yml***
 
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx
+  name: simple-pod
   labels:
-     app: nginx
+    env: test
+    app: gol
 spec:
-   containers:
-   - name: nginx
-     image: nginx
-
-
-################################# ReplicationController ###################################################
-
-apiVersion: v1
-kind: ReplicationController
-metadata:
-  name: nginx
-spec:
-  replicas: 3
-  selector:
-    app: nginx
-  template:
-    metadata:
-      name: nginx
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80
-
+  containers:
+  - name: nginx
+    image: crsreddy1447/gol:1.0
+    ports:
+    - containerPort: 8080
+	
+	
 
 ################################# Service ###############################################################
+**** simple-pod-svc.yml *********
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-service
+  name: simple-svc
 spec:
   selector:
-    app: MyApp
+    app: gol
+  type:  NodePort
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 9376
-	  
+  - name:  https
+    port:  8080
+    nodePort: 30002
+    protocol: TCP
+
+  
+
+################################# ReplicationController ###################################################
+**** simple-pod-replication.yml ****
+
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: simple-rc
+spec:
+  replicas: 3
+  selector:
+    app: gol
+  template:
+    metadata:
+      labels:
+        app: gol
+        ver: "1.0"
+    spec:
+      containers:
+      - name: simple-pod
+        image: crsreddy1447/gol:1.0
+        ports:
+        - containerPort: 8080
 
 
 ################################# ReplicaSet ############################################################	  
@@ -120,17 +130,48 @@ spec:
         ports:
         - containerPort: 8080		
 		
+		
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+		
 -------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------
 
 Commands
 
+$ kubectl apply -f <pathofyaml>
+$ kubectl delete -f <pathofyml>
+$ kubectl get <object-kind>
 $ kubectl create -f deploy.yml   ----> Uses first time only
 $ kubectl apply -f deploy.yml
 $ kubectl describe deploy <app>
 $ kubectl get rs
 $ kubectl get pods
 $ kubectl describe rs         -----> For Replica Set
+
+$ kubectl get nodes -w # watch the output changes 
+$ kubectl get nodes -o wide # more info
+$ kubectl get pods # List all the pods you created
+$ kubectl get pods --all-namespaces   # Lists all the pods in the cluster irrespective of who created
 
 ***********Rolling Update To deployment ******************************
 
@@ -294,3 +335,86 @@ kubectl get nodes -w # watch the output changes
 kubectl get nodes -o wide # more info
 kubectl get pods # List all the pods you created
 kubectl get pods --all-namespaces   # Lists all the pods in the cluster irrespective of who created
+
+
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+Sharing some free #Kubernetes resources for everyone.
+
+
+> Kubernetes the hard way: https://lnkd.in/eu_rkry
+
+> Introduction to Kubernetes: https://lnkd.in/ebHEyaY
+
+> Learn Kubernetes by Playing the “Game of Pods”: https://lnkd.in/epGmpd9
+
+> Kubernetes by example: https://lnkd.in/eETkYKW
+
+> Getting started with Kubernetes: https://lnkd.in/eqD8qWA
+
+> Kubernetes hands-on labs: https://lnkd.in/eEgfyDG
+
+> Learning path - Kubernetes: https://lnkd.in/ea5H-WH
+
+> Fundamentals of Containers, Kubernetes, and Red Hat OpenShift: https://lnkd.in/ea_tfrt
+
+> Zero to hero with Kubernetes: https://lnkd.in/eJJRjck
+
+> Gain free experience in Kubernetes and Docker by doing exercises: engineer.kodekloud.com
+
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+
+################################# Installation of Kubernetes On Master and Slave ############################
+
+On Master ==>
+
+    3  sudo apt-get update
+    4  sudo apt-get install docker.io -y
+    5  sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+    6  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    7  cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    8  deb https://apt.kubernetes.io/ kubernetes-xenial main
+    9  EOF
+   10  sudo apt-get update
+   11  sudo apt-get install -y kubelet kubeadm kubectl
+   12  sudo apt-mark hold kubelet kubeadm kubectl
+   13  kubeadm init --apiserver-advertise-address=172.31.21.29 --pod-network-cidr=192.168.0.0/16
+   14  exit
+   15  sudo kubeadm init --apiserver-advertise-address=172.31.21.29 --pod-network-cidr=192.168.0.0/16
+   16  sudo kubeadm init --apiserver-advertise-address=172.31.21.29 --pod-network-cidr=192.168.0.0/16 --ignore-preflight-errors=NumCPU
+   17  mkdir -p $HOME/.kube
+   18  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   19  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   20  kubectl get nodes
+   21  kubectl get pods
+   22  kubectl get nodes
+   23  clear
+   24  kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+   25  kubectl get pods --all-namespaces
+   26  kubectl get nodes
+   27  sudo su
+   
+On Slave ==> 
+
+    1  sudo apt-get update
+    2  clear
+    3  sudo apt-get install docker.io -y
+    4  sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+    5  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    6  cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+       deb https://apt.kubernetes.io/ kubernetes-xenial main
+       EOF
+
+    7  sudo apt-get update
+    8  sudo apt-get install -y kubelet kubeadm kubectl
+    9  sudo apt-mark hold kubelet kubeadm kubectl
+   10  sudo kubeadm join 172.31.21.29:6443 --token y7fzhp.iovfdkyh9bypfw73     --discovery-token-ca-cert-hash sha256:c504e775aa40d0328f3ebb8961850ae7b784ab4f72147a76d36d40b2ae2e48cf
+
+
+
+ 
+
+
+
+

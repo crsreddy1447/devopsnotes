@@ -513,7 +513,7 @@ RUN aws s3 cp s3://bucketname/favicons /var/www/html/favicons --recursive
 
 FROM tomcat:8
 LABEL "Author" = "Raja"
-ADD https://raja1447.s3-us-west-2.amazonaws.com/gameoflife.war /usr/local/tomcat/webapps/TechdatCommunicationss.war
+ADD https://raja1447.s3-us-west-2.amazonaws.com/gameoflife.war /usr/local/tomcat/webapps/gameoflife.war
 CMD ["catalina.sh", "run"]
 EXPOSE 8080
 
