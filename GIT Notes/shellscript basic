@@ -66,6 +66,18 @@ ex: while (( $n <= 10 ))
 until loop executes only if the condition is false 
 ex: while (( $n => 10 )) 
  
+*** "readonly" is used only to assign a fixed value only once. We can't reassign other value.
+ex: var=40
+readonly var
+*** "readonly" is used only to assign a fixed function only once. We can't overwrite the function.
+ex: hello()
+{echo "Hello"}
+readonly -f hello
+
+ 
+Note: 
+* for loop display value after we give input
+select loop display value we have to select one from it.
  
 *******ex: 1: user name and pwd*********************
 #! /bin/bash
@@ -147,10 +159,116 @@ do
 done
 
 ************************************************************************************************
+**************** FOR LOOP **************************************************
+#! /bin/bash
+for command in ls pwd date  # these three are commands to execute
+do
+  echo "***********$command*******************"
+  $command
+done
 
+******************************************************************************************************
+****************** SELECT LOOP ************************************
+#! /bin/bash
+select item in car bike cycle truck
+do
+   case $item in
+  "car" )
+   echo " rent of $item is 100 dollar" ;;
+  "bike" )
+   echo " rent of $item is 50 dollar" ;;
+  "cycle" )
+   echo " rent of $item is 10 dollar" ;;
+  "truck" )
+   echo " rent of $item is 150 dollar" ;;
+  * )  # value of all
+   echo " Unknown Vehicle" ;;
+esac
+done
 
+**********************************************************************************************************
+ **************BREAK: ***************************************
+ #! /bin/bash
+for (( i=1 ; i<=10 ; i++ ))
+do
+   if (( $i > 5 ))
+    then
+    break
+   fi
+   echo "$i"
+done
 
+****************************************************************************************************
+*************************Continue*****************
+#! /bin/bash
+for (( i=1 ; i<=10 ; i++ ))
+do
+   if [ $i -eq 3 -o $i -eq 6 ]
+    then
+    continue
+   fi
+   echo "$i"
+done
+************************************************************************************************
+*************************Functions*********************************
+#! /bin/bash
+function hello()
+{
+echo "HIIIIIIIII"
+}
 
+quit () 
+{
+exit
+}
+
+hello        # calling Funtions
+echo "How are you"
+quit         # calling Funtions
+*****************************************************************************************************
+************* Local vs Global Variable *********************************
+#! /bin/bash
+
+function print(){
+local name=$1               # Local variable is accessable only in the function print
+echo "The name is $name "
+}
+name="RAJA" 
+echo "The name is $name Before"              # name here is global variable
+print Shekar                # as it is local so it displays only once when print is called 
+echo "The name is $name After"             # name here is global variable
+echo "HI how are you"
+
+******************************************************************************************************
+**************** Find a file present or not by calling function ************
+#! /bin/bash
+usage()
+{
+echo "Provide the argument : "
+echo "usage : $0 file_name"
+}
+
+ is_file_exist()  ##funtion
+   {
+   local file="$1"  ## here "$1" is one arugement has to pass
+
+## Here [[ -f "$file" ]] is used to give file name (-f)
+
+    [[ -f "$file" ]] && return 0 || return 1 
+    }
+
+## Here "$#" used for giving no of arugements
+
+[[ $# -eq 0 ]] && usage  ### if noof arg is zero goto usage function warning
+
+if ( is_file_exist "$1")
+then
+  echo "file found"
+else
+  echo "file  NOT found"
+fi
+
+***************************************************************************************************
 
 
 
