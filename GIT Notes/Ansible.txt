@@ -319,6 +319,129 @@ EX: ansible-playbook -i -v hosts raja.yml -e "package_name=apache2"
 ** -e =extra-vars
 ** -v, -vv = verbose
 
+
+############# EC2 Instance using playbook ###############################################################
+
+---
+  - name: Provision an EC2 Instance
+    hosts: localhost
+    connection: local
+    gather_facts: False
+    tags: provisioning
+
+    vars:
+      instance_type: t2.micro
+      security_group: webservers
+      image: ami-0080e4c5bc078760e
+      region: us-east-1
+      keypair: sshkeypair
+      count: 1
+
+    tasks:
+
+      - name: Create New security group with below given name
+        local_action:
+          module: ec2_group
+          name: "{{ security_group }}"
+          description: Security Group for Newly Created EC2 Instance
+          region: "{{ region }}"
+          rules:
+            - proto: tcp
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 80
+              to_port: 80
+              cidr_ip: 0.0.0.0/0
+          rules_egress:
+            - proto: all
+              cidr_ip: 0.0.0.0/0
+
+
+      - name: Launch the new t2 micro EC2 Instance
+        local_action: ec2
+                      group={{ security_group }}
+                      instance_type={{ instance_type}}
+                      image={{ image }}
+                      wait=true
+                      region={{ region }}
+                      keypair={{ keypair }}
+                      count={{count}}
+        register: ec2
+
+      - name: Wait for EC2 Instance to Spin-up and ready for SSH access
+        local_action: wait_for
+                      host={{ item.public_ip }}
+                      port=22
+                      state=started
+        with_items: "{{ ec2.instances }}"
+
+      - name: Adding Tags to Identify
+        local_action: ec2_tag resource={{ item.id }} region={{ region }} state=present
+        with_items: "{{ ec2.instances }}"
+        args:
+          tags:
+            Name: Web Server
+            Owner: Ravi Kumar
+            PurPose: Testing EC2 Instance From Ansible
+			
+			
+			
+			
+---
+- hosts: localhost
+ 
+  task:
+      - name: Create New security group with below given name
+        ec2_group:
+          name: "raj_sg"
+          description: Security Group for Newly Created EC2 Instance
+          region: "us-west-2"
+          rules:
+            - proto: tcp
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 80
+              to_port: 80
+              cidr_ip: 0.0.0.0/0
+			- proto: tcp
+              from_port: 8080
+              to_port: 8080
+              cidr_ip: 0.0.0.0/0
+          rules_egress:
+            - proto: all
+              cidr_ip: 0.0.0.0/0
+
+
+      - name: Launch the new t2 micro EC2 Instance
+        ec2:
+		    key_name: raja1
+			region: us-west-2
+			instance_type: t2.micro
+			image: ami-775e4f16
+			wait: yes
+			wait_timeout: 500
+			count: 1
+			instance_tag
+			   Name: My_server
+			monitoring: no
+			vpc_subnet_id: 
+			assign_public_ip: yes
+			group: raj_sg
+		register: ec2_out
+
+      - name: Wait for EC2 Instance to Spin-up and ready for SSH access
+        wait_for: host={{ item.public_ip }} port=22 delay=60 timeout=320 state=started
+        with_items: "{{ ec2_out.instances }}"
+		
+			
+##################################################################################################################################################################			
+
+
+
 /////////////////////// EDUREKA ///////////////////////////////////////////
 
 Four Important Components of Ansible Controller Machine
