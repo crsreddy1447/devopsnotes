@@ -1,0 +1,85 @@
+PIPELINE PROCESS
+
+GIT ----> MAVEN -----> JENKINS -----> DOCKER -----> KUBERNETES
+
+GIT ----> MAVEN -----> JENKINS -----> ANSIBLE
+
+GIT ----> MAVEN -----> JENKINS -----> S3
+
+GIT ----> JENKINS  ------> TERRAFORM
+
+
+
+Ansible Play Book on Jenkins
+1. Ansible control Master  and Ansible Host
+2. SSh connect both master and Host
+3. Jenkins master install ansible plugin
+4. Add ACM as Jenkins Slave
+5. Create a job run play book by giving play book path of ACM
+
+PIPELINE SCRIPTING 1:
+**** JOB1 ***********************
+1. GIT CLONE
+2. MVN CLEAN PACKAGE
+3. STORE .WAR IN S3 BUCKET USING S3 PUBLISH ARTIFACT to S3 PLUGIN
+4. SEND DATA TO SONAR QUBE FOR CODE QUALITY
+**** JOB2 *************************
+1. AGENT DOCKER
+2. GIT CLONE DOCKERFILE 
+3. DOCKER BUILD AND PUBLISH PLUGIN
+
+**** JOB3 ***********************
+1. AGENT KUBERNETES
+2. DEPLOY TO KUBERNETES
+
+PIPELINE SCRIPTING 2:
+**** JOB1 ***********************
+1. GIT CLONE
+2. MVN CLEAN PACKAGE
+3. STORE .WAR IN S3 BUCKET USING S3 PUBLISH ARTIFACT to S3 PLUGIN
+4. SEND DATA TO SONAR QUBE FOR CODE QUALITY
+**** JOB2 *************************
+1. AGENT ANSIBLE
+2. GIT CLONE PLAYBOOKS
+3. USING SHELL EXECUTE PLAYBOOK AND DEPLOY THE APP
+
+PIPELINE SCRIPTING 3:
+**** JOB1 ***********************
+1. GIT CLONE
+2. SET TERRAFORM GOBAL TOOLS SETTING
+3. SET ENV VARIABLE LIKE AWS REGION, AWS SECRET AND ACCESS KEY
+ /////////// TERRAFORM SCRIPT ///////////////////
+ pipeline {
+ agent any
+ 
+ stages {
+ stage(‘checkout’) {
+ steps {
+ git branch: ‘develop’, url: ‘git@your url’
+ 
+ }
+ }
+ stage(‘Set Terraform path’) {
+ steps {
+ script {
+ def tfHome = tool name: ‘Terraform’
+ env.PATH = “${tfHome}:${env.PATH}”
+ }
+ sh ‘terraform — version’
+ }
+ }
+  stage(‘Provision infrastructure’) {
+  steps {
+ dir(‘dev’)
+ {
+ sh ‘terraform init’
+ sh ‘terraform plan -out=plan’
+ // sh ‘terraform destroy -auto-approve’
+ sh ‘terraform apply plan’
+ }
+ }
+ }
+ }
+}
+
+//////////////////////////////////////////////////////////////////////////////////
