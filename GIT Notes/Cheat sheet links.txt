@@ -1,0 +1,22 @@
+CHEAT CODES
+
+
+1. Kubernetes cheat sheet: https://lnkd.in/e5huKvG
+
+2. Docker cheat sheet: https://lnkd.in/euVgEym
+
+3. Git and GitHub cheat sheet: https://lnkd.in/eqmYz7Y
+
+4. Ansible cheat sheet: https://lnkd.in/eUcJGfW
+
+5. Linux command cheat sheet: https://lnkd.in/eemfYJU
+
+6. Open Shift cheat sheet: https://lnkd.in/euUv23d
+
+7. Helm cheat sheet: https://lnkd.in/eupFcpy
+
+8. Jenkins cheat sheet: https://lnkd.in/eEdSkWX
+
+
+Also, get familiar with Artifactory CLI: https://lnkd.in/e3QzFNd
+

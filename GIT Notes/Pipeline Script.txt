@@ -65,3 +65,59 @@ pipeline{
         }
     }
 }
+
+######################################################################################
+
+
+job1
+
+pipeline  {
+  agent any 
+  
+     stages {
+	  stage ('Checkout') {
+	    steps{  
+	    git 'https://github.com/crsreddy1447/Myproject.git'
+	    }
+      }
+      stage ('Package') {
+       steps{      
+	   sh 'mvn clean package'
+	   sh 'mvn clean install sonar:sonar'
+       }
+	  }
+	  stage ('artifacts to s3') {
+	  
+	  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
+	                    accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+	                    credentialsId: '859d3428-d5e3-414a-94ff-5b3ef7817735', 
+						secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']])
+    // some block
+     steps {
+	  s3Upload: Publish artifacts to S3 Bucket
+	    script{
+		s3Upload consoleLogLevel: 'INFO', 
+		dontSetBuildResultOnFailure: false, 
+		dontWaitForConcurrentBuildCompletion: false, 
+		entries: [[bucket: 'raja1447', excludedFile: '', flatten: false, 
+		gzipFiles: false, 
+		keepForever: false, 
+		managedArtifacts: false, 
+		noUploadOnFailure: false, 
+		selectedRegion: 'us-west-2', 
+		showDirectlyInBrowser: false, 
+		sourceFile: '**/*.war', 
+		storageClass: 'STANDARD', 
+		uploadFromSlave: false, 
+		useServerSideEncryption: false]], 
+		pluginFailureResultConstraint: 'SUCCESS', 
+		profileName: 'Raja-aws-S3', 
+		userMetadata: []
+	    }
+		}
+	  }
+	  
+	  
+   }
+   
+}  

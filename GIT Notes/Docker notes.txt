@@ -525,6 +525,55 @@ docker container run -itd -p 1111:8080 crsreddy1447/gol:1.0
 
 
 
+***********************#DOCKER SWARM CONFIGURE#***********************************
+
+$ sudo apt-get update -y && sudo apt-get upgrade -y
+
+#####Install Docker
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+$ sudo apt-get update
+$ apt-cache policy docker-ce
+$ sudo apt-get install -y docker-ce
+$ sudo systemctl start docker && sudo systemctl enable docker
+
+#### ADD DOCKER USER
+$ sudo groupadd docker && sudo usermod -aG docker dockeruser
+
+###### Configure firewall  Allow the ports 7946, 4789, 2376, 2376, 2377, and 80 using the UFW firewall 
+$ sudo ufw allow 2376/tcp && sudo ufw allow 7946/udp && sudo ufw allow 7946/tcp && sudo ufw allow 80/tcp && sudo ufw allow 2377/tcp && sudo ufw allow 4789/udp
+$ sudo ufw reload && sudo ufw enable
+$ sudo systemctl restart docker
+
+####### MANAGER NODE SETUP
+$ docker swarm init --advertise-addr <Manager-ip>
+
+https://directdevops.blog/2019/10/07/docker-swarm-mode/
+
+$ docker node ls
+
+######### Deploy new Service on Swarm Cluster
+
+$ docker service create --name <service name> --publish 8081:80 --replicas 2 nginx
+$ docker service ls
+$ docker service ps <service name>
+
+$ docker service scale <service name>=3
+
+$ docker service ls
+
+sudo docker swarm join --token SWMTKN-1-61tyt2wfqsnydrkmhe7v86b2aojcmhq11k3pym9p9s99dw70r7-5hq7lofamlhqrpip1wol3ewfe 172.31.42.216:2377
+
+
+
+
+
+
+
+
+
+
+
 
 
 

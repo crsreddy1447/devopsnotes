@@ -1,0 +1,21 @@
+################My Interview Questions Which are not answered #####################
+
+1. Types of Loadbalancers
+
+2. Tool used for deploying the kubernetes
+
+3. No of VPC we can create
+
+4. What is subnet
+
+5. CIDR range depends on
+
+6. EXPOSE VS CMD VS ENTRY POINT
+
+7. Public Subnet vs Private Subnet
+
+8. .WAR in S3 How you will call that war from S3 and deploy
+
+9. 
+
+
