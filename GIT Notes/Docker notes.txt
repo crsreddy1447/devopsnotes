@@ -564,6 +564,39 @@ $ docker service ls
 
 sudo docker swarm join --token SWMTKN-1-61tyt2wfqsnydrkmhe7v86b2aojcmhq11k3pym9p9s99dw70r7-5hq7lofamlhqrpip1wol3ewfe 172.31.42.216:2377
 
+########## DOCKER COMPOSE/ MICRO SERVICES ####################################
+
+$ sudo apt-get update && sudo apt-get upgrade
+
+Install Docker
+$ sudo apt remove docker docker-engine docker.io
+$ sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo apt-key fingerprint 0EBFCD88
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+$ sudo apt update
+$ sudo apt install docker-ce
+$ sudo usermod -aG docker $USER
+$ docker run hello-world
+
+INSTALL DOCKER COMPOSE
+$ sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+Prepare the Environment
+
+$ mkdir flask-microservice
+$ cd flask-microservice
+$ mkdir nginx postgres web
+
+
+
+
+
+
+
+
 
 
 
