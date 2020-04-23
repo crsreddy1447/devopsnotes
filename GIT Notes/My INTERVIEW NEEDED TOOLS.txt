@@ -1,0 +1,42 @@
+
+Topics for interview: 
+
+Jenkins complete 
+
+Docker Complete
+
+Kubernetes Complete
+
+Ansible Few
+
+Terraform Complete
+
+GIT and GIT FLOW Complete
+
+Maven Complete Cycle
+
+NAGIOS COMPLETE
+
+AWS CLI EC2
+
+AWS CLI VPC
+
+LINUX and SHELL SCRIPTING
+
+AWS CLI S3
+
+AWS IAM
+
+AWS Elastic Block Store (EBS)
+
+AWS ELB load balancer
+
+Amazon DynamoDB
+
+AWS Lambda
+
+AWS CLOUD WATCH
+
+AWS Auto Scaling
+
+AWS EKS
