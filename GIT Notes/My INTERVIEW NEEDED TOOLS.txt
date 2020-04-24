@@ -17,19 +17,21 @@ Maven Complete Cycle
 
 NAGIOS COMPLETE
 
-AWS CLI EC2
-
-AWS CLI VPC
-
 LINUX and SHELL SCRIPTING
 
-AWS CLI S3
+AWS CLI EC2    ------------->DONE
 
-AWS IAM
+AWS CLI VPC    --------------> DONE
 
-AWS Elastic Block Store (EBS)
+AWS CLI S3       --------------> Done
+
+AWS IAM          ----------> DONE
+
+AWS Elastic Block Store (EBS)  ---------> Done
 
 AWS ELB load balancer
+
+AWS Elastic Beanstalk
 
 Amazon DynamoDB
 

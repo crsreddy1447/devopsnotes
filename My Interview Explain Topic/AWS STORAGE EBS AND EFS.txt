@@ -1,0 +1,69 @@
+#### AWS EBS and AWS EFS
+STORAGES of AWS
+Amazon S3
+Amazon Elastic Block Store
+Amazon Elastic File System
+Amazon FSx for Lustre
+Amazon FSx for Windows File Server
+Amazon S3 Glacier
+AWS Storage Gateway
+
+Amazon Elastic Block Store and Amazon Elastic File System and AWS Storage Gateway
+
+Amazon Elastic Block Store: 
+Amazon Elastic Block Store (Amazon EBS) provides block level storage volumes for use with EC2 instances.
+Multiple volumes to one instance and vice versa
+EBS volumes are created in a specific Availability Zone, and can then be attached to any instances in that same Availability Zone. To make a volume available outside of the Availability Zone, you can create a snapshot and restore that snapshot to a new volume
+Amazon EBS provides the following volume types: 
+1. General Purpose SSD base performance of 3 IOPS/GiB, with the ability to burst to 3,000 IOPS for extended periods of time.
+volume can range in size from 1 GiB to 16 TiB.
+
+2. Provisioned IOPS SSD: support up to 64,000 IOPS and 1,000 MiB/s of throughput
+Provisioned IOPS SSD (io1) volumes are designed to meet the needs of I/O-intensive workloads, particularly database workloads
+
+3. Throughput Optimized HDD: provide low-cost magnetic storage that defines performance in terms of throughput rather than IOPS.
+4. Cold HDD: low-cost magnetic storage that defines performance in terms of throughput rather than IOPS
+5. Magnetic
+
+### AWS CLI EBS
+aws ec2 create-volume --volume-type gp2 --size 80 --availability-zone us-east-1a
+aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
+aws ec2 describe-volumes
+
+
+### Amazon Elastic File System:
+
+Amazon Elastic File System (Amazon EFS) is a fully-managed service that provides a simple, scalable, fully managed, elastic NFS file system. It is built to scale on demand to petabytes without disrupting applications, growing and shrinking automatically as you add and remove files.
+Amazon EFS file systems can automatically scale from gigabytes to petabytes of data without needing to provision storage.
+
+EFS offers two storage classes: 
+Standard storage class, and 
+Infrequent Access storage class (EFS IA)
+
+To access your file system, you mount the file system on an Amazon EC2 Linux-based instance using the standard Linux mount command and the file system’s DNS name. 
+Amazon EFS uses the Network File System version 4 (NFS v4) protocol. 
+AWS DataSync provides a fast and simple way to securely sync existing file systems with Amazon EFS.
+Amazon EFS supports 1000 Amazon EC2 instances connecting to a file system concurrently.
+You can create up to 1,000 file systems per region.
+
+
+#### AWS Storage Gateway
+AWS Storage Gateway is a hybrid cloud storage service that gives you on-premises access to virtually unlimited cloud storage.
+The gateway connects to AWS storage services. The service includes a highly-optimized data transfer mechanism, with bandwidth management, automated network resilience, and efficient data transfer.
+
+The service includes a highly-optimized data transfer mechanism, with bandwidth management, automated network resilience, and efficient data transfer.
+
+File Gateway:  File Gateway presents a file-based interface to Amazon S3, which appears as a network file share. It enables you to store and retrieve Amazon S3 objects through standard file storage protocols.
+
+Tape Gateway: Tape Gateway is a cloud-based Virtual Tape Library (VTL). It presents your backup application with a VTL interface, consisting of a media changer and tape drives. You can create virtual tapes in your virtual tape library using the AWS Management Console. 
+
+Volume Gateway: Volume Gateway provides an iSCSI target, which enables you to create block storage volumes and mount them as iSCSI devices from your on-premises or EC2 application servers. The Volume Gateway runs in either a cached or stored mode.
+
+
+
+
+
+
+
+
+

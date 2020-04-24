@@ -1,0 +1,55 @@
+### AWS IAM and CLI
+
+AWS Identity and Access Management
+AWS IAM to securely control individual and group access to your AWS resources. You can create and manage user identities ("IAM users") and grant permissions for those IAM users to access your resources. You can also grant permissions for users outside of AWS ( federated users).
+
+To assign permissions to a user, group, role, or resource, you create a policy that lets you specify:
+
+Manage IAM permissions:
+To assign permissions to a user, group, role, or resource, you create a policy  using:
+Actions – Which AWS service actions you allow. For example, you might allow a user to call the Amazon S3 ListBucket action.
+Resources – Which AWS resources you allow the action on. For example: S3 buckets will you allow the user to perform.
+Effect – Whether to allow or deny access. 
+Conditions – Which conditions must be present for the policy to take effect. For example: S3 delete condition is deny.
+
+Policy are two types
+1. Managed Policy (AWS)
+2. Custom Policy (Our own policy) JSON or UI
+
+AWS Access type:
+1. Programmatic access
+2. AWS management Console
+
+ {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "ec2:Describe*",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "elasticloadbalancing:Describe*",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudwatch:ListMetrics",
+                "cloudwatch:GetMetricStatistics",
+                "cloudwatch:Describe*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "autoscaling:Describe*",
+            "Resource": "*"
+        }
+    ]
+}
+
+
+
+
