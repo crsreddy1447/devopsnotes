@@ -29,9 +29,9 @@ AWS IAM          ----------> DONE
 
 AWS Elastic Block Store (EBS)  ---------> Done
 
-AWS ELB load balancer
+AWS ELB load balancer  ----------------> Done
 
-AWS Elastic Beanstalk
+AWS Elastic Beanstalk  ------------> DONE
 
 Amazon DynamoDB
 
