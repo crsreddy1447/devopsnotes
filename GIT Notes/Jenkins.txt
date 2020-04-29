@@ -504,7 +504,49 @@ $ sudo usermod -aG root jenkins
 $ sudo chmod 777 /var/run/docker.sock
 
   
-  
+Install and Configure Apache as Reverse Proxy for Jenkins:
+
+In this tutorial we will run Jenkins behind an apache web server, we will configure apache as the reverse proxy for Jenkins. First I will install apache and enable some require modules, and then I'll create the virtual host file with domain name my.jenkins.id for Jenkins. Please use your own domain name here and replace it in all config files wherever it appears.
+
+Install apache2 web server from Ubuntu repository.
+
+apt-get install apache2
+When the installation is done, enable the proxy and proxy_http modules so we can configure apache as frontend server/reverse proxy for Jenkins.
+
+a2enmod proxy
+a2enmod proxy_http
+Next, create a new virtual host file in the sites-available directory.
+
+cd /etc/apache2/sites-available/
+vim jenkins.conf
+Paste virtual host configuration below.
+<Virtualhost *:80>
+    ServerName        my.jenkins.id
+    ProxyRequests     Off
+    ProxyPreserveHost On
+    AllowEncodedSlashes NoDecode
+ 
+    <Proxy http://localhost:8080/*>
+      Order deny,allow
+      Allow from all
+    </Proxy>
+ 
+    ProxyPass         /  http://localhost:8080/ nocanon
+    ProxyPassReverse  /  http://localhost:8080/
+    ProxyPassReverse  /  http://my.jenkins.id/
+</Virtualhost>
+Save the file. Then activate the Jenkins virtual host with the a2ensite command.
+
+a2ensite jenkins
+Restart Apache and Jenkins.
+
+systemctl restart apache2
+systemctl restart jenkins
+Check that port 80 and 8000 are in use by Jenkins and Apache.
+netstat -plntu
+
+Builds failing with OutOfMemoryErrors:  
+The build and deployment failures the permanent fix by increase the Perm Gen Space and Heap Space.
   
   
   

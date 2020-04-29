@@ -1,0 +1,34 @@
+29/04/2020 WINDOWS POWERSHELL
+Configure iis
+$ Get-WindowsOptionalFeature -FeatureName IIS* -online | Select-Object featurename
+Store theses value in variable $<variable name>
+$iisfeatures=Get-WindowsOptionalFeature -FeatureName IIS* -online | Select-Object featurename 
+
+foreach($item in $iisfeatures.featurename){Enable-WindowsOptionalFeature -FeatureName $item -Online -Verbose}
+
+cmdlet
+commands are built in the form of verb-noun format
+$ get-command    to list all commands
+$ import-module webadministration -Verbose
+$ get-command -Module webadministration
+
+WIN ISE
+import-module webadministration
+New-WebAppPool -Name "RAJA" -Force   # To create a AppPools user 
+$result=Get-Item IIS:\AppPools\RAJA -Force # To store appPool data to result 
+$result |Format-List *                 # TO list the values stored in value
+$result.managedPipelineMode="Classic"  # to change the parameter
+$result|Set-Item -Force -verbose       # to load the parameter in IIS
+
+
+
+
+
+
+
+
+
+
+
+
+

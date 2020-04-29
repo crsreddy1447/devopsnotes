@@ -33,12 +33,18 @@ AWS ELB load balancer  ----------------> Done
 
 AWS Elastic Beanstalk  ------------> DONE
 
-Amazon DynamoDB
+Amazon DynamoDB  -------------> Done
 
 AWS Lambda
 
-AWS CLOUD WATCH
+AWS CLOUD WATCH   ----------> 
+AWS CloudTrail
+AWS SNS
 
 AWS Auto Scaling
 
 AWS EKS
+
+Migration
+DMS (Database Migration Service):  to another — for example, Oracle to MySQL.
+SMS (Server Migration Service)

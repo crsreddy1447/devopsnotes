@@ -1,0 +1,64 @@
+#### Amazon Relational Database Service (RDS)
+
+Amazon Relational Database Service (Amazon RDS) makes it easy to set up, operate, and scale a relational database in the cloud.
+The basic building block of Amazon RDS is the DB instance. A DB instance is an isolated database environment in the AWS Cloud.
+You can create and modify a DB instance by using the AWS Command Line Interface, the Amazon RDS API, or the AWS Management Console.
+Each DB instance runs a DB engine. Amazon RDS currently supports the 
+MySQL, MariaDB, PostgreSQL, Oracle, and Microsoft SQL Server DB engines.
+
+DB instance storage comes in three types: 
+Magnetic  3TB  and 1000 IOPS.
+General Purpose (SSD): Storage Range 20GB-64TB for all.  Sql 20Gb-16TB
+Provisioned IOPS (PIOPS). 100GB-64TB.  1000 to 80,000 IOPS.
+
+db.m4.xlarge	4cpu	16GB RAM
+db.t3.large     2cpu    8GB RAM
+db.t2.large     2cpu    8GB RAM
+
+Amazon RDS manages backups, software patching, automatic failure detection, and recovery.
+Amazon RDS uses Network Time Protocol (NTP) to synchronize the time on DB Instances.
+You can run your DB instance in several Availability Zones, an option called a Multi-AZ deployment.
+In a Multi-AZ deployment, Amazon RDS automatically provisions and maintains a synchronous standby replica in a different Availability Zone.
+The primary DB instance is synchronously replicated across Availability Zones to a standby replica to provide data redundancy, eliminate I/O freezes, and minimize latency spikes during system backups.
+The identifier is used as part of the DNS hostname allocated to your instance by RDS. Mostly DB name will be identifier.
+For example, if you specify db1 as the DB instance identifier, then DNS endpoint will be db1.123456789012.us-east-1.rds.amazonaws.com, where 123456789012 is the fixed identifier for a specific region for your account.
+
+Amazon RDS creates a master user account for your DB instance as part of the creation process.
+master user has permissions to create databases and to perform create, delete, select, update, and insert operations
+You must set the master user password when you create a DB instance. You can also change the master user password and manage users using standard SQL commands.
+
+Configuring the Processor: 
+Number of CPU cores
+Threads per core
+you can configure the number of CPU cores and threads per core only for Oracle DB instances.
+
+metrics are useful for monitoring storage for your DB instance:
+1. IOPS:  The number of I/O operations completed each second.
+2. Latency: The elapsed time between the submission of an I/O request and its completion.
+3. Throughput – The number of bytes each second that are transferred to or from disk.
+4. Queue Depth – The number of I/O requests in the queue waiting to be serviced.. These has to be sent to device when it is free.
+
+*** Once your DB instance is available, you can access its endpoint via the DB instance description. Using this endpoint you can construct the connection string required to connect directly with your DB instance.
+By default, customers are allowed to have up to a total of 40 Amazon RDS DB instances. 
+
+
+#### Amazon DynamoDB (NoSQL database)
+Amazon DynamoDB is a key-value and document database that delivers single-digit millisecond performance at any scale. It's a fully managed, multiregion, multimaster, durable database with built-in security
+DynamoDB can handle more than 10 trillion requests per day and can support peaks of more than 20 million requests per second.
+DynamoDB is serverless with no servers to provision, patch, or manage and no software to install, maintain, or operate.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

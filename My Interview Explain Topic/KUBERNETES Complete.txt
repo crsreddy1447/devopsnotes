@@ -1,0 +1,86 @@
+#### KUBERNETES COMPLETE
+
+Kubernetes is an open source container orchestration engine for automating deployment, scaling, and management of containerized applications.
+A Kubernetes cluster consists of a set of worker machines, called nodes, that run containerized applications. Every cluster has at least one worker node.
+
+POD: 
+A Pod is the basic execution unit of a Kubernetes application--the smallest and simplest unit in the Kubernetes object model that you create or deploy.
+**Each POD many have multiple containers. But “one-container-per-Pod” is recommended.
+Each Pod is meant to run a single instance of a given application.
+Pods provide two kinds of shared resources for their constituent containers: networking and storage.
+Each Pod is assigned a unique IP address.Every container in a Pod shares the network namespace, including the IP address and network ports.
+A Pod can specify a set of shared storage volumes. All containers in the Pod can access the shared volumes, allowing those containers to share data.
+A Pod is not a process, but an environment for running a container. A Pod persists until it is deleted.
+
+Terminology and Controllers:
+ReplicaSet: the default, is a relatively simple type. It ensures the specified number of pods are running
+Deployment: is a declarative way of managing pods via ReplicaSets. Includes rollback and rolling update mechanisms
+Daemonset: is a way of ensuring each node will run an instance of a pod. Used for cluster services, like health monitoring and log forwarding
+StatefulSet: is tailored to managing pods that must persist or maintain state
+Job and CronJob: run short-lived jobs as a one-off or on a schedule.
+
+NODES:
+A node is a worker machine in Kubernetes, previously known as a minion.A node may be a VM or physical machine.
+Each node contains the services necessary to run pods and is managed by the master components. The services on a node include the container runtime, kubelet and kube-proxy.
+Node is externally created by cloud providers.
+three components that interact with the Kubernetes node interface: 
+Node controller:  is a Kubernetes master component which manages various aspects of nodes like Node status, Node health, assign cidr block to node.
+Kubelet: An agent that runs on each node in the cluster. It makes sure that containers are running in a Pod.
+kube-proxy: kube-proxy is a network proxy that runs on each node in your cluster. kube-proxy maintains network rules on nodes.
+Container Runtime: The container runtime is the software that is responsible for running containers.
+
+***Heartbeats, sent by Kubernetes nodes, help determine the availability of a node. 
+Cluster:
+A cluster is a set of computers working as an instance managed by Kubernetes
+You can have up to 5,000 nodes in a cluster.
+Regional clusters have masters and nodes spread across 3 zones for high availability and resilience from single zone failure and downtime during master upgrades.
+
+Image REFER DOC of GOOGLE Kubernetes Basic
+
+CLUSTER >>> NODE >>> POD  
+CLUSTER = NODES + MASTER
+NODE = PODS + Containers
+POD = Containers
+
+Labels are arbitrary metadata you can attach to any object in the Kubernetes API. Labels tell you how to group these things to get an identity. This is the only way you
+can group things in Kubernetes.
+EX: 4pods 3 Labels
+labels APP: MYAPP; Phase:test/prod; Role: Front End/ Back End/
+
+Volumes: 
+Volumes are a way for containers within a pod to share data, and they allow for Pods to be stateful. These are two very important concerns for production applications.
+There are many different types of volumes in Kubernetes. Some of the volume types include long-lived persistent volumes, temporary, short-lived emptyDir volumes, and
+networked nfs volumes.
+
+Kubernetes - Cluster Architecture:
+
+Kubernetes - Master Machine Components--->
+1. etcd: It stores the configuration information which can be used by each of the nodes in the cluster. It is a distributed key value Store which is accessible to all.
+2. API Server(MAIN): The Kubernetes API server validates and configures data for the api objects which include pods, services, replicationcontrollers, and others. It helps in communication of pods by using kubectl
+3. Controller Manager: It is responsible for maintaining desired states mentioned in the manifest.
+4. Scheduler: It watches for new work tasks and assigns them to healthy nodes in the cluster. The scheduler is responsible for workload utilization and allocating pod to new node.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
