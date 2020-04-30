@@ -12,15 +12,21 @@ $ get-command    to list all commands
 $ import-module webadministration -Verbose
 $ get-command -Module webadministration
 
+TO CHECK OPEN RUN(win+R) and type " inetmgr "
+
 WIN ISE
-import-module webadministration
+Import-Module WebAdministration
 New-WebAppPool -Name "RAJA" -Force   # To create a AppPools user 
 $result=Get-Item IIS:\AppPools\RAJA -Force # To store appPool data to result 
 $result |Format-List *                 # TO list the values stored in value
 $result.managedPipelineMode="Classic"  # to change the parameter
+$result.enable32BitAppOnWin64=$true  #for boolean true or false denote as a variable $true
+$result.queueLength=65535
 $result|Set-Item -Force -verbose       # to load the parameter in IIS
+$result | Format-List *
 
-
+30/04/2020
+Same as above with comments
 
 
 
