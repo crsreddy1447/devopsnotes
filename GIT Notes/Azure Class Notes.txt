@@ -13,6 +13,8 @@ $ import-module webadministration -Verbose
 $ get-command -Module webadministration
 
 TO CHECK OPEN RUN(win+R) and type " inetmgr "
+-Force is for conformation
+-Verbose 
 
 WIN ISE
 Import-Module WebAdministration
@@ -23,17 +25,95 @@ $result.managedPipelineMode="Classic"  # to change the parameter
 $result.enable32BitAppOnWin64=$true  #for boolean true or false denote as a variable $true
 $result.queueLength=65535
 $result|Set-Item -Force -verbose       # to load the parameter in IIS
-$result | Format-List *
 
 30/04/2020
 Same as above with comments
 
+//
+
+01/05/2020
+
+if (condition){
+# True Block
+}
+else{
+# False Block
+}
+
+Import-Module WebAdministration
+
+if(Test-Path IIS:\AppPools\reddy)
+{
+Write-warning "The following block Already Exists"
+#Removing existing App Pool
+Remove-Item IIS:\AppPools\reddy -Force -Recurse -Verbose
+# Create New pool
+New-WebAppPool -Name Reddy -Force -Verbose
+}
+
+else
+{
+Write-warning "The following block doesnot Exists. So creating New"
+#create newweb app pool cmdlet
+New-WebAppPool -Name Reddy -Force -Verbose
+ 
+}
+
+# To Remove restriction error
+$ Get-ExecutionPolicy
+$ Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -Verbose
+Give File path to execute
+'H:\AZURE\POWER SHELL PROGRAM\IF condition to create webappPool.ps1'
+
+param(
+    [parameter (Mandatory=$true)]
+    [string]$pool
+)
 
 
+Import-Module webadministration
 
+if(Test-path IIS:\AppPools\$pool)
+{
+    # If above condition is true then this block statement will be execute
+    Write-Warning " The following Application Pool:$pool Already exist"
+    # Removing the existing application Pool
+    #Remove-WebAppPool
+    Remove-Item IIS:\AppPools\$pool -Force -Recurse -Verbose
 
+}
+else{
+    # If above if condition failed then this else block statements will execute
+    Write-Host "The followig Application Pool:$pool deos not exist. Hence creating new" -ForegroundColor Red
+   
+}
 
+   #create new-app pool
+    New-WebAppPool -Name $pool -Force -Verbose
 
+    # fetch the applicaition pool using get-item and store the value into variable $result 
+
+    $result=Get-Item IIS:\AppPools\$pool -Force -Verbose
+
+    #modify queuelength = 7000
+
+    $result.queueLength=7000
+
+    # managed run time version  v2.0
+
+    $result.managedRuntimeVersion="v2.0"
+
+    #manage pipeline mode as  Classic
+
+    $result.managedPipelineMode="Classic"
+
+    # enable32bit appon win 64 set as True
+
+    $result.enable32BitAppOnWin64=$true
+
+    # set the above new values to existing app-pool
+
+    $result | Set-Item -Force -Verbose
 
 
 
