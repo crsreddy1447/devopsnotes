@@ -115,6 +115,94 @@ else{
 
     $result | Set-Item -Force -Verbose
 
+02/05/2020
+
+param(
+
+  [string]$Pool,
+  [string]$Version,
+  [string]$mode,
+  [bool]$enable32bit,
+  [int]$queuelength
+
+)
+# to work with IIS we need to import module " webadministration"
+Import-Module Webadministration
+
+#check the App-pool name should not empty
+if($Pool -ne "" -and $Pool -ne $null)
+{
+ # check the app-pool which is already exit or not. if yes then delete else provide message
+if(Test-path IIS:\AppPools\$Pool)
+{
+    Write-Warning "The following App-pool:$Pool already exist. hence Deleting" 
+    #remove app-pool using remove-item
+
+    Remove-Item IIS:\AppPools\$pool -Force -Verbose -Recurse
+
+}
+else{
+    Write-Host " The following App-pool:$Pool doesnot exist. hence creting new " -ForegroundColor Green
+
+}
+
+# to create new app-pool New-webapppool cmdlet
+
+New-WebAppPool -Name $Pool -Force -Verbose
+
+# get the existing app-pool from IIS using get-item cmdlet and store the resutl in varaible ($result)
+
+$result=Get-Item IIS:\AppPools\$Pool -Force
+
+# updating .net clr version with given value
+if($Version -ne "" -and $Version -ne $null)
+{
+$result.managedRuntimeVersion=$Version
+}
+else{
+    Write-Error -Message " Version value should not be empty" -ErrorAction Stop
+}
+
+#update managed pipeline mode
+if($mode -ne $null -and $mode -ne "")
+{
+$result.managedPipelineMode=$mode
+}
+else{
+    Write-Error -Message " Mode value should not be empty" -ErrorAction stop
+}
+
+#update Queuelength
+if($queuelength -ge 10 -and $queuelength -le 65535){
+
+$result.queueLength=$queuelength
+}
+else{
+    Write-Error -Message "Invalid Range supplied . Range should be between 10 -65535" -ErrorAction stop
+}
+
+#update enable32bit (value should True or False)
+if("$enable32bit" -ne $null -and "$enable32bit" -ne "")
+{
+if($enable32bit -eq "True"){
+$result.enable32BitAppOnWin64=$true
+}
+else{
+$result.enable32BitAppOnWin64=$false
+}
+}
+else{
+    Write-Error -Message " Enable32bit value should not be null" -ErrorAction stop
+}
+
+# set the latest values to current app-pool by using set-item cmdlet
+
+$result| set-item -Force -Verbose
+
+}
+else{
+ Write-Error -Message " Pool name should not be empty" -ErrorAction stop
+}
 
 
 

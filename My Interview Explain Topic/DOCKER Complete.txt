@@ -47,7 +47,13 @@ A container in detached mode cannot be automatically removed when it stops. Cont
 
 Docker Volume:
 Volumes are stored in a part of the host filesystem which is managed by Docker (/var/lib/docker/volumes/ on Linux)
-Bind mounts
+when you use a volume, a new directory is created within Docker’s storage directory on the host machine
+volumes stored in docker's "private" storage area
+volumes can be created by the docker engine when the container starts.
+Bind mounts:  When you use a bind mount, a file or directory on the host machine is mounted into a container.
+mount binds can be stored anywhere
+mount bind have to exist prior to starting the docker container
+
 
 Docker Namespace:
 amespace adds a layer of isolation in containers. Docker provides various namespaces in order to stay portable and not affect the underlying host system. 
