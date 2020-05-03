@@ -118,11 +118,15 @@ else{
 02/05/2020
 
 param(
-
+  [parameter (Mandatory=$true)]
   [string]$Pool,
+  [parameter (Mandatory=$true)]
   [string]$Version,
+  [parameter (Mandatory=$true)]
   [string]$mode,
+  [parameter (Mandatory=$true)]
   [bool]$enable32bit,
+  [parameter (Mandatory=$true)]
   [int]$queuelength
 
 )
