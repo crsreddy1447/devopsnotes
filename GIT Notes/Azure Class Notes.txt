@@ -210,3 +210,445 @@ else{
 
 
 
+05/05/2020
+App pool Identity
+1. Build-In Account
+  a. Local Service
+  b. Local System
+  c. Network Service
+  d. App pool Identity
+2. Custom Account
+https://www.advancedinstaller.com/user-guide/iis-app-pool-identity.html
+
+param(
+  
+ [string[]]$Pools,
+ $Version,
+ $mode,
+ $enable32bit,
+ $queuelength,
+ $identiytype,
+ $user,
+ $password
+
+)
+
+$Pool="abc","xyz","123"
+# to work with IIS we need to import module " webadministration"
+Import-Module Webadministration
+
+foreach ($pool in $Pools){
+
+#check the App-pool name should not empty
+if(-not([string]::IsNullOrWhiteSpace($Pool)))
+{
+ # check the app-pool which is already exit or not. if yes then delete else provide message
+if(Test-path IIS:\AppPools\$Pool)
+{
+    Write-Warning "The following App-pool:$Pool already exist. hence Deleting" 
+    #remove app-pool using remove-item
+
+    Remove-Item IIS:\AppPools\$pool -Force -Verbose -Recurse
+
+}
+else{
+    Write-Host " The following App-pool:$Pool doesnot exist. hence creting new " -ForegroundColor Green
+
+}
+
+# to create new app-pool New-webapppool cmdlet
+
+New-WebAppPool -Name $Pool -Force -Verbose
+
+# get the existing app-pool from IIS using get-item cmdlet and store the resutl in varaible ($result)
+
+$result=Get-Item IIS:\AppPools\$Pool -Force
+
+# updating .net clr version with given value
+if(-not([string]::IsNullOrWhiteSpace($Version)))
+{
+$result.managedRuntimeVersion=$Version
+}
+else{
+    Write-Error -Message " Version value should not be empty" -ErrorAction Stop
+}
+
+#update managed pipeline mode
+if(-not([string]::IsNullOrWhiteSpace($mode)))
+{
+$result.managedPipelineMode=$mode
+}
+else{
+    Write-Error -Message " Mode value should not be empty" -ErrorAction stop
+}
+
+#update Queuelength
+if(-not([string]::IsNullOrWhiteSpace("$queuelength"))){
+if(([convert]::ToInt16($queuelength) -ge 10) -and ([convert]::ToInt16($queuelength) -le 65535)){
+
+$result.queueLength=[convert]::ToInt64($queuelength)
+}
+else{
+    Write-Error -Message "Invalid Range supplied . Range should be between 10 -65535" -ErrorAction stop
+}
+} # end of main if validation
+else{
+Write-Error -Message " Queuelength should not be null" -ErrorAction Stop
+}
+
+#update enable32bit (value should True or False)
+if(-not([string]::IsNullOrWhiteSpace("$enable32bit")))
+{
+if("$enable32bit" -eq "True"){
+$result.enable32BitAppOnWin64=$true
+}
+else{
+$result.enable32BitAppOnWin64=$false
+}
+}
+else{
+    Write-Error -Message " Enable32bit value should not be null" -ErrorAction stop
+}
+
+#Working with identitytype
+if(-not([string]::IsNullOrWhiteSpace($identiytype)))
+{
+    if($identiytype -eq "LocalService")
+    {
+        $result.processModel.identityType="LocalService"
+    }
+    elseif($identiytype -eq "LocalSystem")
+    {
+        $result.processModel.identityType="LocalSystem"
+    }
+    elseif($identiytype -eq "NetworkService")
+    {
+        $result.processModel.identityType="NetWorkService"
+    }
+    elseif($identiytype -eq "SpecificUser")
+    {
+        $result.processModel.identityType="SpecificUser"
+        $result.processModel.userName=$user
+        $result.processModel.password=$password
+    }
+    else{
+        Write-Host "Setting the default identiytype as Applicationpoolidentiy" -ForegroundColor Green
+        $result.processModel.identityType="Applicationpoolidentiy"
+    }
+
+}
+else{
+    Write-warnig -Message "Identity should not be empty and values must be Local System, Local Service, Network Service, Application-pool identity and Specific . By default Applicationpoolidentiy was set"
+}
+
+# set the latest values to current app-pool by using set-item cmdlet
+
+$result| set-item -Force -Verbose
+
+}
+else{
+ Write-Error -Message " Pool name should not be empty" -ErrorAction stop
+}
+}
+
+07/05/2020
+<APPpool.json> file
+
+{
+    "Name": "Kumar",
+    "Version": "v2.0",
+    "Mode": "Classic",
+    "QueLength": 9909,
+    "Enable32bit": true,
+    "identityType": "LocalSystem",
+    "UserName": "",
+    "Password": ""
+}
+
+<AppPool.ps1> file
+
+$data = Get-Content -Path H:\Azure\POWERSHELL\appPool.json | ConvertFrom-Json
+
+$pool = $data.Name
+$version = $data.Version
+$mode = $data.Mode
+$quelength = $data.QueLength
+$enable32bit = $data.Enable32bit
+$identitytype = $data.identityType
+$username = $data.Username
+$password = $data.Password
+
+if(![string]::IsNullOrWhiteSpace($pool))
+    {
+        Import-Module webAdministration
+        if(Test-Path IIS:\AppPools\$pool)
+        {
+            Write-Warning "The Application pool: $pool already exists, so removing the pool"
+            Remove-Item IIS:\AppPools\$pool -Force -Recurse -verbose
+            Write-Host "The AppPool: $pool deleted successfully" -ForegroundColor Green
+        }
+        else
+        {
+            Write-Host "The Application Pool: $pool does not exist, hence creating new one." -ForegroundColor White
+        }
+
+        New-WebAppPool -Name $pool -Force -Verbose
+        Write-Host "The AppPool: $pool created successfully" -ForegroundColor Green
+
+        $result =  Get-Item IIS:\AppPools\$pool -Force -verbose
+
+        #Version
+        if(![string]::IsNullOrWhiteSpace($version))
+        {
+            if($version -eq "v2.0" -or $version -eq "v4.0")
+            {
+                $result.managedRuntimeVersion = $version
+            }
+            elseif($version -eq "No Managed Code")
+            {
+                $result.managedRuntimeVersion = ""
+            }
+            else
+            {
+                Write-Error -Message "Invalid Version value. Version should be v2.0/v4.0/No Managed Code" -ErrorAction Stop
+            }
+        }
+        else
+        {
+            Write-Error -Message "Version should not be empty" -ErrorAction Stop
+        }
+
+        #Mode
+        if(![string]::IsNullOrWhiteSpace($mode))
+        {
+            if($mode -eq "Integrated" -or $mode -eq "Classic")
+            {
+                $result.managedPipelineMode = $mode
+            }
+            else
+            {
+                Write-Error -Message "Invalid Mode value, mode should be Integrated/Classic" -ErrorAction Stop
+            }
+        }
+        else
+        {
+            Write-Error -Message "Mode should not be empty" -ErrorAction Stop
+        }
+
+        #Queue Length
+        if(![string]::IsNullOrWhiteSpace($quelength))
+        {
+            if(([convert]::ToInt32($quelength) -ge 10) -and ([convert]::ToInt32($quelength) -le 65535))
+            {
+                $result.queueLength = [Convert]::ToInt32($quelength)
+            }
+            else
+            {
+                Write-Error -Message "Invalid Range Passed, range should be 10 to 65535" -ErrorAction Stop
+            }
+        }
+        else
+        {
+            Write-Error -Message "Queue Length Should not be empty" -ErrorAction Stop
+        }
+
+        #Enable32bit
+        if(![string]::IsNullOrWhiteSpace($enable32bit))
+        {
+            if("$enable32bit" -eq "True")
+            {
+                $result.enable32BitAppOnWin64 = $true
+            }
+            else
+            {
+                $result.enable32BitAppOnWin64 = $false
+            }
+        }
+        else
+        {
+            Write-Error -Message "Enable32bit should not be empty" -ErrorAction Stop
+        }
+
+        #Identity Type
+        if(![string]::IsNullOrWhiteSpace($identitytype))
+        {
+            if($identitytype -eq "LocalSystem")
+            {
+                $result.processModel.identityType = "LocalSystem"
+            }
+            elseif($identitytype -eq "LocalService")
+            {
+                $result.processModel.identityType = "LocalService"
+            }
+            elseif($identitytype -eq "NetworkService")
+            {
+                $result.processModel.identityType = "NetworkService"
+            }
+            elseif($identitytype -eq "SpecificUser")
+            {
+                $result.processModel.identityType = $identitytype
+                $result.processModel.userName = $username
+                $result.processModel.password = $password
+            }
+            else
+            {
+                $result.processModel.identityType = "ApplicationPoolIdentity"
+            }
+        }
+        else
+        {
+            Write-Host "Setting the default identiytype as Applicationpoolidentiy" -ForegroundColor White
+            Write-Error -Message "Identity Type should not be empty" -ErrorAction Stop
+        }
+
+        $result | Set-Item -Force -Verbose
+    }
+    else
+    {
+        Write-Error -Message "The Application name should not be empty" -ErrorAction Stop
+    }
+	
+	
+---------------------------------
+
+$Data=Get-Content -Path D:\Devops\AZ-800\pool.json | ConvertFrom-Json
+#load the JSON values into  local varaibles
+
+$pool=$data.Name
+$version=$Data.version
+$mode=$Data.mode
+$queuelength=$Data.queuelength
+$enable32bit=$Data.enable32bit
+$identity=$Data.identitytype
+$user=$Data.username
+$password=$Data.password
+
+#validate pool name if($pool -ne "" -and $pool -ne $null) -- former method
+if(-not ([string]::IsNullOrWhiteSpace($pool))){
+    #import module webadministration
+    Import-Module webadministration -Verbose
+    #test the app-pool  exist or not . if exist then delete or set mesaage
+    if(Test-Path IIS:\AppPools\$pool){
+        Write-Warning "The given App-pool:$pool already exist. Hence removing"
+        Remove-Item IIS:\AppPools\$pool -Force -Recurse -Verbose
+    }
+    else {
+        Write-Host "The given App-pool:$pool doesnot not exist. Hence creating new" -ForegroundColor Green
+    } 
+    
+    #create new webapppool
+    New-WebAppPool -Name $pool -Force
+    #load the above created app-pool into local varaible
+    $result=Get-Item IIS:\AppPools\$pool -Force
+
+    #validate managed runtime version
+    if(-not([string]::IsNullOrWhiteSpace($version))){
+        if(($version -eq "v2.0") -or ($version -eq "v4.0")){
+            $result.managedRuntimeversion=$version
+        }
+        elseif($version -eq "No Managed Code"){
+            $result.managedRuntimeversion=""
+        }
+        else{
+            Write-Error -Message "version value should be v2.0 or v4.0 or No Managed code" -ErrorAction Stop
+        }
+    }
+    else {
+        Write-Error -Message " version should not be empty" -ErrorAction Stop
+    }
+
+    #validate managed pipeline mode
+    if(-not([string]::IsNullOrWhiteSpace($mode))){
+        if(($mode -eq "Integrated") -or ($mode -eq "Classic")){
+            $result.ManagedPipelineMode=$mode
+        }
+        else {
+            Write-Error -Message "value should be Integrated or Classic" -ErrorAction Stop
+        }
+    }
+    else {
+        Write-Error -Message "Mode value should not be null or emtpy and value should be Integrated or Classic"
+    }
+    #validate queuelength
+    if(-not([string]::IsNullOrWhiteSpace($queuelength))){
+        if(([convert]::ToInt64($queuelength)-ge 10) -and ([convert]::ToInt64($queuelength) -le 65535)){
+            $result.queuelength=[convert]::ToInt64($queuelength)
+        }
+        else {
+            Write-Error -Message "queuelength value should be between 10-65535" -ErrorAction stop
+        }
+    }
+    else {
+        Write-Error -Message "Queuelength value should not be null" -ErrorAction Stop
+    }
+    #validate enable32bit
+    if(-not([string]::IsNullOrWhiteSpace($enable32bit))){
+        if(("$enable32bit" -eq "True") -or ("$enable32bit" -eq "False")){
+            $result.enable32BitAppOnWin64=$enable32bit
+        }
+        else {
+            Write-Error -Message "Enable32bit value should be true|false or 1|0" -ErrorAction Stop
+        }
+    }
+    else {
+        Write-Error -Message "enable32bit values should not be null or empty" -ErrorAction stop
+    }
+
+    #validate identity
+    if(-not ([string]::IsNullOrWhiteSpace($identity))){
+        if($identity -eq "LocalSystem"){
+            $result.Processmodel.Identitytype=$identity
+        }
+        elseif($identity -eq "LocalService"){
+            $result.Processmodel.Identitytype=$identity
+        }
+        elseif($identity -eq "NetworkService"){
+            $result.Processmodel.Identitytype=$identity
+        }
+        elseif($identity -eq "SpecificUser"){
+            $computer=$env:COMPUTERNAME
+            Add-type -AssemblyName system.directoryservices.AccountManagement
+            $creds=New-Object -TypeName System.DirectoryServices.AccountManagement.PrincipalContext('machine', $computer)
+            $credstatus=$creds.ValidateCredentials($user, $password)
+            if($credstatus -eq "true"){
+                $result.processModel.identityType="SpecificUser"
+                $result.processModel.userName=$user
+                $result.processModel.password=$password
+            }
+            else {
+                Write-Error -Message "Invalid credentials" -ErrorAction Stop
+            }
+        }
+        else{
+            Write-Warning "No matching identitytype found .hence applying default" 
+            $result.Processmodel.identitytype="ApplicationPoolIdentity"
+        }
+    }
+    else{
+        Write-Error -Message "Identiytype value should be LocalSystem or LocalService or NetworkService or SpecificUser or ApplicationPoolIdentity" -ErrorAction stop
+    }
+
+    $result |Set-Item -Force -Verbose
+}# end of main if pool
+else{
+    Write-Error -Message "Pool name should not be empty. Hence aborting execution" -ErrorAction Stop
+}
+
+
+{
+    "Name":"Json",
+    "version":"v4.0",
+    "mode":"Integrated",
+    "queuelength":9999,
+    "enable32bit":false,
+    "identitytype":"SpecificUser",
+    "username":"Test80",
+    "password":"India@123"
+
+}	
+
+
+
+
+
+

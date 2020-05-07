@@ -1,0 +1,182 @@
+Interview Methods:
+
+#####JENKINS:
+Jenkins Cloud Bees
+Promoting a build means
+free style and Maven Job diff
+Upstream and down stream
+Jenkins Directory structure
+Jenkins Plugin Strategies
+Workf flow lib in jenkins
+Security Structure in Jenkins
+Jenkins can we create a permission that few can access a folder in jenkins and few not able to
+Port of jenkins
+Continuous Integration vs Continuous Delivery vs Continuous Deployment flow
+How many servers you are using
+How to Setup Webhooks method
+Post-build Actions in Jenkins
+Jenkins Mail Notification Methods
+How can I access Jenkins environment variables in workspace
+jenkins Memory Issue. So i want to save last 5 five builds. How?
+How to run Docker in jenkins pipeline
+Create and deletion of containers will be taken care by jenkins or You
+In jenkins once the build is success what will happen to that container.
+In maven project if containers are deleted every time it has to fetch the data. Which is time consuming. How to over come?
+ANS: Using Vol. Agent as Docker  and specify a vol by mapping local M2 to container Vol. If i can Local M2. with Container M2 I can overcome.
+MultiBrach Pipeline means
+Forgot Jenkins username and Pwd. How will you login back
+Commit Based Job in Jenkins? What configurations you need to do in jenkins and github
+Multi Module Project configurations you need to do in parent and child project? What is dependency Management
+How to create multiple free style jobs with different names with same job configurations.
+How to copy your job in your machine to other loacl jenkins machine?
+How to downgrade pluign in jenkins
+Can we have differnt nodes for each stage
+Types of build triggers and diff b/w Build Periodically and Poll SCM
+How do you take jenkins Backup
+How to set jenkins build to fail based specific word in console output?
+Active and reactive parameters (Dynamic Parameterization) in jenkins
+How to customize the build number to something else in jenkins job page
+What is shared library in jenkins
+
+
+#####ANSIBLE:
+Ansible-- Role, template, Handlers. 
+What are Adhock Commands Why we need them
+How to get detailed logs and output while executing playbook command
+What is Ansible.cfg file
+Ansible 5 modules used in work
+Which module is used to Copy a file from node to master
+Five task two on Local and remaining on Node
+Master and Node setup process
+Ansible roles and need of it.
+Ansible Galaxy
+Ansible Facts
+Ansible master as Windows? What windows module you worked? Configurations needed to work with windows
+How to make our YAML files reusable?
+Ansible Vault and Ansible tower?
+How to run a playbook as root user?
+Diff b/w copy and Fetch Module?
+What we need ansible
+Can we create custom Modules
+What is dynamic inventory in ansible
+Anible play book to play on Ubuntu and Centos
+How to handle prompts with ansible palybook -y we gives how to code in playbook
+
+
+####DOCKER
+Version of Docker using
+5 Best Practices of Docker
+ANS:1.CMD VS RUN ----> Lot may run increases layers and size Less runs and using shell commnds execution
+    2. Base image vs scratch
+	3. Once dependency files should should be there and other remove
+	
+Docker Kill VS Docker Stop
+command for listing all the exited containers
+How to clean up docker host(Not used images)
+Can we have Multiple CMD in Docker file?
+Docker Swarm and Docker Compose
+Docker save and Docker Load
+Have worked on Multistage Dockerfile? Why we need that?
+can we copy a file from local to docker container without login into docker container
+A volume is attached to container. If container crashes what happen to volume?
+ADD VS COPY in Docker File
+Huge file has to be sent to daemon which takes much time. How will you send in better method?
+Command to remove stopped and running containers?
+Inside container many changes like delete, create, modify but I want to check which file is deleted and which action has been taken. What is the command?
+ONBUILD instruction in Dockerfile
+use of .dockerignore file
+In dockerfile how to give arg. If supply 1 gives maven 2.x version. supply 2 gives  maven latest how?
+
+
+
+###KUBERNETES
+Can we have multiple ontainers in a pod?
+Can we have same containers in a pod
+Two container in a pod. One is working other not. How can we find which one is not working
+What is Liveliness and Readiness probes? Why we need them?
+Monotoring tool of kubernetes if worked
+Can we deploy a particular pod on to a particular node
+What is init and side-car containers? Where we use these?
+Which one is Default deployment strategy? How it works?
+Command to check logs in POD
+Service types in KUBERNETES?
+Ans: ClusterIP, Node POrt, LoadBalancer ....
+What is the link between pod and service
+Objects in Kubernetes? Explain about them?
+Commands to list pods and deployments
+components in master node and slave nodes
+what is stateful sets in kubernetes?
+Tools to maintain kubernetes log files
+
+
+
+
+#####GIT
+Which Branching Strategy
+How to Git pull vs Git fetch
+Git clone a specific branch
+Git folder name is changed after cloning. One of your team mate asked to share the link. How will i get.
+ANS: goto .git folder and check from where last commit is done.
+How to clone a specific branch or master Branch and the last commit only.
+Ans: $ git clone <link> -b master -death 1
+What is Sub-Module and why we need sub module
+Multiple file added to git. One of the file i want to take out of staging area?
+GIT Cherrypick
+Git stash
+Conflicts in git
+Command to list all the Branches
+git reset. Types of git reset
+How to delete local branch and remote branch
+Diff b/w git diff and git status
+What are hooks in Git
+
+ 
+
+
+####TERRAFORM:
+Technology stacks used in company --- terraform
+DF state in terraform
+
+
+
+###AWS: 
+How you achieve Autoscaling in AWS
+How to copy file from windows to AWS machine
+What are role and Policies in AWS IAM
+50 users have to give same permission how?
+Programatic access how will you give
+Ec2 Machine I have installed many apps. I want to create same config machine. How?
+AMI region specific. How to use same AMI in other region?
+Why we need security groups? What is default outbound rules?
+What is VPC? Brief about VPC?
+Which load balancers your worked and difference between those
+How to auto scale is done?
+Auto Sacling rule load goes more than 60% create a new. Inst1 62%, Inst2 30%, Inst3 30#. Will it create new instance?
+Ans: Auto scaling takes Avg of three machines
+ 
+
+
+###Shell:
+What is shebang in shell? Why we use it?
+How to replace a specific word in shell
+How to get present working folder in shell
+How to find the position of A B C D where A,B,C,B position changes. Give the value of the position 
+Script to find directory or a file. If dir remove the dir else show as file
+How to check whether a particular port is used or not
+Script for Palindrome or not
+Command to get no of line in a file
+File with Ip Address. List unique IP addresses with no of time its present in file
+ANS:  cat <file name> | unique -n
+What is Exit status in UNIX
+How to display the save file name in shell script Ex: Magic.sh ---> This is from Magic.sh ; Change to Magic-test.sh  ----> This is from Magic-test.sh
+Ans: Echo $0
+Command to find empty files in a given directory
+SSH connectivity in two machine. What files present in .ssh
+How to schedule a shell script in unix machine
+How to identify IP addresses in log file and count of IP addresses in log file
+Command to get load average?
+
+ 
+
+
+
