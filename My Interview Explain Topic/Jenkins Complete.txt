@@ -84,7 +84,7 @@ Command line – to start the node agent using the command line, the client need
 
 Configure the default port of the Jenkins build server
 The default port number can be changed in the config file at
-$ sudo vim /etc/default/jenkins
+$ sudo vim /etc/default/jenkins  or sudo vim /etc/sysconfig/jenkins ---> JENKINS_PORT=”8123"
 Here you can set a different port number, e.g. HTTP_PORT=8082
 Now you need to restart Jenkins with
 $ service jenkins restart
