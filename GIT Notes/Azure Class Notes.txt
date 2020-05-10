@@ -973,7 +973,7 @@ if($Apppools.Length -ne 0){
         $version=$i.$item.version
         $mode=$i.$item.mode
         $queuelength=$i.$item.queuelength
-        $enable32bit=$i.$item.'32bit'
+        $enable32bit=$i.$item.enable32bit
         $identity=$i.$item.identityType
         $user=$i.$item.user
         $password=$i.$item.password
