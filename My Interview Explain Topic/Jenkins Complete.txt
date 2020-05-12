@@ -87,7 +87,7 @@ The default port number can be changed in the config file at
 $ sudo vim /etc/default/jenkins  or sudo vim /etc/sysconfig/jenkins ---> JENKINS_PORT=”8123"
 Here you can set a different port number, e.g. HTTP_PORT=8082
 Now you need to restart Jenkins with
-$ service jenkins restart
+$ service jenkins restart  or sudo systemctl restart jenkins
 or by adding /restart at the end of the Jenkins URL, e.g. https://yourjenkinsurl/ci/restart.
 
 Declarative versus Scripted Pipeline syntax:
@@ -193,6 +193,171 @@ Did you automate anything in your project? Please explain
 What is input directive?
 The input directive on a stage allows you to prompt for input, using the input step.If the input is approved, the stage will then continue. Any parameters provided as part of the input submission will be available in the environment for the rest of the stage.
 
+#####JENKINS:
+Jenkins Cloud Bees
+Ans: CloudBees Core is a centralized management solution that controls Jenkins Masters providing scalable security, compliance, and efficiency of Jenkins in Enterprises.
+
+Promoting a build means
+Ans:Keeping multiple ptojects in downstream and upstream. Here CI is done trigger CD. For this process we used promote build to deploy to production
+and run production release job
+I have different Jenkins pipeline jobs for Build, Deploy, QA Automation tests and Release to Production. I am building a Jenkins Delivery pipeline to run these jobs in a single pipeline. The pipeline should be like once QA certification is done, a build job should be triggered for approval and then Release preparation jobs can run further. Flow should be like:
+Run the Build, Junit and SonarQube Analysis in single pipeline job using Jenkinsfile on Develop branch
+Run the QA Deployment job after the above job is stable or success.
+Run the QA Automation job on QA environment
+Here, I want a promote a build for approval before start the Release process on Release branch
+Once the promotion is approved, release versioning/tagging job is triggered
+Run the Production release job.
+(OR)
+For this we uses promoted builds plugin "General" section, click on "Promote builds when"
+name and select a star and "Promote immediately when build is " or "Manually Approve" and built the job.
+
+Upstream and down stream
+The upstream job is the one that is triggered before the actual job is triggered. The downstream job is the one that is triggered after the actual job is triggered. We can configure the actual job not to be triggered if the upstream job is failed.
+
+Jenkins Directory structure
+/var/lib/jenkins or /var/lib/jenkins_home
+JENKINS_HOME
+ +- config.xml     (jenkins root configuration)
+ +- *.xml          (other site-wide configuration files)
+ +- userContent    (files in this directory will be served under your http://server/userContent/)
+ +- fingerprints   (stores fingerprint records)
+ +- nodes          (slave configurations)
+ +- plugins        (stores plugins)
+ +- secrets        (secretes needed when migrating credentials to other servers)
+ +- workspace (working directory for the version control system)
+     +- [JOBNAME] (sub directory for each job)
+ +- jobs
+     +- [JOBNAME]      (sub directory for each job)
+         +- config.xml     (job configuration file)
+         +- latest         (symbolic link to the last successful build)
+         +- builds
+             +- [BUILD_ID]     (for each build)
+                 +- build.xml      (build result summary)
+                 +- log            (log file)
+                 +- changelog.xml  (change log)
+				 
+Jenkins Plugin Strategies
+
+Workf flow lib in jenkins
+
+Security Structure in Jenkins
+Ans: 1. Access Control:users are authenticated and appropriate set of permissions are given to them.
+Security Realm and Authorization Strategy
+Login to Jenkins with your credentials.
+Go to "Manage Jenkins".
+Go to "Configure Global Security".
+In the option "Authorization" select "Project-based Matrix Authorization Strategy" and put the privileges as appropriate.
+Permissions are given to these topics : Overall, Slave, Job, Run, View, SCM.
+2. Protect users of Jenkins from other threats
+Slave To Master Access Control, Securing JENKINS_HOME
+Disabling Security:
+Stop Jenkins (the easiest way to do this is to stop the servlet container.)
+Go to $JENKINS_HOME in the file system and find config.xml file.
+Open this file in the editor.
+Look for the <useSecurity>true</useSecurity> element in this file.
+Replace true with false
+Remove the elements authorizationStrategy and securityRealm
+Start Jenkins
+When Jenkins comes back, it will be in an unsecured mode where everyone gets full access to the system.
+
+Change default Port of jenkins
+The default port number can be changed in the config file at
+$ sudo vim /etc/default/jenkins  or sudo vim /etc/sysconfig/jenkins ---> JENKINS_PORT=”8123"
+Here you can set a different port number, e.g. HTTP_PORT=8082
+Now you need to restart Jenkins with
+$ service jenkins restart  or sudo systemctl restart jenkins
+or by adding /restart at the end of the Jenkins URL, e.g. https://yourjenkinsurl/ci/restart.
+
+Continuous Integration vs Continuous Delivery vs Continuous Deployment flow
+
+How many servers you are using
+
+How to Setup Webhooks method
+GitHub webhooks in Jenkins are used to trigger the build whenever a developer commits something to the master branch.
+GIT HUB: Goto your project repository --> "settings" ---> "webhooks." ---> "Add webhooks"  add Payload URL from jenkins.
+Jenkins: Manage Jenkins ---> Configure System ---> GitHub Pull Requests  ---> Published Jenkins URL and add repo link
+Now go to the Jenkins pipeline and select "GitHub hook trigger for GITScm polling."
+
+Post-build Actions in Jenkins  
+Ans: Steps that are executed after build are called postbuild actions
+Execute Windows batch command, Execute shell, Invoke Ant, Invoke Gradle script, Invoke top-level Maven targets, E-mail Notification, Delete workspace when build is done
+Archive the artifacts, Build other projects
+
+How To Send Email Notification In Jenkins?
+Ans: Using Email Extension Plugin – This plugin lets you configure every aspect of email notifications.
+Using Default Email Notifier – This comes with Jenkins by default. It has a default message consisting of a build number and status.
+Manage Jenkins-> Configure System --> email notification section 
+using Gmail then type smtp.gmail.com for the SMTP server.
+Use SMTP authentication --> mail username and password --> SSL option --> port number as 465.
+post {
+        always {
+            emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+        }
+		
+How can I access Jenkins environment variables in workspace?
+Manage Jenkins -> Configure System -> Global Properties -> Environment Variables -> Add
+BUILD_ID, BUILD_NUMBER, BUILD_TAG, JENKINS_URL, NODE_NAME
+Ex: echo "${env.JENKINS_URL}"  or echo ${BUILD_NUMBER
+
+jenkins Memory Issue. So i want to save last 5 five builds. How?
+Ans: Discard old build: Set -Days to Keep Build, Max Builds to Keep. Max it displays 30. To see all builds goto /var/lib/jenkins/jobs/myjob/builds
+
+How to run Docker in jenkins pipeline
+Ans: As Agent Docker
+
+Create and deletion of containers will be taken care by jenkins or You
+
+In jenkins once the build is success what will happen to that container.
+
+In maven project if containers are deleted every time it has to fetch the data. Which is time consuming. How to over come?
+ANS: Using Vol. Agent as Docker  and specify a vol by mapping local M2 to container Vol. If i can Local M2. with Container M2 I can overcome.
+
+MultiBrach Pipeline means
+SCM repository in which we have three branches these are Master, Develop and Feature.
+Master branch have complete CI/CD pipeline script, Develop branch have Only CI pipeline script and feature branch have online unit test pipeline script.
+To perform complete CI/CD pipeline for the master branch and Only CI pipeline for the develop branch. You can do this with the help of multibranch pipeline project.
+
+Commit Based Job in Jenkins? What configurations you need to do in jenkins and github
+Poll SCM cron tab  and Triggering a build using Git hooks
+
+How to create multiple free style jobs with different names with same job configurations.
+
+How to downgrade pluign in jenkins
+manage plugin and click on downgrade.
+
+Can we have differnt nodes for each stage
+
+Types of build triggers and diff b/w Build Periodically and Poll SCM
+
+How to set jenkins build to fail based specific word in console output?
+text-finder plugin .*(?i)failed.*|.*(?i)error.* would find the words "failed" or "error" in a case insensitive manner.
+ This will cause any build which outputs "failed" or "error" to fail in Jenkins.
+
+Active and reactive parameters (Dynamic Parameterization) in jenkins
+Jenkins build need to have inputs like check-boxes, radio buttons, multi-select values, etc. So to achieve this use case there is a plugin called Active Choice Plugin
+
+How to customize the build number to something else in jenkins job page
+Manage Jenkins -> Script Console by writing updateNextBuildNumber(1)
+or Next Build Number Plugin
+
+What is shared library in jenkins
+Jenkins Shared Libraries are written in Groovy and allow you to create common sets of logic, and share that among teams/projects/organizations.
+Here you can simply load a library in to Jenkins and every pipeline job on that Jenkins master has access to that shared library.
+The pipeline code is declared in global variable. When we call the variable entire code is runned and deployed.
+jenkins-shared-library
+|____vars  ----global shared library code with  .groovy and .txt
+|____src   ---- regular java source directory, added to the classpath during every script compilation. 
+|____resources  -----non-groovy files like Json, 
+
+How to Clear Jenkins build history
+ANS:1. GUI--- Goto build history and click on delete build.
+2. Login to Jenkins command-line.
+$ rm -rf jobs/${JOB_NAME}/builds/${BUILD_NUM}*
+(or)
+$ ls jobs/jobname/builds
+$ rm -rf jobs/jobname/builds/97* jobs/jobname/builds/13*
+Note: After removing jobs or builds from file system you need to go to Manage Jenkins in the Jenkins GUI and click Reload Configuration from Disk.
+Note: The Jenkins home directory might be in /var/jenkins_home or /var/lib/jenkins or another location.
 
 
 

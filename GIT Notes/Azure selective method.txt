@@ -3,22 +3,23 @@ param(
     [string[]]$components
 )
 
-$Data=Get-Content -Path H:\AZURE\POWERSHELL\appPOOL2.json | ConvertFrom-Json
+$data=Get-Content -Path H:\AZURE\POWERSHELL\appPOOL2.json | ConvertFrom-Json
 #load the JSON values into  local varaibles
 
 #create empty array
 $Apppools=@()
 #load the array object from json and append them into empty array variable
-($data.IISDeploy.AppPools).ForEach{
-    $Apppools+=$_.psobject.properties.Name
-}
+($data.IISDeploy.AppPools).ForEach {$Apppools+=$_.psobject.properties.Name}
 
-if($components.Length -ne 0){
-foreach($item in $components){
+if($components.Length -ne 0)
+{
+foreach($item in $components)
+{
     Write-Host "Working on selected app-pool:$item" -ForegroundColor Green
-    if($Apppools -contains $item){
+    if($Apppools -contains $item)
+	{
             Write-Host "Working on App-pool :$item" -ForegroundColor Green
-            ($i=$Data.IISDeploy.AppPools)|Where-Object{$_.Name -eq $item}
+            ($i=$data.IISDeploy.AppPools)|Where-Object{$_.Name -eq $item}
             # load the variables from json for specific app-pool
             
             $pool=$i.$item.Name
@@ -31,15 +32,18 @@ foreach($item in $components){
             $password=$i.$item.password
     
             #validate pool name if($pool -ne "" -and $pool -ne $null) -- former method
-    if(-not ([string]::IsNullOrWhiteSpace($pool))){
+    if(-not ([string]::IsNullOrWhiteSpace($pool)))
+	{
         #import module webadministration
         Import-Module webadministration
         #test the app-pool  exist or not . if exist then delete or set mesaage
-        if(Test-Path IIS:\AppPools\$pool){
+        if(Test-Path IIS:\AppPools\$pool)
+		{
             Write-Warning "The given App-pool:$pool already exist. Hence removing"
             Remove-Item IIS:\AppPools\$pool -Force -Recurse -Verbose
         }
-        else {
+        else 
+		{
             Write-Host "The given App-pool:$pool doesnot not exist. Hence creating new" -ForegroundColor Green
         } 
         
@@ -49,43 +53,56 @@ foreach($item in $components){
         $result=Get-Item IIS:\AppPools\$pool -Force
     
         #validate managed runtime version
-        if(-not([string]::IsNullOrWhiteSpace($version))){
-            if(($version -eq "v2.0") -or ($version -eq "v4.0")){
+        if(-not([string]::IsNullOrWhiteSpace($version)))
+		{
+            if(($version -eq "v2.0") -or ($version -eq "v4.0"))
+			{
                 $result.managedRuntimeversion=$version
             }
-            elseif($version -eq "No Managed Code"){
+            elseif($version -eq "No Managed Code")
+			{
                 $result.managedRuntimeversion=""
             }
-            else{
+            else
+			{
                 Write-Error -Message "version value should be v2.0 or v4.0 or No Managed code" -ErrorAction Stop
             }
         }
-        else {
+        else 
+		{
             Write-Error -Message " version should not be empty" -ErrorAction Stop
         }
     
         #validate managed pipeline mode
-        if(-not([string]::IsNullOrWhiteSpace($mode))){
-            if(($mode -eq "Integrated") -or ($mode -eq "Classic")){
+        if(-not([string]::IsNullOrWhiteSpace($mode)))
+		{
+            if(($mode -eq "Integrated") -or ($mode -eq "Classic"))
+			{
                 $result.ManagedPipelineMode=$mode
             }
-            else {
+            else 
+			{
                 Write-Error -Message "value should be Integrated or Classic" -ErrorAction Stop
             }
         }
-        else {
+        else 
+		{
             Write-Error -Message "Mode value should not be null or emtpy and value should be Integrated or Classic"
         }
         #validate queuelength
-        if(-not([string]::IsNullOrWhiteSpace($queuelength))){
-            if(([convert]::ToInt64($queuelength)-ge 10) -and ([convert]::ToInt64($queuelength) -le 65535)){
+        if(-not([string]::IsNullOrWhiteSpace($queuelength)))
+		{
+            if(([convert]::ToInt64($queuelength)-ge 10) -and ([convert]::ToInt64($queuelength) -le 65535))
+			{
                 $result.queuelength=[convert]::ToInt64($queuelength)
             }
-            else {
+            else 
+			{
                 Write-Error -Message "queuelength value should be between 10-65535" -ErrorAction stop
             }
         }
-        else {
+        else 
+		{
             Write-Error -Message "Queuelength value should not be null" -ErrorAction Stop
         }
         #validate enable32bit
@@ -93,57 +110,70 @@ foreach($item in $components){
             if(("$enable32bit" -eq "True") -or ("$enable32bit" -eq "False")){
                 $result.enable32BitAppOnWin64=$enable32bit
             }
-            else {
+            else 
+			{
                 Write-Error -Message "Enable32bit value should be true|false or 1|0" -ErrorAction Stop
             }
         }
-        else {
+        else 
+		{
             Write-Error -Message "enable32bit values should not be null or empty" -ErrorAction stop
         }
     
         #validate identity
-        if(-not ([string]::IsNullOrWhiteSpace($identity))){
-            if($identity -eq "LocalSystem"){
+        if(-not ([string]::IsNullOrWhiteSpace($identity)))
+		{
+            if($identity -eq "LocalSystem")
+			{
                 $result.Processmodel.Identitytype=$identity
             }
-            elseif($identity -eq "LocalService"){
+            elseif($identity -eq "LocalService")
+			{
                 $result.Processmodel.Identitytype=$identity
             }
-            elseif($identity -eq "NetworkService"){
+            elseif($identity -eq "NetworkService")
+			{
                 $result.Processmodel.Identitytype=$identity
             }
-            elseif($identity -eq "SpecificUser"){
+            elseif($identity -eq "SpecificUser")
+			{
                 $computer=$env:COMPUTERNAME
                 Add-type -AssemblyName system.directoryservices.AccountManagement
                 $creds=New-Object -TypeName System.DirectoryServices.AccountManagement.PrincipalContext('machine', $computer)
                 $credstatus=$creds.ValidateCredentials($user, $password)
-                if($credstatus -eq "true"){
+                if($credstatus -eq "true")
+				{
                     $result.processModel.identityType="SpecificUser"
                     $result.processModel.userName=$user
                     $result.processModel.password=$password
                 }
-                else {
+                else 
+				{
                     Write-Error -Message "Invalid credentials" -ErrorAction Stop
                 }
             }
-            else{
+            else
+			{
                 Write-Warning "No matching identitytype found .hence applying default" 
                 $result.Processmodel.identitytype="ApplicationPoolIdentity"
             }
         }
-        else{
+        else
+		{
             Write-Error -Message "Identiytype value should be LocalSystem or LocalService or NetworkService or SpecificUser or ApplicationPoolIdentity" -ErrorAction stop
         }
     
         $result |Set-Item -Force -Verbose
     }# end of main if pool
-    else{
+    else
+	{
         Write-Error -Message "Pool name should not be empty. Hence aborting execution" -ErrorAction Stop
     }
     
         
     }
-    else{
+    else
+	{
         Write-Error -Message " the given component : $item doesnot exist in JSON" -ErrorAction 
     }
 }

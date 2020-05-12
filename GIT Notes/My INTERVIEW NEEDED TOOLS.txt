@@ -1,11 +1,11 @@
 
 Topics for interview: 
 
-Jenkins complete 
+Jenkins complete  --------> DONE
 
-Docker Complete
+Docker Complete    -------> DONE
 
-Kubernetes Complete
+Kubernetes Complete  -------> DONE
 
 Ansible Few
 
@@ -13,7 +13,7 @@ Terraform Complete
 
 GIT and GIT FLOW Complete
 
-Maven Complete Cycle
+Maven Complete Cycle -------> DONE
 
 NAGIOS COMPLETE
 
@@ -23,21 +23,21 @@ AWS CLI EC2    ------------->DONE
 
 AWS CLI VPC    --------------> DONE
 
-AWS CLI S3       --------------> Done
+AWS CLI S3       --------------> DONE
 
 AWS IAM          ----------> DONE
 
-AWS Elastic Block Store (EBS)  ---------> Done
+AWS Elastic Block Store (EBS)  ---------> DONE
 
-AWS ELB load balancer  ----------------> Done
+AWS ELB load balancer  ----------------> DONE
 
 AWS Elastic Beanstalk  ------------> DONE
 
-Amazon DynamoDB  -------------> Done
+Amazon DynamoDB  -------------> DONE
 
 AWS Lambda
 
-AWS CLOUD WATCH   ----------> 
+AWS CLOUD WATCH 
 AWS CloudTrail
 AWS SNS
 

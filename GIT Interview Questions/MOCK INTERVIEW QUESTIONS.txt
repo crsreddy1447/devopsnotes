@@ -1,44 +1,5 @@
 Interview Methods:
 
-#####JENKINS:
-Jenkins Cloud Bees
-Promoting a build means
-free style and Maven Job diff
-Upstream and down stream
-Jenkins Directory structure
-Jenkins Plugin Strategies
-Workf flow lib in jenkins
-Security Structure in Jenkins
-Jenkins can we create a permission that few can access a folder in jenkins and few not able to
-Port of jenkins
-Continuous Integration vs Continuous Delivery vs Continuous Deployment flow
-How many servers you are using
-How to Setup Webhooks method
-Post-build Actions in Jenkins
-Jenkins Mail Notification Methods
-How can I access Jenkins environment variables in workspace
-jenkins Memory Issue. So i want to save last 5 five builds. How?
-How to run Docker in jenkins pipeline
-Create and deletion of containers will be taken care by jenkins or You
-In jenkins once the build is success what will happen to that container.
-In maven project if containers are deleted every time it has to fetch the data. Which is time consuming. How to over come?
-ANS: Using Vol. Agent as Docker  and specify a vol by mapping local M2 to container Vol. If i can Local M2. with Container M2 I can overcome.
-MultiBrach Pipeline means
-Forgot Jenkins username and Pwd. How will you login back
-Commit Based Job in Jenkins? What configurations you need to do in jenkins and github
-Multi Module Project configurations you need to do in parent and child project? What is dependency Management
-How to create multiple free style jobs with different names with same job configurations.
-How to copy your job in your machine to other loacl jenkins machine?
-How to downgrade pluign in jenkins
-Can we have differnt nodes for each stage
-Types of build triggers and diff b/w Build Periodically and Poll SCM
-How do you take jenkins Backup
-How to set jenkins build to fail based specific word in console output?
-Active and reactive parameters (Dynamic Parameterization) in jenkins
-How to customize the build number to something else in jenkins job page
-What is shared library in jenkins
-
-
 #####ANSIBLE:
 Ansible-- Role, template, Handlers. 
 What are Adhock Commands Why we need them

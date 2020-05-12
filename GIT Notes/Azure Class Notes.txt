@@ -1096,6 +1096,94 @@ else{
 } 
 }
 
+------------------
+12/05/2020
+
+{
+    "IISDeploy":{
+        "Sites":[
+            {"Google":{"Name":"Google","port":80,"physicalpath":"D:/Devops/IIS/Sites","Apppool":"Google"}}
+        ]
+    } 
+}
+$data=Get-Content -Path H:\AZURE\POWERSHELL\sites.json | ConvertFrom-Json
+#Declare Empty Variable
+$sites=@()
+# Assigning json value to enpty variable
+($data.IISDeploy.Sites).Foreach{
+    $sites+=$_.psobject.properties.name
+    
+}
+#validate sites length should not be 0
+if($sites.length -ne 0)
+{
+    foreach($item in $sites)
+    {
+        Write-Host "Working on Sites" -ForegroundColor Green
+        ($j=$data.IISDeploy.Sites)|Where-Object{$_.Name -eq $item}
+        $sites=$j.$item.Name
+        $port=$j.$item.port
+        $physicalpath=($j.$item.physicalpath).Replace("/","\")
+        $pool=$j.$item.Apppool
+
+        # Valid site name should not be empty
+        if($sites.length -ne 0)
+        {
+            Import-Module WebAdministration
+            if(Test-Path IIS:\Sites\$sites)
+            {
+                Write-Warning "The given site :$sites found. Hence deleting"
+                Remove-Item IIS:\Sites\$sites -Force -Verbose -Recurse
+            }
+            else 
+            {
+                Write-Host "No site found with name of :$sites. hence creating new" -ForegroundColor Green 
+                
+            }
+            #Validate physical path
+            if ($physicalpath.Length -ne 0) 
+            {
+                #Test the physical path
+                if (Test-Path $physicalpath) 
+                {
+                    Write-Warning "Physicalpath :$physicalpath already exist .hence Deleting"
+                    Remove-Item $physicalpath -Force -Recurse -Verbose
+                }
+                else 
+                {
+                    Write-Host "Physicalpath :$physicalpath doesnot exit. Hence creating new" -ForegroundColor Green
+                }
+                #create physical Path
+                New-Item $physicalpath\$sites -ItemType Directory -Force -Verbose
+
+
+            }
+            else
+            {
+                Write-Error -message "Physicalpath should not be null. please verify JOSN or declared variables "  -ErrorAction Stop
+            } # end of the physical path condition
+            #validate the port
+            if($port.length -ne 0)
+            {
+                New-Website -Name $sites -Port $port -PhysicalPath $physicalpath -ApplicationPool $pool -Force -ErrorAction Stop
+            }
+            else
+            {
+                Write-Error "Port number should not be empty .hence aborting the process" -ErrorAction Stop
+            }
+        }
+        else
+        {
+            Write-Error -Message "Site name should not be null or empty" -ErrorAction Stop 
+        }
+    }
+}
+else
+{
+    Write-Error -Message "Sites length should not Zero. please verify JSON" -ErrorAction stop
+}
+
+
 
 
 
