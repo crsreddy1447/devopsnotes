@@ -1144,14 +1144,14 @@ if($sites.length -ne 0)
             if ($physicalpath.Length -ne 0) 
             {
                 #Test the physical path
-                if (Test-Path $physicalpath) 
+                if (Test-Path $physicalpath\$sites) 
                 {
                     Write-Warning "Physicalpath :$physicalpath already exist .hence Deleting"
-                    Remove-Item $physicalpath -Force -Recurse -Verbose
+                    Remove-Item $physicalpath\$sites -Force -Recurse -Verbose
                 }
                 else 
                 {
-                    Write-Host "Physicalpath :$physicalpath doesnot exit. Hence creating new" -ForegroundColor Green
+                    Write-Host "Physicalpath :$physicalpath\$sites doesnot exit. Hence creating new" -ForegroundColor Green
                 }
                 #create physical Path
                 New-Item $physicalpath\$sites -ItemType Directory -Force -Verbose
