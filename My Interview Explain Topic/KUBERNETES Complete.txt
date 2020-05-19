@@ -133,9 +133,58 @@ Kubernetes load balancing:
 Internal load balancing: used to balance the loads automatically and allocates the pods within the necessary configuration
 External load balancing: It transfers or drags the entire traffic from the external loads to backend pods.
 
+Kubernetes Liveness and Readiness Probes:
+Liveness Probes:
+Kubernetes uses liveness probes to know when to restart a container. If a container is unresponsive perhaps the application is not working
+Liveness probe checks the container health as we tell it do, and if for some reason the liveness probe fails, it restarts the container. 
+Readiness Probes:
+Kubernetes uses readiness probes to decide when the container is available for accepting traffic. A pod is considered ready when all of its containers are ready. 
+If a pod is not ready, it is removed from service load balancers. Here if the container is not ready it fails the request or route it to other pods, which are capable of servicing requests.
 
+Can we have multiple containers in a pod?
+Yes. But not recommended. it is harder to troubleshoot the container because logs from different processes will be mixed together, and it is harder manage the processes lifecycle
 
+Can we have same containers in a pod
+Yes, you can add multiple container with same image. but with different port numbers
 
+Can we deploy a particular pod on to a particular node
+You can use node selectors to place specific pods on specific nodes, all pods in a project on specific nodes, or create a default 
+node selector to schedule pods that do not have a defined node selector or project selector. nodeSelector is a field of PodSpec.
+
+Which one is Default deployment strategy? How it works?
+The rolling deployment is the standard default deployment to Kubernetes. It works by slowly, one by one, replacing pods of the previous 
+version of your application with pods of the new version without any cluster downtime.
+A rolling update waits for new pods to become ready via your readiness probe before it starts scaling down the old ones. If there is a problem, the rolling update or deployment can be aborted without bringing the whole cluster down. 
+
+Recreate
+In this type of very simple deployment, all of the old pods are killed all at once and get replaced all at once with the new ones.
+
+Command to check logs in POD
+$ kubectl -n kube-system logs -f podname
+
+Service types in KUBERNETES?
+Ans: There are four types of Kubernetes services:
+ClusterIP. This default type exposes the service on a cluster-internal IP. You can reach the service only from within the cluster.
+NodePort. This type of service exposes the service on each node’s IP at a static port. A ClusterIP service is created automatically, and the NodePort service will route to it. From outside the cluster, you can contact the NodePort service by using “<NodeIP>:<NodePort>”.
+LoadBalancer. This service type exposes the service externally using the load balancer of your cloud provider. The external load balancer routes to your NodePort and ClusterIP services, which are created automatically.
+ExternalName. This type maps the service to the contents of the externalName field (e.g., foo.bar.example.com). It does this by returning a value for the CNAME record.
+.
+Objects in Kubernetes? Explain about them?
+Pod is the basic unit of kubernetes.
+
+what is stateful Vs stateless in kubernetes
+A stateless application is one which depends on no persistent storage. The only thing your cluster is responsible for is the code, and other static content, being hosted on it. That’s it, no changing databases, no writes and no left over files when the pod is deleted.
+A stateful application, on the other hand, has several other parameters it is supposed to look like database, persistance volume, are syncwith the app or not.
+
+Commands to list pods and deployments
+kubectl describe pods my-pod
+kubectl get pods
+
+Tools to maintain kubernetes log files
+What is init and side-car containers? Where we use these?
+What is the link between pod and service
+Two container in a pod. One is working other not. How can we find which one is not working
+Monotoring tool of kubernetes if worked
 
 
 

@@ -1,96 +1,72 @@
-Interview Methods:
-
-#####ANSIBLE:
-Ansible-- Role, template, Handlers. 
-What are Adhock Commands Why we need them
-How to get detailed logs and output while executing playbook command
-What is Ansible.cfg file
-Ansible 5 modules used in work
-Which module is used to Copy a file from node to master
-Five task two on Local and remaining on Node
-Master and Node setup process
-Ansible roles and need of it.
-Ansible Galaxy
-Ansible Facts
-Ansible master as Windows? What windows module you worked? Configurations needed to work with windows
-How to make our YAML files reusable?
-Ansible Vault and Ansible tower?
-How to run a playbook as root user?
-Diff b/w copy and Fetch Module?
-What we need ansible
-Can we create custom Modules
-What is dynamic inventory in ansible
-Anible play book to play on Ubuntu and Centos
-How to handle prompts with ansible palybook -y we gives how to code in playbook
-
-
-####DOCKER
-Version of Docker using
-5 Best Practices of Docker
-ANS:1.CMD VS RUN ----> Lot may run increases layers and size Less runs and using shell commnds execution
-    2. Base image vs scratch
-	3. Once dependency files should should be there and other remove
-	
-Docker Kill VS Docker Stop
-command for listing all the exited containers
-How to clean up docker host(Not used images)
-Can we have Multiple CMD in Docker file?
-Docker Swarm and Docker Compose
-Docker save and Docker Load
-Have worked on Multistage Dockerfile? Why we need that?
-can we copy a file from local to docker container without login into docker container
-A volume is attached to container. If container crashes what happen to volume?
-ADD VS COPY in Docker File
-Huge file has to be sent to daemon which takes much time. How will you send in better method?
-Command to remove stopped and running containers?
-Inside container many changes like delete, create, modify but I want to check which file is deleted and which action has been taken. What is the command?
-ONBUILD instruction in Dockerfile
-use of .dockerignore file
-In dockerfile how to give arg. If supply 1 gives maven 2.x version. supply 2 gives  maven latest how?
-
-
-
-###KUBERNETES
-Can we have multiple ontainers in a pod?
-Can we have same containers in a pod
-Two container in a pod. One is working other not. How can we find which one is not working
-What is Liveliness and Readiness probes? Why we need them?
-Monotoring tool of kubernetes if worked
-Can we deploy a particular pod on to a particular node
-What is init and side-car containers? Where we use these?
-Which one is Default deployment strategy? How it works?
-Command to check logs in POD
-Service types in KUBERNETES?
-Ans: ClusterIP, Node POrt, LoadBalancer ....
-What is the link between pod and service
-Objects in Kubernetes? Explain about them?
-Commands to list pods and deployments
-components in master node and slave nodes
-what is stateful sets in kubernetes?
-Tools to maintain kubernetes log files
-
-
-
+Interview Methods
 
 #####GIT
 Which Branching Strategy
 How to Git pull vs Git fetch
 Git clone a specific branch
+$ git clone -b <branch> <remote_repo>
+Ex: $ git clone -b my-branch crsreddy1447/myproject.git
+(OR)
+$ git clone --single-branch --branch <branchname> <remote-repo>
+Ex: git clone --single-branch -b dev crsreddy1447/myproject.git
+
 Git folder name is changed after cloning. One of your team mate asked to share the link. How will i get.
 ANS: goto .git folder and check from where last commit is done.
 How to clone a specific branch or master Branch and the last commit only.
-Ans: $ git clone <link> -b master -death 1
+git clone --depth=1 --branch dev https://github.com/your/repo.git
+
 What is Sub-Module and why we need sub module
+Git submodules allow you to keep a git repository as a subdirectory of another git repository. 
+Git submodules are simply a reference to another repository at a particular snapshot in time.
+When adding a submodule to a repository a new .gitmodules file will be created. The .gitmodules file contains 
+meta data about the mapping between the submodule project's URL and local directory.
+git submodule add https://bitbucket.org/j
+git clone /url/to/repo/with/submodules
+git submodule init
+git submodule update
+https://www.atlassian.com/git/tutorials/git-submodule
+
 Multiple file added to git. One of the file i want to take out of staging area?
-GIT Cherrypick
-Git stash
+If you need to remove a single file from the staging area, use
+$ git reset HEAD -- <file>
+If you need to remove a whole directory (folder) from the staging area, use
+$ git reset HEAD -- <directoryName>
+
 Conflicts in git
 Command to list all the Branches
-git reset. Types of git reset
-How to delete local branch and remote branch
-Diff b/w git diff and git status
-What are hooks in Git
+$ git branch -a   ---> -a shows all local and remote branches
+$ git branch -r   ---> -r shows only remote branches
 
+git reset. Types of git reset
+Three types
+1. Soft (Move HEAD): Here the Head move to previous commit and index and working directory are same.
+$ git reset --soft Head~
+2. Mixed (Updating the Index): Here Head and index file changes (also unstaged). But working dir is same 
+$ git reset --mixed HEAD~
+3. Hard (Updating the Working Directory): Here total Head, Index and working directory moves to previous one. looks like the 
+$ git reset --hard HEAD~
+https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
+
+How to delete local branch and remote branch
+Deleting a branch LOCALLY:
+Git will not let you delete the branch you are currently on so you must make sure to checkout a branch
+$ git branch -d <branch>.  ----> -d option will delete the branch only if it has already been pushed and merged with the remote branch
+EX: git branch -d fix/authentication
+$ git branch -D <branch>. -D instead if you want to force the branch to be deleted, even if it hasn't been pushed or merged yet.
+Deleting a branch REMOTELY: 
+$ git push <remote_name> --delete <branch_name>
+OR
+$ git push <remote_name> :<branch_name>
+If you get the error as push failed then use
+$ git fetch -p  --->  -p flag means "prune". and try to sync the branch list.
+
+
+Diff b/w git diff and git status
+git satus only shows the modified files which are to be added
+git diff shows the file content and matter that was modified by comparing with previous commit.
+NOTE: $ git status -s  and $ git dif -name-only  both commands serves for same purpose
+
+What are hooks in Git
  
 
 

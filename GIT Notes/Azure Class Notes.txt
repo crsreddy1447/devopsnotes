@@ -1703,3 +1703,379 @@ Task : Component deployment for site
 1,3,5,7,9  ( names of base numbers as components)
 
 
+{
+    "IISDeploy":{
+        "Apppools":[
+            {"A1":{"Name":"A1","mode":"Classic","version":"v4.0","queuelength":12345,"enable32bit":true,"identity":"LocalService","user":"","password":""}},
+            {"A2":{"Name":"A2","mode":"Integrated","version":"v2.0","queuelength":5555,"enable32bit":false,"identity":"SpecificUser","user":"RAJA","password":"crsreddy1447"}},
+            {"A3":{"Name":"A3","mode":"Classic","version":"v4.0","queuelength":3333,"enable32bit":true,"identity":"LocalSystem","user":"","password":""}}
+            
+            
+        ],
+        "Sites":[
+            {"APPLE1":{"Name":"APPLE1","id":1,"port":81,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":false,"windows":"windowsbasic" }},
+            {"APPLE2":{"Name":"APPLE2","id":2,"port":82,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":true,"windows":"windowsbasic" }},
+            {"APPLE3":{"Name":"APPLE3","id":3,"port":83,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":false,"windows":"windows" }},
+            {"APPLE4":{"Name":"APPLE4","id":4,"port":84,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":false,"windows":"windowsbasic" }},
+            {"APPLE5":{"Name":"APPLE5","id":5,"port":85,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":false,"windows":"windowsbasic" }},
+            {"APPLE6":{"Name":"APPLE6","id":6,"port":86,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":true,"windows":"windows" }}
+        ]
+    } 
+}
+
+
+
+------------
+19/05/2020
+
+$data=Get-Content H:\AZURE\POWERSHELL\Authvsites.json |ConvertFrom-Json
+#create empty array
+$vsites=@()
+#load vsites from json into empty array
+($data.IISDeploy.Vsites).ForEach{
+    $vsites+=$_.psobject.properties.name
+}
+
+#valiate virtualsites lenght
+if($vsites.Length -ne 0){
+    foreach($item in $vsites){
+        Write-Host " Data reading process begin for virtual site :$item" -ForegroundColor Green
+        ($k=$data.IISDeploy.Vsites)|Where-Object{$_.Name -eq $item}
+
+            $vsite=$k.$item.Name
+            $vwebsite=$k.$item.site
+            $vphysicalpath=($k.$item.physicalpath).replace("/","\")
+            $vanonymous=$k.$item.anonymous
+            $vwindows=$k.$item.windows
+            $vimpersonate=$k.$item.impersonate
+
+                #lets load the website detials
+                if($vwebsite.Length -ne 0){
+                    ($j=$data.IISDeploy.Sites)|Where-Object{$_.name -eq $vwebsite}
+                    
+                    $site=$j.$vwebsite.Name
+                    $port=$j.$vwebsite.port
+                    $physicalpath=($j.$vwebsite.physicalpath).replace("/","\")
+                    $anonymous=$j.$vwebsite.anonymous
+                    $windows=$j.$vwebsite.windows
+                   # $impersonate=$j.$vwebsite.impersonate
+                    $apppool=$j.$vwebsite.apppool
+
+                    Import-Module WebAdministration
+                    #load the app-pool info from JSON
+                    # validate app-pool name and initate the process for app-pool deployment
+                if($Apppool.Length -ne 0){
+                # load the app-pool information from JSON
+                ($i=$Data.IISDeploy.AppPools)|Where-Object{$_.Name -eq $Apppool}
+                
+                    Write-Host "Working on App-pool :$item" -ForegroundColor Green
+                    # load the variables from json for specific app-pool
+                    
+                    $pool=$i.$Apppool.Name
+                    $version=$i.$Apppool.version
+                    $mode=$i.$Apppool.mode
+                    $queuelength=$i.$Apppool.queuelength
+                    $enable32bit=$i.$Apppool.enable32bit
+                    $identity=$i.$Apppool.identity
+                    $user=$i.$Apppool.user
+                    $password=$i.$Apppool.password
+            
+                    #validate pool name if($pool -ne "" -and $pool -ne $null) -- former method
+            if(-not ([string]::IsNullOrWhiteSpace($pool))){
+                #import module webadministration
+                Import-Module webadministration
+                #test the app-pool  exist or not . if exist then delete or set mesaage
+                if(Test-Path IIS:\AppPools\$pool){
+                    Write-Warning "The given App-pool:$pool already exist. Hence removing"
+                    Remove-Item IIS:\AppPools\$pool -Force -Recurse -Verbose
+                }
+                else {
+                    Write-Host "The given App-pool:$pool doesnot not exist. Hence creating new" -ForegroundColor Green
+                } 
+                
+                #create new webapppool
+                New-WebAppPool -Name $pool -Force
+                #load the above created app-pool into local varaible
+                $result=Get-Item IIS:\AppPools\$pool -Force
+            
+                #validate managed runtime version
+                if(-not([string]::IsNullOrWhiteSpace($version))){
+                    if(($version -eq "v2.0") -or ($version -eq "v4.0")){
+                        $result.managedRuntimeversion=$version
+                    }
+                    elseif($version -eq "No Managed Code"){
+                        $result.managedRuntimeversion=""
+                    }
+                    else{
+                        Write-Error -Message "version value should be v2.0 or v4.0 or No Managed code" -ErrorAction Stop
+                    }
+                }
+                else {
+                    Write-Error -Message " version should not be empty" -ErrorAction Stop
+                }
+            
+                #validate managed pipeline mode
+                if(-not([string]::IsNullOrWhiteSpace($mode))){
+                    if(($mode -eq "Integrated") -or ($mode -eq "Classic")){
+                        $result.ManagedPipelineMode=$mode
+                    }
+                    else {
+                        Write-Error -Message "value should be Integrated or Classic" -ErrorAction Stop
+                    }
+                }
+                else {
+                    Write-Error -Message "Mode value should not be null or emtpy and value should be Integrated or Classic"
+                }
+                #validate queuelength
+                if(-not([string]::IsNullOrWhiteSpace($queuelength))){
+                    if(([convert]::ToInt64($queuelength)-ge 10) -and ([convert]::ToInt64($queuelength) -le 65535)){
+                        $result.queuelength=[convert]::ToInt64($queuelength)
+                    }
+                    else {
+                        Write-Error -Message "queuelength value should be between 10-65535" -ErrorAction stop
+                    }
+                }
+                else {
+                    Write-Error -Message "Queuelength value should not be null" -ErrorAction Stop
+                }
+                #validate enable32bit
+                if(-not([string]::IsNullOrWhiteSpace($enable32bit))){
+                    if(("$enable32bit" -eq "True") -or ("$enable32bit" -eq "False")){
+                        $result.enable32BitAppOnWin64=$enable32bit
+                    }
+                    else {
+                        Write-Error -Message "Enable32bit value should be true|false or 1|0" -ErrorAction Stop
+                    }
+                }
+                else {
+                    Write-Error -Message "enable32bit values should not be null or empty" -ErrorAction stop
+                }
+            
+                #validate identity
+                if(-not ([string]::IsNullOrWhiteSpace($identity))){
+                    if($identity -eq "LocalSystem"){
+                        $result.Processmodel.Identitytype=$identity
+                    }
+                    elseif($identity -eq "LocalService"){
+                        $result.Processmodel.Identitytype=$identity
+                    }
+                    elseif($identity -eq "NetworkService"){
+                        $result.Processmodel.Identitytype=$identity
+                    }
+                    elseif($identity -eq "SpecificUser"){
+                        $computer=$env:COMPUTERNAME
+                        Add-type -AssemblyName system.directoryservices.AccountManagement
+                        $creds=New-Object -TypeName System.DirectoryServices.AccountManagement.PrincipalContext('machine', $computer)
+                        $credstatus=$creds.ValidateCredentials($user, $password)
+                        if($credstatus -eq "true"){
+                            $result.processModel.identityType="SpecificUser"
+                            $result.processModel.userName=$user
+                            $result.processModel.password=$password
+                        }
+                        else {
+                            Write-Error -Message "Invalid credentials" -ErrorAction Stop
+                        }
+                    }
+                    else{
+                        Write-Warning "No matching identitytype found .hence applying default" 
+                        $result.Processmodel.identitytype="ApplicationPoolIdentity"
+                    }
+                }
+                else{
+                    Write-Error -Message "Identiytype value should be LocalSystem or LocalService or NetworkService or SpecificUser or ApplicationPoolIdentity" -ErrorAction stop
+                }
+            
+                $result |Set-Item -Force -Verbose
+            }# end of main if pool
+            else{
+                Write-Error -Message "Pool name should not be empty. Hence aborting execution" -ErrorAction Stop
+            }
+            
+                
+                }
+                else{
+                Write-Error -Message "Apppool cannot be empty. please validate JSON. Process getting aborted" -ErrorAction Stop
+                }
+                Write-Host "********************[END]App-pool $pool deployment****************** " -ForegroundColor Green
+                #website deployment begin
+                Write-Host "********************[Begin]website $site deployment****************** " -ForegroundColor Green
+                    if($site.lengh -ne 0){
+                        if(Test-path IIS:\Sites\$site){
+                            Write-Warning "The given site $site already exist. hecne moving virtual site deployment"
+                        }
+                        else{
+                            Write-Host " No site found with $site. hence creating new" -ForegroundColor Cyan
+                            #validate physicalpath
+                            if(Test-Path $physicalpath\$site){
+                                Write-Warning " Physcialpath : $physicalpath\$site already exist. Hecne removing"
+                                Remove-Item $physicalpath\$site -Force -Recurse -Verbose
+                            }
+                            else{
+                                    Write-Host " No physcialpath found .Hence creating new" -ForegroundColor Green
+                            }
+                            New-Item $physicalpath\$site -ItemType Directory -Force -Verbose
+                            #validate port
+                            if(($port.Length -ne 0) -and ([convert]::ToInt16($port) -ge 80)){
+                                #create website
+                                New-Website -Name $site -Port $port -PhysicalPath $physicalpath\$site -ApplicationPool $Apppool -Force -ErrorAction stop
+                            }
+                            else{
+                                Write-Error -Message "Port value must be set" -ErrorAction Stop
+                            }
+
+                            # apply Anonymous authentication
+                            if($anonymous.length -ne 0){
+                                if("$anonymous" -eq "True" -or "$anonymous" -eq "false"){
+                                        Set-WebConfigurationProperty -Name enabled -Filter system.webServer/security/authentication/anonymousAuthentication -Value $($anonymous) -PSPath IIS:\Sites\ -Location $site -Force -ErrorAction Stop -Verbose
+                                }
+                                else{
+                                    Write-Warning "Invalid input provided . value must be true or false"
+                                }
+                            # apply windows authentication
+                            if($windows.length -ne 0){
+                                if($windows -eq "windows"){
+                                    Set-WebConfigurationProperty -Name enabled -Filter system.webServer/security/authentication/windowsAuthentication -Value $true -PSPath IIS:\Sites\ -Location $site -Force -ErrorAction Stop -Verbose
+                                }
+                                elseif($windows -eq "basic"){
+                                    Set-WebConfigurationProperty -Name enabled -Filter system.webServer/security/authentication/basicAuthentication -Value $true -PSPath IIS:\Sites\ -Location $site -Force -ErrorAction Stop -Verbose
+                                }
+                                elseif($windows -eq "digest"){
+                                    Set-WebConfigurationProperty -Name enabled -Filter system.webServer/security/authentication/digestAuthentication -Value $true -PSPath IIS:\Sites\ -Location $site -Force -ErrorAction Stop -Verbose
+                                }
+                                elseif($windows -eq "windowsbasic" -or $windows -eq "windowsandbasic"){
+                                    Set-WebConfigurationProperty -Name enabled -Filter system.webServer/security/authentication/windowsAuthentication -Value $true -PSPath IIS:\Sites\ -Location $site -Force -ErrorAction Stop -Verbose
+                                    Set-WebConfigurationProperty -Name enabled -Filter system.webServer/security/authentication/basicAuthentication -Value $true -PSPath IIS:\Sites\ -Location $site -Force -ErrorAction Stop -Verbose
+                                }
+                                else{
+                                    Write-warning "Windows authentication value must be windows, basic, digest, windowsbasic or windowsandbasic"
+                                }
+                
+                                }
+                                else {
+                                    Write-Error -Message "Windows Authentication value must be set" -ErrorAction stop
+                                }
+
+                }
+                else{
+                    Write-Error -message "Anonymous aunthentication value must be set" -ErrorAction Stop
+                }
+                        }# end of test-path (else condtion)
+                    }
+                    else {
+                        Write-Error -Message "Site name must be set.Aborting the process" -ErrorAction Stop
+                    }
+                Write-Host "********************[End]website $site deployment****************** " -ForegroundColor Green
+
+                }# if $vwebsite
+                else {
+                    Write-Error -Message "Website name must be set in JSON. hence aborting the process" -ErrorAction Stop
+                }
+
+                #lets start virtual site deployment
+                Write-Host "*********************************[Begin] Virtual site: $vsite deployment***************************" -ForegroundColor Green
+                if($vsite.Length -ne 0){
+                    if(Test-Path IIS:\Sites\$site\$vsite){
+                        Write-Warning "Given Virtual site already exist. Hence deleting"
+                        Remove-Item IIS:\Sites\$site\$vsite -Force -Recurse -Verbose
+                    }
+                    else {
+                        Write-Host "No Virtual site found with name :$vsite. Hence creating new" -ForegroundColor Cyan
+                    }
+                    #validate physicalpath
+                    if($vphysicalpath.Length -ne 0){
+                        if(Test-path $vphysicalpath\$site\$vsite){
+                            Write-Warning "physicalpath already exist. Hence deleting"
+                            Remove-Item $vphysicalpath\$site\$vsite -Force -Recurse
+                        }
+                        else{
+                            Write-Host "No path found with $vphysicalpath\$site\$vsite .hence creating new" -ForegroundColor Cyan
+                        }
+
+                        New-Item $vphysicalpath\$site\$vsite -ItemType Directory -Force
+                        
+                    }
+                    else {
+                        Write-Error -Message "Physicalpath must be set" -ErrorAction Stop
+                    }
+                    #create virtualsite
+                    New-WebApplication -Name $vsite -Site $site -PhysicalPath $vphysicalpath\$site\$vsite -ApplicationPool $pool -Force -ErrorAction Stop
+
+                    #authentication
+                    #anonymous
+                    if($vanonymous.lengh -ne 0){
+                        if("$vanonymous" -eq "True" -or "$vanonymous" -eq "False"){
+                            Set-WebConfigurationProperty -Filter system.webServer/security/authentication/anonymousAuthentication -Name enabled -Value $vanonymous -PSPath IIS:\Sites\$site -Location $vsite -ErrorAction Stop
+                        }
+                        else {
+                            Write-Warning "Anonymous value must be true or false. Hence no changes applied"
+                        }
+                    
+                    }
+                    else {
+                        Write-Error -Message "Anonymous vlaue must be set as TRUE|False" -ErrorAction Stop
+                    }
+                    #windows
+                    if($vwindows.Length -ne 0){
+                        if($windows -eq "windows"){
+                            Set-WebConfigurationProperty -Filter system.webServer/security/authentication/windowsAuthentication -Name enabled -Value $true -PSPath IIS:\Sites\$site -Location $vsite -ErrorAction Stop
+                        }
+                        elseif($windows -eq "basic"){
+                            Set-WebConfigurationProperty -Filter system.webServer/security/authentication/basicAuthentication -Name enabled -Value $true -PSPath IIS:\Sites\$site -Location $vsite -ErrorAction Stop
+                        }
+                        elseif($windows -eq "windowsbasic" -or $windows -eq "windowsandbasic"){
+                            Set-WebConfigurationProperty -Filter system.webServer/security/authentication/windowsAuthentication -Name enabled -Value $true -PSPath IIS:\Sites\$site -Location $vsite -ErrorAction Stop
+                            Set-WebConfigurationProperty -Filter system.webServer/security/authentication/basicAuthentication -Name enabled -Value $true -PSPath IIS:\Sites\$site -Location $vsite -ErrorAction Stop
+                        }
+                        else{
+                            Write-Warning "windows authentication must be windows,basic windowsbasic or windowsandbasic .hence no changes applied" 
+                        }
+                    }
+                    else {
+                        Write-Error -Message "Windows authentication must be set like windows, basic, windowsbasic or windowsandbasic" -ErrorAction Stop
+                    }
+                    #Aspimpersonation
+                    if($vimpersonate.Length -ne 0){
+                        if($vimpersonate -eq "True"){
+                            cmd /c  "c:\windows\system32\inetsrv\appcmd.exe set config $site/$vsite /section:system.web/identity /impersonate:true"
+                        }
+                        else {
+                            cmd /c "c:\windows\system32\inetsrv\appcmd.exe set config $site/$vsite /section:system.web/identity /impersonate:false"
+                        }
+                    }
+                    else{
+                        Write-Warning "Impersonate value must true or false" 
+                    }
+
+                }# end main if ($vsite.length)
+                else {
+                    Write-Error -Message "Virtual site name must be set" -ErrorAction Stop
+                }
+                Write-Host "*********************************[End] Virtual site: $vsite deployment***************************" -ForegroundColor Green
+
+    }# end of foreach of vistes
+}# end of $vsites.lengh main block
+else {
+    Write-Error -Message "Vsites should not be zero. Hence abort the process" -ErrorAction Stop
+}
+
+
+---------
+json
+
+{
+    "IISDeploy":{
+        "AppPools":[
+            {"Aviva":{"Name":"Aviva","mode":"Integrated","version":"v4.0","queuelength":12345,"enable32bit":false,"identity":"SpecificUser","user":"RAJA","password":"crsreddy1447"}}
+        ],
+        "Sites":[
+            {"Aviva":{"Name":"Aviva","port":89,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":false,"windows":"windowsbasic","impersonate":true }},
+            {"EMC2":{"Name":"EMC2","port":91,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":false,"windows":"windowsbasic","impersonate":true }},
+            {"Apple":{"Name":"Apple","port":92,"physicalpath":"H:/AZURE/IIS/Sites","Apppool":"Aviva","Anonymous":false,"windows":"windowsbasic","impersonate":true }}
+        ],
+        "Vsites":[
+            {"HCL":{"Name":"HCL","Site":"EMC2","physicalpath":"H:/AZURE/IIS/Sites","Anonymous":false,"windows":"windows","impersonate":true}},
+            {"F5":{"Name":"F5","Site":"Apple","physicalpath":"H:/AZURE/IIS/Sites","Anonymous":false,"windows":"windows","impersonate":true}}
+        ]
+    } 
+}
+
