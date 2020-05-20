@@ -267,4 +267,9 @@ git pull and git fetch are same but fetch will create a branch and sent it to
 
 GIT FLOW---------------
 
+Master(Main) ---> Develop(Main)  ---> Release(Multiple Branches)  ---> Feature(Multiple Branches) ---> HotFix(Multiple Branches) 
+
+
+
+
 

@@ -1,19 +1,19 @@
 
 Topics for interview: 
 
-Jenkins complete  --------> DONE
+Jenkins complete  --------> DONE   Shared library, 
 
-Docker Complete    -------> DONE
+Docker Complete    -------> DONE 
 
 Kubernetes Complete  -------> DONE
 
-Ansible Few
+Ansible Few  ----> DONE  
 
 Terraform Complete
 
-GIT and GIT FLOW Complete
+GIT and GIT FLOW Complete -----> DONE Submodule and Git flow
 
-Maven Complete Cycle -------> DONE
+Maven Complete Cycle -------> DONE 
 
 NAGIOS COMPLETE
 

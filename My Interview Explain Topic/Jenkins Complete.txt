@@ -305,10 +305,6 @@ Ans: Discard old build: Set -Days to Keep Build, Max Builds to Keep. Max it disp
 How to run Docker in jenkins pipeline
 Ans: As Agent Docker
 
-Create and deletion of containers will be taken care by jenkins or You
-
-In jenkins once the build is success what will happen to that container.
-
 In maven project if containers are deleted every time it has to fetch the data. Which is time consuming. How to over come?
 ANS: Using Vol. Agent as Docker  and specify a vol by mapping local M2 to container Vol. If i can Local M2. with Container M2 I can overcome.
 
@@ -320,14 +316,6 @@ To perform complete CI/CD pipeline for the master branch and Only CI pipeline fo
 Commit Based Job in Jenkins? What configurations you need to do in jenkins and github
 Poll SCM cron tab  and Triggering a build using Git hooks
 
-How to create multiple free style jobs with different names with same job configurations.
-
-How to downgrade pluign in jenkins
-manage plugin and click on downgrade.
-
-Can we have differnt nodes for each stage
-
-Types of build triggers and diff b/w Build Periodically and Poll SCM
 
 How to set jenkins build to fail based specific word in console output?
 text-finder plugin .*(?i)failed.*|.*(?i)error.* would find the words "failed" or "error" in a case insensitive manner.
@@ -359,8 +347,18 @@ $ rm -rf jobs/jobname/builds/97* jobs/jobname/builds/13*
 Note: After removing jobs or builds from file system you need to go to Manage Jenkins in the Jenkins GUI and click Reload Configuration from Disk.
 Note: The Jenkins home directory might be in /var/jenkins_home or /var/lib/jenkins or another location.
 
+How to create multiple free style jobs with different names with same job configurations.
 
+How to downgrade pluign in jenkins
+manage plugin and click on downgrade.
 
+Can we have differnt nodes for each stage
+
+Types of build triggers and diff b/w Build Periodically and Poll SCM
+
+Create and deletion of containers will be taken care by jenkins or You
+
+In jenkins once the build is success what will happen to that container.
 
 
 
