@@ -1,72 +1,6 @@
 Interview Methods
 
-#####GIT
-Which Branching Strategy
-How to Git pull vs Git fetch
-Git clone a specific branch
-$ git clone -b <branch> <remote_repo>
-Ex: $ git clone -b my-branch crsreddy1447/myproject.git
-(OR)
-$ git clone --single-branch --branch <branchname> <remote-repo>
-Ex: git clone --single-branch -b dev crsreddy1447/myproject.git
 
-Git folder name is changed after cloning. One of your team mate asked to share the link. How will i get.
-ANS: goto .git folder and check from where last commit is done.
-How to clone a specific branch or master Branch and the last commit only.
-git clone --depth=1 --branch dev https://github.com/your/repo.git
-
-What is Sub-Module and why we need sub module
-Git submodules allow you to keep a git repository as a subdirectory of another git repository. 
-Git submodules are simply a reference to another repository at a particular snapshot in time.
-When adding a submodule to a repository a new .gitmodules file will be created. The .gitmodules file contains 
-meta data about the mapping between the submodule project's URL and local directory.
-git submodule add https://bitbucket.org/j
-git clone /url/to/repo/with/submodules
-git submodule init
-git submodule update
-https://www.atlassian.com/git/tutorials/git-submodule
-
-Multiple file added to git. One of the file i want to take out of staging area?
-If you need to remove a single file from the staging area, use
-$ git reset HEAD -- <file>
-If you need to remove a whole directory (folder) from the staging area, use
-$ git reset HEAD -- <directoryName>
-
-Conflicts in git
-Command to list all the Branches
-$ git branch -a   ---> -a shows all local and remote branches
-$ git branch -r   ---> -r shows only remote branches
-
-git reset. Types of git reset
-Three types
-1. Soft (Move HEAD): Here the Head move to previous commit and index and working directory are same.
-$ git reset --soft Head~
-2. Mixed (Updating the Index): Here Head and index file changes (also unstaged). But working dir is same 
-$ git reset --mixed HEAD~
-3. Hard (Updating the Working Directory): Here total Head, Index and working directory moves to previous one. looks like the 
-$ git reset --hard HEAD~
-https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
-
-How to delete local branch and remote branch
-Deleting a branch LOCALLY:
-Git will not let you delete the branch you are currently on so you must make sure to checkout a branch
-$ git branch -d <branch>.  ----> -d option will delete the branch only if it has already been pushed and merged with the remote branch
-EX: git branch -d fix/authentication
-$ git branch -D <branch>. -D instead if you want to force the branch to be deleted, even if it hasn't been pushed or merged yet.
-Deleting a branch REMOTELY: 
-$ git push <remote_name> --delete <branch_name>
-OR
-$ git push <remote_name> :<branch_name>
-If you get the error as push failed then use
-$ git fetch -p  --->  -p flag means "prune". and try to sync the branch list.
-
-
-Diff b/w git diff and git status
-git satus only shows the modified files which are to be added
-git diff shows the file content and matter that was modified by comparing with previous commit.
-NOTE: $ git status -s  and $ git dif -name-only  both commands serves for same purpose
-
-What are hooks in Git
  
 
 
@@ -113,7 +47,16 @@ How to schedule a shell script in unix machine
 How to identify IP addresses in log file and count of IP addresses in log file
 Command to get load average?
 
- 
+Logical Volume
+Hypervisor
+CNI in Kubrtnetes
+Diff b/w Centos, Debaian, Redhat
+networking switch and router
+cloud plugin used in kubernetes
+external kubernetes services
+SSL communication
+Layers of OSI model of ubuntu
+
 
 
 
