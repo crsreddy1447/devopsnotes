@@ -1,0 +1,155 @@
+29/05/2020
+Virtual Machine creation Requirements:
+1. Resource group
+2. Virtual Network
+3. Network Security Groups
+4. Network Interface 
+5. Public IP (one for each instance)
+6. Create disk (one for each instance)
+
+#####################HOW TO CONNECT REMOTE DESKTOP FROM POWERSHELL #########################################
+
+https://www.assistanz.com/access-azure-windows-vm-through-powershell/  ----> Complete Document
+
+300 RDP 3389 TCP Any Any Allow
+310 WinRM_5986 5986 TCP Any Any Allow
+320 WinRM_http 5985 Any Any Any
+
+On WINDOWS Run Terminal using win+R:
+-----------------------------------------------------
+mstsc -v <ipaddresss>
+
+Modify Disk volume on remote desktop.
+Disable NetWorkService on remote desktop in Windows Security of Domain, Private, Public (turn off)
+
+On Remote desktop Command Prompt
+------------------------------------------------------
+1. powershell.exe
+2. winrm quickconfig   
+3. get-service winrm
+4. start-service winrm
+
+On Local Windows POWERSHELL:
+--------------------------------------------------
+1. Get-Service WinRM
+2. WinRM qc 
+3. Enter-PSSession '<IP Address>' -Credential:'<username>'...                                                                                                                               
+4. Enable-PSRemoting   
+***NOTE: If you get an Error like change network. Then Change your wifi network to private.                                                                                                                                                                      
+5. Set-Item WSMan:\localhost\Client\TrustedHosts -value <IP Address>
+6. Enter-PSSession -ComputerName <IP Address> -Credential "<username>"                                                                                                                          
+                                                  
+For Testing the connection execute these commands from Local Win Powershell only after it is connected.
+1. New-Item F:\test.txt
+2. Set-Content F:\test.txt 'Welcome to Remote Desktop'
+3. Get-Content F:\test.txt
+Now go and check in Remote desktop you will see a file with test.txt
+
+################################################################################################################
+
+30/05/2020
+############### VPN ###########################
+VPN creation Requirements:
+1. Resource group
+2. Virtual Network
+ a. Subnet.
+ b. Gatewaysubnet  (Goto attributes and select Subnet and click on Gatewaysubnet)
+3. Public IP
+4. Virtual Network Gateway
+
+Insert certificate in powershell:
+ROOT CERT:
+$cert=New-SelfSignedCertificate -Type Custom -KeySpec Signature -Subject "ROOTCERT" -KeyExportPolicy Exportable -HashAlgorithm sha256 -KeyLength 2048 -CertStoreLocation 'Cert:\CurrentUser\My' -KeyUsageProperty Sign -KeyUsage CertSign
+
+CLIENT CERT:
+New-SelfSignedCertificate -Type Custom -DnsName CLIENT -KeySpec Signature -Subject "CN=ClientCERT" -KeyExportPolicy Exportable -HashAlgorithm sha256 -KeyLength 2048 -CertStoreLocation 'Cert:\CurrentUser\My' -Signer $cert -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.2")
+
+http://www.rebeladmin.com/2018/07/step-step-guide-azure-point-site-vpn/
+
+https://www.c-sharpcorner.com/article/step-by-step-demo-of-creating-a-point-to-site-vpn-connection2/
+
+https://www.assistanz.com/steps-to-create-point-to-site-vpn-using-azure-portal/
+
+-------
+------
+------
+1 Create Resource Group -- Name - VPN (Location East US)
+== Virtual Network====
+2 Virtual network (name -Vpn-Vnet  address prefix: 172.16.0.0/16)
+3 Subnet (172.16.1.0/24)
+4 Gateway Subnet (172.16.0.0/24)
+
+=====Public IP====
+Ip address should be dynamic
+
+===== Virtual Network Gateway=======================================================
+
+*****Make sure GatewaySubnet was created in virtual network or not . if not creaate before creating virtual network gateway
+We are supposed to provide following details:
+
+Name
+Location ( location should be same virtual network)
+Gateway Tpye : VPN
+VPN TYpe: Route Based
+SKU: Choose any one
+Generation: generation 1
+
+Virtual network : choose correct virtual network where gatewaysubnet was created
+
+Public IP: Choose existing one and verify whether IPname was correctly loaded or not.
+
+Clicl on review+Create
+
+
+============================================================================================
+
+Create Root and Client Certificates for the sake of VPN connectivity from our local to Azure virtula network
+============================================================================================================
+
+------ROOTcert --------
+$cert=New-SelfSignedCertificate -Type Custom -KeySpec Signature -Subject "ROOTCERT" -KeyExportPolicy Exportable -HashAlgorithm sha256 -KeyLength 2048 -CertStoreLocation 'Cert:\CurrentUser\My' -KeyUsageProperty Sign -KeyUsage CertSign
+-----Client Cert-------
+New-SelfSignedCertificate -Type Custom -DnsName CLIENT -KeySpec Signature -Subject "CN=ClientCERT" -KeyExportPolicy Exportable -HashAlgorithm sha256 -KeyLength 2048 -CertStoreLocation 'Cert:\CurrentUser\My' -Signer $cert -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.2")
+
+Press Windows+R (run prompt)
+type MMC --> enter key
+
+1) one Microsoft management console opens follow below instructions
+File-->Add/remove snap in --> choose certificates -->add --> choose current user/machine-->OK
+
+2) Expand certificates-->personal -- right hand side look for the root and client certificates are present or not. make sure certs are available before proceed
+3) Right click on RootCert --> alltasks-->export -->next-->next(no private key export choose second option)-->choose base64 encode-->choose the certifcate path to save the cert(name --Root)-->finish
+4) Right click on Client Cert -->All tasks --> export--> next->choose yes, with privatekey --> next (do not modify any options)--> select password cehck box --> enter password (ex:India@123)--> choose the path to save .pfx-->finish
+
+================================================================================================================
+Open Azure port and open Virtual network gateway
+
+1) In the left hand side menu choose --> Point-to-site configuration
+2) click on configuration in right hand side and then enter below details:
+
+  Address pool : 10.0.0.0/24 ( this IP should not be overlapped)
+  Choose Tunnel type : IKEV2 and SSTP(SSL)
+  ======================
+  
+  before enter certificate details we need copy the certificate code with below instructions
+  right click on root.cer --> open with notepad /notepad++ --> copy code expect ----begin certificate and --- End certifcate --> make sure no space in between entire code --> copy the code
+  ======================
+  switch to VPN gateway and paste certificate code which copied earlier
+  
+  Name: root value : copied certificate code
+  Click on Save and wait for few mins until complete
+  
+  ONCE COMPLETE CLICK ON DOWNLOAD VPN CLIENT --> ONCE DOWNLOAD COMPLETE --> EXTRACT IT AND COPY Windowsamd64.EXE INTO CERTIFICATE FOLDER --> INSTALL VPN CLIENT.EXE 
+  
+  VERIFY VPN CONNECTED OR NOT. IF NOT CONNECTED PLEASE CROSS VERIFY CERTIFICATE DETAILS
+  
+================================
+  
+  Provions VM with pulic IP as NONE --> One VM created then copy private IP and verify RDP
+  
+=========================VPN validation complete=================================================================
+
+
+
+
+

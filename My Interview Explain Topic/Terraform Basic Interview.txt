@@ -1,0 +1,137 @@
+############ TERRAFORM COMPLETE
+
+Terraform is a tool for building, changing, and versioning infrastructure safely and efficiently.
+Configuration files describe to Terraform the components needed to run an application. Based on that it generates an execution plan describing
+what it will do to reach the desired state, and then executes it to build the described infrastructure. 
+
+The key features of Terraform are:
+Infrastructure as Code: With a single code it develops the infrastructure required to work
+Execution Plans: The execution plan shows what Terraform will do 
+Resource Graph: Terraform builds a graph of all your resources, and parallelizes the creation as efficiently as possible.
+Change Automation: Complex changesets can be applied to your infrastructure with minimal human interaction
+
+Use Cases:
+Multi-Tier Applications: Terraform is an ideal tool for building and managing these infrastructures. Each tier can be described as a collection of resources
+Self-Service Clusters:Using Terraform, the knowledge of how to build and scale a service can be codified in a configuration.
+Software Demos: a Terraform configuration to create, provision and bootstrap a demo on cloud providers like AWS. This allows end users to easily demo the software on their own
+
+
+************************* TERRAFORM********************************
+-> Terraform is a tool for building, changing, and versioning infrastructure safely and efficiently. 
+-> Terraform can manage existing and popular service providers as well as custom in-house solutions.
+-> Configuration files describe to Terraform the components needed to run a single application or your entire datacenter. 
+-> Terraform is an ideal tool for building and managing multi-tier infrastructures. 
+  ***Each tier can be described as a collection of resources, and the dependencies between each 
+tier are handled automatically; 
+  ***Terraform will ensure the database tier is available before the web servers are started 
+and that the load balancers are aware of the web nodes. 
+ ***Each tier can then be scaled easily using Terraform by modifying a single count configuration value. 
+Because the creation and provisioning of a resource is codified and automated, elastically scaling with load becomes trivial.
+
+**** In terraform  we give folder as input. In packer we give in files
+
+DIFF Uses of Terraform
+1. Terraform is focused on destroying the resource instead of updating the resoure
+2. Terraform uses resources dependencies and make the decision of what should be created first and when to create resources in parallel using ‘depends_on’ argument.
+3. The terraform plan command is used to create an execution plan  for a set of changes matches your expectations without making any changes to real resources or to the state. 
+.
+
+
+//*/*/* USES OF TERRAFORM///*/*/*/*
+1. Multi Cloud Deployment
+2. Resource Schedulers
+3. Software Demos
+4. To create different Environment for Testing and Production
+5. Multi Tier Applications
+
+/*/*/*/*/*/*/*/*////*****SAMPLE MODEL*****/*/*/*/*/*/*/*/*/
+
+
+We use three main files while using TF:
+main.tf -> This is used to declare resources needed for your configuration.
+vars.tf -> This will hold variables to be used in main.tf.
+outputs.tf -> This file will hold any output variables.
+
+NEEDED KEYS  Elements in DSL (domain specific language)
+1. Variables
+2. Providers   --> This will say where the script has to work EX: AWS, AZURE, GCP, VAGRANT etc
+3. Resources   -->  What to create to git required output. EX: EC2 instance, 
+    Syntax:  resource "<Resource Type>" "<Resource Name>"
+4. Output
+5. Data Sources: A data source represents a piece of read-only information that is fetched from the provider (in this case, AWS) every time you run Terraform.
+
+The syntax for using a data source is very similar to the syntax of a resource:
+data "<PROVIDER>_<TYPE>" "<NAME>" {
+ [CONFIG ...]
+}
+To get the data out of a data source, you use the following attribute reference syntax:
+data.<PROVIDER>_<TYPE>.<NAME>.<ATTRIBUTE>
+Ex: data.aws_availability_zones.all.names
+
+
+provider "aws" {
+  access_key = "ACCESS_KEY_HERE"
+  secret_key = "SECRET_KEY_HERE"
+  region     = "us-east-1"
+}
+
+resource "aws_instance" "example" {
+  ami           = "ami-2757f631"
+  instance_type = "t2.micro"
+}
+
+***The PROVIDER block is used to configure the named provider, in our case "aws". 
+A provider is responsible for creating and managing resources. 
+Multiple provider blocks can exist if a Terraform configuration is composed of multiple providers, which is a common situation.
+
+***The RESOURCE block defines a resource that exists within the infrastructure. 
+A resource might be a physical component such as an EC2 instance, or it can be a logical resource such as a Heroku application.
+ 
+--> The resource block has two strings before opening the block: the resource type and the resource name. In our example, the resource type is "aws_instance" and the name is "example."
+
+***** Initialization
+
+The first command to run for a new configuration -- or after checking out an existing configuration from version control -- is 
+===>  $ terraform init  // Initialization
+EX: terraform init <DIR Path>
+
+===>  $ terraform validate  // It check the file for errors
+EX: terraform validate <DIR Path>
+
+===>  $ terraform apply  // To see the execution Plan. and to build the file
+EX: terraform apply <DIR Path>
+
+===>  $ terraform show   // To inspect the current state 
+
+==>   $ terraform destroy  // To delete the work  
+EX: terraform destroy <DIR Path>
+
+
+1) What is Terraform?
+2) Why should Terraform be preferred for DevOps?
+3) What are the features of Terraform?
+4) What steps should be followed for making an object of one module to be available for the other module at a high level?
+5) What are the new factors in the latest v1.24.0 & v1.25.0 Terraform Azure Provider?
+6) Are themes supported by terraforming?
+7) Give a configuration of for creating a single E2C instance in Amazon Web Services ( AWS ).
+8) Why POVRay renders fields and sometimes just doesn’t get displayed?
+9) How will you check whether your POVRay install is ok with the terraform?
+10) In case something went wrong, how will you handle and control rollbacks?
+11) Can policies be added to the Open Source or to the Pro Version of Enterprise?
+12) Mention the version controls that are supported besides GitHub?
+13) Can the Terraform Module Versions be locked anyhow?
+14) On Azure, Can callbacks be used with terraforming?
+15) Can terraform be used for on-prem infrastructure?
+16) Is the management of Azure Availability Zones alike the management done by distinct cloud providers available?
+17) What do you mean by IaC?
+18) With the help of an example, explain the significance of 'read permission' on a workspace.
+19) While using TFE's API for the provision of resources, will history be the same as it is on the web?
+20) Technology stacks used in company --- terraform
+21) DF state in terraform
+
+How do I see object values when debugging terraform
+Ans:$ terraform refresh
+    $ terraform show
+How to create duplicate resource in AWS using terraform
+
+https://blog.gruntwork.io/an-introduction-to-terraform-f17df9c6d180
