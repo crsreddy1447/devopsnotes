@@ -1,5 +1,5 @@
 29/05/2020
-Virtual Machine creation Requirements:
+###############################Virtual Machine creation Requirements:###########################################
 1. Resource group
 2. Virtual Network
 3. Network Security Groups
@@ -24,20 +24,20 @@ Disable NetWorkService on remote desktop in Windows Security of Domain, Private,
 
 On Remote desktop Command Prompt
 ------------------------------------------------------
-1. powershell.exe
-2. winrm quickconfig   
-3. get-service winrm
-4. start-service winrm
+1. >> powershell.exe
+2. >> winrm quickconfig   
+3. >> get-service winrm
+4. >> start-service winrm (Use this only winRm service is not running)
 
 On Local Windows POWERSHELL:
 --------------------------------------------------
-1. Get-Service WinRM
-2. WinRM qc 
-3. Enter-PSSession '<IP Address>' -Credential:'<username>'...                                                                                                                               
-4. Enable-PSRemoting   
+1. >> Get-Service WinRM
+2. >> WinRM qc 
+3. >> Enter-PSSession '<IP Address>' -Credential:'<username>'...                                                                                                                               
+4. >> Enable-PSRemoting   
 ***NOTE: If you get an Error like change network. Then Change your wifi network to private.                                                                                                                                                                      
-5. Set-Item WSMan:\localhost\Client\TrustedHosts -value <IP Address>
-6. Enter-PSSession -ComputerName <IP Address> -Credential "<username>"                                                                                                                          
+5. >> Set-Item WSMan:\localhost\Client\TrustedHosts -value <IP Address>
+6. >> Enter-PSSession -ComputerName <IP Address> -Credential "<username>"                                                                                                                          
                                                   
 For Testing the connection execute these commands from Local Win Powershell only after it is connected.
 1. New-Item F:\test.txt
@@ -45,10 +45,10 @@ For Testing the connection execute these commands from Local Win Powershell only
 3. Get-Content F:\test.txt
 Now go and check in Remote desktop you will see a file with test.txt
 
-################################################################################################################
+##################################### END OF VIRTUAL MACHINE #############################################################
 
 30/05/2020
-############### VPN ###########################
+########################################## VPN and VM Creation ############################################################
 VPN creation Requirements:
 1. Resource group
 2. Virtual Network
@@ -70,9 +70,6 @@ https://www.c-sharpcorner.com/article/step-by-step-demo-of-creating-a-point-to-s
 
 https://www.assistanz.com/steps-to-create-point-to-site-vpn-using-azure-portal/
 
--------
-------
-------
 1 Create Resource Group -- Name - VPN (Location East US)
 == Virtual Network====
 2 Virtual network (name -Vpn-Vnet  address prefix: 172.16.0.0/16)
@@ -98,8 +95,7 @@ Virtual network : choose correct virtual network where gatewaysubnet was created
 
 Public IP: Choose existing one and verify whether IPname was correctly loaded or not.
 
-Clicl on review+Create
-
+Click on review+Create
 
 ============================================================================================
 
@@ -148,6 +144,38 @@ Open Azure port and open Virtual network gateway
   Provions VM with pulic IP as NONE --> One VM created then copy private IP and verify RDP
   
 =========================VPN validation complete=================================================================
+##################################### END OF VPN AND VM CREATION ######################################################## 
+
+01/06/2020
+
+Chocolatey INSTALL
+>> Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+To use Azure PowerShell in PowerShell 5.1 on Windows:
+
+Update to Windows PowerShell 5.1. If you're on Windows 10 version 1607 or higher, you already have PowerShell 5.1 installed.
+Install .NET Framework 4.7.2 or later.
+Make sure you have the latest version of PowerShellGet. Run Install-Module -Name PowerShellGet -Force.
+
+>> Install-Module -Name PowerShellGet -Force
+>> Install-Module -Name Az   -------> To install Az module (AzureRM previous name)
+>> import-module az -Verbose -Force
+
+############################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
