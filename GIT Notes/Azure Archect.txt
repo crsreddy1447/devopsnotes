@@ -163,17 +163,259 @@ Make sure you have the latest version of PowerShellGet. Run Install-Module -Name
 
 ############################################################################################################################
 
+02/06/2020
+
+POWERSHELL COMMANDS
+--------------------------
+Get-Moudle cmdlet is used for getting all the modules in powershell
+Import-Module Az is used getting 'Az' module
+>> Import-Module az   ---> to install Az module
+>> Get-Module
+Azure Account Login-Mechanism:
+-----------------------------
+To connect azure portal from powershell use below cmdlet
+>> Connect-AzAccount   ---> To login into Azure account
+
+https://docs.atomicscope.com/docs/creating-service-principal  ---> Complete Document
+
+Service Principal:
+------------------
+A Service Principal is an application within Azure Active Directory, which is authorized to access resources or resource group in Azure. ... 
+You can assign permissions to the service principal that are different than your own Azure account permissions.
+#1 Login thru service principal to azure portal using power shell *****while creating service principle role will be contributor
+>> $sp=New-AzADServicePrincipal -DisplayName "RAJA"
+>> $sp
+<output>
+Secret                : System.Security.SecureString
+ServicePrincipalNames : {77cc8ded-d210-424f-a250-13ec215aec78, http://RAJA}
+ApplicationId         : 77cc8ded-d210-424f-a250-13ec215aec78
+ObjectType            : ServicePrincipal
+DisplayName           : RAJA
+Id                    : 8b0c5f3f-c556-493c-8003-08a5739b3ef6
+Type                  :
 
 
+#2 converting secure string to unsecure string
+>> $unsecure=ConvertFrom-SecureString -SecureString $sp.Secret  
+
+#3 converting secure string to binary string
+>> $binarySTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($sp.Secret)
+>> $binarySTR
+2464439934856
+
+#4 converting binary string to pointer for real password
+>> $password=[System.Runtime.InteropServices.Marshal]::PtrToStringAuto($binarySTR)
+>> $password
+f4b5b5f2-56a2-4c62-8ead-250c95f42852
+
+#5 convert the password to secure string again 
+>> $securepassword=ConvertTo-SecureString $password -AsPlainText -Force
+
+#6 Creating credentials
+>> $creds=New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($sp.ApplicationId, $securepassword)
+>> $creds
+
+UserName                                                 Password
+--------                                                 --------
+77cc8ded-d210-424f-a250-13ec215aec78 System.Security.SecureString
+
+#7 Getting the tenant id
+>> $tenant=(Get-AzContext).Tenant.Id
+>> $tenant
+8472dafb-f62e-4879-b123-1e7d871ef9ab
+
+#8 Getting the subscription id
+>> $subscriptionid=(Get-AzContext).Subscription.Id
+>> $subscriptionid
+4b32eb0d-2356-47e9-a8db-088b3d2ac170
+
+#9 connect to azure account
+>> Connect-AzAccount -ServicePrincipal -Credential $creds -Tenant $tenant -Subscription $subscriptionid
+
+Account                              SubscriptionName TenantId                             Environment
+-------                              ---------------- --------                             -----------
+77cc8ded-d210-424f-a250-13ec215aec78 Free Trial       8472dafb-f62e-4879-b123-1e7d871ef9ab AzureCloud
+
+#10 Logout from azure account
+>>> Logout-AzAccount
+
+03/06/2020
+
+#declare variables
+$resourcegroup="RG800"
+$location="southcentralus"
+$vnetname="vnet800"
+$addressprefix="172.16.0.0/16"
+$subnetname="Subnet1"
+$Subnetaddressprefix="172.16.1.0/24"
+$vmName="VM"
 
 
+#create resource group
+$rg=new-azresourcegroup -name $resourcegroup -location $location
+
+#create virtual network
+$vnet=New-AzVirtualNetwork -name $vnetname -ResourceGroupName $resourcegroup -location $location -addressprefix $addressprefix -force -verbose
+
+#create subnet for existing virtul network
+$subnet=add-AzVirtualNetworkSubnetConfig -Name $subnetname -AddressPrefix $Subnetaddressprefix -virtualNetwork $vnet
+
+#adding gateway subnet
+$gwsubnet=add-azvirtualnetworksubnetconfig -name "GatewaySubnet" -AddressPrefix "172.16.0.0/24" -virtualNetwork $vnet
+#update subnet into existing virtual network
+$vnet | set-azvirtualnetwork 
+
+#create virtual machine
+new-azvm -ResourceGroupName $resourcegroup -Location $location -Name $vmName -VirtualNetworkName $vnetname -SubnetName $subnetname  -AsJob
+-----------------------------------------------------
+Connect-AzAccount 
+
+Get-AzADServicePrincipal -DisplayName "RAJA" -Verbose  #getting ServicePrincipal
+
+$user='raja'
+$pwd='Password@123'| ConvertTo-SecureString -Force -AsPlainText
+$cred=New-Object PSCredential($user,$pwd)
+
+$rgname="RAJA"
+$locname="eastus"
+$vnetname="RAJAnet"
+$addprefix="10.1.0.0/16"
+$subnetname="RAJAsubnet-1"
+$subnetaddprefix="10.1.1.0/24"
+$vmname="RAJAVM"
+
+$rgroup=New-AzResourceGroup -Name $rgname -Location $locname -Force -Verbose
+
+$virtualnw=New-AzVirtualNetwork -Name $vnetname -ResourceGroupName $rgname -Location $locname -AddressPrefix $addprefix -Force -Verbose
+
+$sub=Add-AzVirtualNetworkSubnetConfig -Name $subnetname -VirtualNetwork $virtualnw -AddressPrefix $subnetaddprefix
+
+$gatewaysub=Add-AzVirtualNetworkSubnetConfig -Name "GatewaySubnet" -VirtualNetwork $virtualnw -AddressPrefix 10.0.2.0/24 
+
+$virtualnw |Set-AzVirtualNetwork
 
 
+New-AzVM -Name $vmname -ResourceGroupName $rgname -Location $locname -VirtualNetworkName $vnetname -SubnetName $subnetname -AsJob -Credential $cred
+
+Remove-AzResource -ResourceGroupName $rgname -resorcetype $vmname -Force -verbose
+
+Get-AzResource | Remove-AzResource -Force -verbose#to wipe all resourcegroups
+Get-AzResource -ResourceGroupName $rgname| Remove-AzResource -Force -verbose #to wipe specific Resource group
+
+Get-AzResourceGroup -Name $rgname 
+--------------------------------------------------------------------------------------------
+
+04/06/2020
+************ IMP CMD
+>> New-NetFirewallRule –DisplayName "Allow ICMPv4-In" –Protocol ICMPv4
+
+VM1
+Virtual network/subnet: Vnet1/Subnet-1
+NIC Public IP: 52.186.156.91
+NIC Private IP: 10.1.1.4
+
+VM2
+Virtual network/subnet: Vnet2/subnet-2
+NIC Public IP: 13.82.147.249
+NIC Private IP: 10.2.1.4
+
+ping 13.82.147.249
+ping 52.186.156.91
+
+Install-Module -Name Az
+import-module az -Verbose -Force
+Get-Module
+
+Connect-AzAccount 
+
+Get-AzADServicePrincipal -DisplayName "RAJA" -Verbose  #getting ServicePrincipal
+
+Connect-AzAccount 
+Get-AzADServicePrincipal -DisplayName "RAJA" -Verbose  #getting ServicePrincipal
+$user='raja'
+$pwd='Password@123'| ConvertTo-SecureString -Force -AsPlainText
+$cred=New-Object PSCredential($user,$pwd)
+
+$rgname="RAJA"
+$locname="eastus"
+
+$vnetname1="RAJAnet1"
+$addprefix1="10.1.0.0/16"
+$subnetname1="subnet-1"
+$subnetaddprefix1="10.1.1.0/24"
+$vmname1="RAJAVM1"
+
+$vnetname2="RAJAnet2"
+$addprefix2="10.2.0.0/16"
+$subnetname2="subnet-2"
+$subnetaddprefix2="10.2.1.0/24"
+$vmname2="RAJAVM2"
+
+$rgroup=New-AzResourceGroup -Name $rgname -Location $locname -Force -Verbose
+
+$virtualnw1=New-AzVirtualNetwork -Name $vnetname1 -ResourceGroupName $rgname -Location $locname -AddressPrefix $addprefix1 -Force -Verbose
+$sub1=Add-AzVirtualNetworkSubnetConfig -Name $subnetname1 -VirtualNetwork $virtualnw1 -AddressPrefix $subnetaddprefix1
+#$gatewaysub=Add-AzVirtualNetworkSubnetConfig -Name "GatewaySubnet" -VirtualNetwork $virtualnw1-AddressPrefix 10.0.1.0/24 
+$virtualnw1 |Set-AzVirtualNetwork
+
+$virtualnw2=New-AzVirtualNetwork -Name $vnetname2 -ResourceGroupName $rgname -Location $locname -AddressPrefix $addprefix2 -Force -Verbose
+$sub1=Add-AzVirtualNetworkSubnetConfig -Name $subnetname2 -VirtualNetwork $virtualnw2 -AddressPrefix $subnetaddprefix2
+#$gatewaysub=Add-AzVirtualNetworkSubnetConfig -Name "GatewaySubnet" -VirtualNetwork $virtualnw2 -AddressPrefix 10.0.1.0/24 
+$virtualnw2 |Set-AzVirtualNetwork
+
+Add-AzVirtualNetworkPeering -Name $vnetname1-to-vnetname2 -VirtualNetwork $virtualnw1 -RemoteVirtualNetworkId $virtualnw2.Id
+Add-AzVirtualNetworkPeering -Name $vnetname2-to-vnetname1 -VirtualNetwork $virtualnw2 -RemoteVirtualNetworkId $virtualnw1.Id
+
+New-AzVM -Name $vmname1 -ResourceGroupName $rgname -Location $locname -VirtualNetworkName $vnetname1 -SubnetName $subnetname1 -AsJob -Credential $cred
+New-AzVM -Name $vmname2 -ResourceGroupName $rgname -Location $locname -VirtualNetworkName $vnetname2 -SubnetName $subnetname2 -AsJob -Credential $cred
+
+Remove-AzResource -ResourceGroupName $rgname -resorcetype $vmname -Force -verbose
+
+Get-AzResource | Remove-AzResource -Force -verbose#to wipe all resourcegroups
+Get-AzResource -ResourceGroupName $rgname| Remove-AzResource -Force -verbose #to wipe specific Resource group
+
+Get-AzResourceGroup -Name $rgname 
+
+---------------------------------------------------------------------------------------------------------
+
+APPLICATION GATEWAY
+
+set-AzVMExtension -ResourceGroupName "APP" -ExtensionName IIS -VMName VM-front -Publisher microsoft.compute -ExtensionType CustomScriptExtension -TypeHandlerVersion 1.4 -SettingString '{"commandToExecute": "powershell add-windowsfeature web-server; powershell add-content -path \"C:\\inetpub\\wwwroot\\default.htm\" -value $($env:Computername)"}' -Location eastus
+set-AzVMExtension -ResourceGroupName "APP" -ExtensionName IIS -VMName BACK-VM-2 -Publisher microsoft.compute -ExtensionType CustomScriptExtension -TypeHandlerVersion 1.4 -SettingString '{"commandToExecute": "powershell add-windowsfeature web-server; powershell add-content -path \"C:\\inetpub\\wwwroot\\default.htm\" -value $($env:Computername)"}' -Location eastus
+
+STEPS FOR APPLICATION GATEWAY:
+1. ResourceGroup
+2. VIrtual Network
+  Subnet-1=FrontEnd
+  Subnet-2=Backend
+3. Public IP 
+4. Virtual Machines --2 or VMSS or APP Services
+3. Application Gateway
+  
+  Configuration
+   Add Route Table
+
+6. Cloud Shell open and add storage
+7. Run Azextension command with VM and Resource name. (Run commands = noof vms)  
+set-AzVMExtension -ResourceGroupName "APP" -ExtensionName IIS -VMName VM-front -Publisher microsoft.compute -ExtensionType CustomScriptExtension -TypeHandlerVersion 1.4 -SettingString '{"commandToExecute": "powershell add-windowsfeature web-server; powershell add-content -path \"C:\\inetpub\\wwwroot\\default.htm\" -value $($env:Computername)"}' -Location eastus
+set-AzVMExtension -ResourceGroupName "APP" -ExtensionName IIS -VMName BACK-VM-2 -Publisher microsoft.compute -ExtensionType CustomScriptExtension -TypeHandlerVersion 1.4 -SettingString '{"commandToExecute": "powershell add-windowsfeature web-server; powershell add-content -path \"C:\\inetpub\\wwwroot\\default.htm\" -value $($env:Computername)"}' -Location eastus
+
+-----------------------------------------------------------------------------------------------------------
+10/06/2020
+Install-WindowsFeature -Name Web-server -IncludeManagementTools -Verbose
+Remove-Item C:\inetpub\wwwroot\iisstart.htm -Force -Recurse -Verbose
+Add-Content -Path "C:\inetpub\wwwroot\iisstart.htm" -Value $("Hello LoadBalancer Node " + $env:COMPUTERNAME)
+
+1. Resource Group
+2. Virtual Network
+     Subnet
+3. Network Security Group
+4. OA
+5. Load Balancer
+6. VM's
 
 
-
-
-
+--------------------------------------------------------------------------------------------------------------
 
 
 
