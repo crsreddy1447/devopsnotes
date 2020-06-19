@@ -2,39 +2,24 @@
 Topics for interview: 
 
 Jenkins complete  --------> DONE   Shared library, 
-
 Docker Complete    -------> DONE 
-
 Kubernetes Complete  -------> DONE
-
 Ansible Few  ----> DONE  
-
-Terraform Complete
-
+Terraform ---> DONE
 GIT and GIT FLOW Complete -----> DONE Submodule and Git flow
-
 Maven Complete Cycle -------> DONE 
-
 NAGIOS COMPLETE
-
 LINUX and SHELL SCRIPTING
 
 AWS CLI EC2    ------------->DONE
-
 AWS CLI VPC    --------------> DONE
-
 AWS CLI S3       --------------> DONE
-
 AWS IAM          ----------> DONE
 
 AWS Elastic Block Store (EBS)  ---------> DONE
-
 AWS ELB load balancer  ----------------> DONE
-
 AWS Elastic Beanstalk  ------------> DONE
-
 Amazon DynamoDB  -------------> DONE
-
 AWS Lambda
 
 AWS CLOUD WATCH 

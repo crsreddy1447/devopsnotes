@@ -67,6 +67,7 @@ docker start <container name>  ----> to start a container
 docker attach <container Id> to go inside the container
 docker rmi <image name> ---> To delete the images
 docker system prune --all ---> to delete unwanted and not running containers
+docker exec -it <container name> /bin/bash ---> to enter into a container
 
 
 	   
@@ -129,8 +130,23 @@ EX: LABEL "Organisation" = "ABCDEF"
 6. ENV: to set Environment Variable
 
 
+https://aspetraining.com/resources/blog/deploying-your-first-web-app-to-tomcat-on-docker
+git clone https://github.com/softwareyoga/docker-tomcat-tutorial.git
 
-	
+## build is run by the Docker daemon, not by the CLI. It downloads any images 
+that are necessary and also executes the commands specified in the Dockerfile.
+$ docker build -t mywebapp .
+
+#Docker CLI has a command called run which will start a container based on a Docker Image
+$ docker run -p 80:8080 mywebapp
+
+/usr/local/tomcat
+
+<role rolename="admin"/>
+<role rolename="admin-gui"/>
+<role rolename="manager-gui"/>
+<user username="admin" password="admin" roles="standard,manager,admin,manager-gui,manager-script"/>
+
 To Save and execute docker File:
 $ cd/
 $ mkdir 

@@ -1,0 +1,210 @@
+centos ip
+three apps web , api, authentication
+public ip 
+different ports 
+rajwebsite.com
+app.rajwebsite.com
+
+      <Host name="www.rajwebsite.com"  appBase="gameoflife"
+            unpackWARs="true" autoDeploy="true"/>
+
+      <Host name="www.app.rajwebsite.com"  appBase="Sample"
+            unpackWARs="true" autoDeploy="true"/>
+
+
+https://aspetraining.com/resources/blog/deploying-your-first-web-app-to-tomcat-on-docker
+git clone https://github.com/softwareyoga/docker-tomcat-tutorial.git
+
+## build is run by the Docker daemon, not by the CLI. It downloads any images 
+that are necessary and also executes the commands specified in the Dockerfile.
+$ docker build -t mywebapp .
+
+#Docker CLI has a command called run which will start a container based on a Docker Image
+$ docker run -p 80:8080 mywebapp
+
+/usr/local/tomcat
+
+<role rolename="admin"/>
+<role rolename="admin-gui"/>
+<role rolename="manager-gui"/>
+<user username="admin" password="admin" roles="standard,manager,admin,manager-gui,manager-script"/>
+
+/usr/local/tomcat/webapps
+/usr/local/tomcat/gameo
+
+
+18.218.250.2 www.rajwebsite.com
+18.218.250.2 www.sam.rajwebsite.com
+18.218.250.2 www.web.rajwebsite.com
+
+
+http://18.218.250.2:8181/helloworld
+http://18.218.250.2:8181/gameoflife
+http://18.218.250.2:8181/SampleWebApp 
+
+https://raja1447.s3-us-west-2.amazonaws.com/sample.war
+https://raja1447.s3-us-west-2.amazonaws.com/SampleWebApp.war
+https://raja1447.s3-us-west-2.amazonaws.com/gameoflife.war
+https://raja1447.s3-us-west-2.amazonaws.com/helloworld+.war
+https://raja1447.s3-us-west-2.amazonaws.com/TechdatCommunicationss.war
+
+docker exec -it <container name> /bin/bash
+docker exec -it 5540fbf9ad4 /bin/bash
+
+<role rolename="tomcat"/>
+<role rolename="admin-gui"/>
+<role rolename="manager-gui"/>
+<role rolename="manager-status"/>
+<user username="admin" password="admin" roles="tomcat,admin-gui,manager-gui,manager-status"/>
+
+Step 1: Open file server.xml in folder C:/Tomcat7.2/conf.
+
+Setp 2: Change port of http tomcat to 80. This look like:
+<Connector port="80" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+
+Step 3: Add new virtual host entry just before last closing Engine tag
+<Host name="abc.com"
+          appBase="/usr/local/tomcat/webapps/gameoflife"
+          unpackWARs="true"
+          autoDeploy="true"
+          xmlValidation="false"
+          xmlNamespaceAware="false">
+        
+           <Alias>rajweb.com</Alias>
+ 
+           <Context path="" docBase="/usr/local/tomcat/webapps/gameoflife"
+               debug="0" reloadable="false"/>
+           <Context path="/gameoflife" docBase="/usr/local/tomcat/webapps/gameoflife"
+              debug="0" reloadable="false"/>
+     </Host>
+	 
+	 <Host name="app.abc.com"
+          appBase="/usr/local/tomcat/webapps/SampleWebApp"
+          unpackWARs="true"
+          autoDeploy="true"
+          xmlValidation="false"
+          xmlNamespaceAware="false">
+        
+           <Alias>rajweb.com</Alias>
+ 
+           <Context path="" docBase="/usr/local/tomcat/webapps/SampleWebApp"
+               debug="0" reloadable="false"/>
+           <Context path="/SampleWebApp" docBase="/usr/local/tomcat/webapps/SampleWebApp"
+              debug="0" reloadable="false"/>
+     </Host>
+
+Same way you can set domain name for 3 application. I hope this clarifies your doubt. Let us know if you have any other question.
+
+
+moodle:
+image: sergiogomez/docker-moodle
+environment:
+ - VIRTUAL_HOST=moodle.domain.com
+nginx:
+image: jwilder/nginx-proxy:latest
+ environment:
+  - VIRTUAL_PROTO=https
+  ports:
+   - "443:443"
+volumes:
+ - /var/run/docker.sock:/tmp/docker.sock
+ - /srv/docker/gitlab/gitlab/certs:/etc/nginx/certs
+postgresql:
+ image: sameersbn/postgresql:9.4
+ volumes:
+  - /srv/docker/gitlab/postgresql:/var/lib/postgresql
+ gitlab:
+  image: sameersbn/gitlab:latest
+  links:
+ - redis:redisio
+ - postgresql:postgresql
+ environment:
+- VIRTUAL_HOST=gitlab.domain.com
+volumes:
+ - /srv/docker/gitlab/gitlab:/home/git/data
+redis:
+image: sameersbn/redis:latest
+volumes:
+ - /srv/docker/gitlab/redis:/var/lib/redis
+owncloud:
+ image: l3iggs/owncloud:latest
+ environment:
+ - VIRTUAL_HOST=cloud.domain.com
+ - TARGET_SUBDIR=/
+ volumes:
+ - /srv/docker/owncloud/files:/usr/share/webapps/owncloud/data
+ 
+ If you followed all the tutorials here, then you should already know how “vi” editor works. So just paste this inside server.xml file.
+
+</Host>
+      <Host name="example.com" appBase="webapps" unpackWARs="true" autoDeploy="true">
+      <Alias>www.example.com</Alias>
+      <Context path="" docBase="yourapp" debug="0" privileged="true" />
+      <Valve className="org.apache.catalina.valves.AccessLogValve"
+             directory="logs"   prefix="localhost_access_log." suffix=".txt"
+             pattern="%h %l %u %t &quot;%r&quot; %s %b" resolveHosts="false" />
+</Host>
+This entry should be inside the <Engine> tag. I have put it in the end just before the closing </Engine> tag.
+Make sure you pay attention to:
+name=“example.com” - should be your domain name
+<Alias>www.example.com</Alias> - the same but with www in front
+docBase=“yourapp” - should be the name you used in URL to access your webapp after the port Nr.
+Now TomCat will know what webapp to give if the request will contain the host name example.com or www.example.com
+So you’ll be able to access your app with http://www.example.com:8080
+
+
+
+How To Map A Domain To Tomcat’s Web Application
+Posted on May 18, 2016by quysnhat
+When you deployed your application in Tomcat server you can view your app by the link like: http://localhost:port/appName. You can mapping a domain to Tomcat’s web application to access your application according by your domain (ex: http://yourdomain.com) after you reference the domain to your ip server.
+To do this you flow theses steps:
+Step 1: Open file server.xml in folder C:/Tomcat7.2/conf.
+Setp 2: Change port of http tomcat to 80. This look like:
+
+
+<Connector port="80" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+Step 3: Add new virtual host entry just before last closing Engine tag
+
+<Host name="yourdomain.com"
+          appBase="C:/Tomcat7.2/webapps/yourapp"
+          unpackWARs="true"
+          autoDeploy="true"
+          xmlValidation="false"
+          xmlNamespaceAware="false">
+        
+           <Alias>doithoaitructuyen.msb.com.vn</Alias>
+ 
+           <Context path="" docBase="C:/Tomcat7.2/webapps/yourapp"
+               debug="0" reloadable="false"/>
+           <Context path="/yourapp" docBase="C:/Tomcat7.2/webapps/yourapp"
+              debug="0" reloadable="false"/>
+     </Host>
+Step 3: Save file and restart apache tomcat.
+
+
+
+
+
+Total Experience	3.7years
+Relevant Experience in AWS 3.5years
+Experience in DevOps 3.5 years 
+Experience in Docker 3.5 years
+Experience in Development Yes 
+Experience in Administration or support Yes
+Experience in Kubernetes Yes 
+Experience in ECS No 
+Experience in Shell or Python or Ruby Scripting - No 
+Experience in Chef or Ancible -- any one Ansible 
+Experience in Linux Operating System Yes 
+Experience inÂ different types of NoSQL databases AWS RDS 
+Experience inÂ Designing and implementing CI/CD yes
+Have you given Interview with Tavisca in last 6 months No
+If not in pune, willing to Relocate Pune Yes
+CTC (in LPA)	5.90LPA
+ECTC (in LPA)	9.50LPA
+Notice PeriodÂ(in days) Immediate Joining
+

@@ -1,0 +1,60 @@
+################
+AZURE 
+ 
+#################
+POWERSHELL SCRIPTING
+
+################
+AWS
+ CLI
+ IAM
+ S3 & EC2
+ VPC
+ LOADBALANCER
+ Auto Scaling
+ Elastic Block Store (EBS)
+ Elastic Beanstalk 
+ DynamoDB
+ Lambda
+ EKS
+ CLOUD WATCH 
+ CloudTrail
+ SNS
+ Codepipeline
+ Server Migration
+ DataBase Migration
+ 
+ AWS-AZURE Connect   = https://www.powerupcloud.com/connecting-clouds-aws-to-azure-site-to-site-vpn-step-by-step/
+ Public DNS	ec2-54-188-38-75.us-west-2.compute.amazonaws.com
+User name	Administrator
+Password	
+N42j?ma3I%vHT3eZk7ZHWDmLfYU4KkFe
+ 
+###############
+DEVOPS
+ GIT
+ MAVEN
+ NEXUS
+ SONARQUBE
+ DOCKER
+ JENKINS
+ KUBERNETES
+ TERRAFORM
+ ANSIBLE
+ NAGIOS
+ CDN/WAF such as Akamai,CloudFlare (optional)
+###############
+LINUX  https://blog.cloud66.com/ten-very-handy-linux-commands-to-make-your-devops-life-easy/
+ FILE SYSTEM and permissions
+ NETWORKING & SECURITY
+ SERVER CONNECTION
+ Commands
+ SHELL SCRIPTING
+ 
+######################## 
+Phyton Scripting (Optional)
+
+10:30-1:00 --- Devops
+2;30-4;00 --- AWS
+7;00-9;00 --- Azure
+10;30-12;00 --- Linux and Scripting
