@@ -393,7 +393,7 @@ STEPS FOR APPLICATION GATEWAY:
 3. Application Gateway
   
   Configuration
-   Add Route Table
+  Add Route Table
 
 6. Cloud Shell open and add storage
 7. Run Azextension command with VM and Resource name. (Run commands = noof vms)  
@@ -401,13 +401,13 @@ set-AzVMExtension -ResourceGroupName "APP" -ExtensionName IIS -VMName VM-front -
 set-AzVMExtension -ResourceGroupName "APP" -ExtensionName IIS -VMName BACK-VM-2 -Publisher microsoft.compute -ExtensionType CustomScriptExtension -TypeHandlerVersion 1.4 -SettingString '{"commandToExecute": "powershell add-windowsfeature web-server; powershell add-content -path \"C:\\inetpub\\wwwroot\\default.htm\" -value $($env:Computername)"}' -Location eastus
 
 -----------------------------------------------------------------------------------------------------------
-10/06/2020
+10/06/2020 LOAD Balancer
 Install-WindowsFeature -Name Web-server -IncludeManagementTools -Verbose
 Remove-Item C:\inetpub\wwwroot\iisstart.htm -Force -Recurse -Verbose
 Add-Content -Path "C:\inetpub\wwwroot\iisstart.htm" -Value $("Hello LoadBalancer Node " + $env:COMPUTERNAME)
 
 1. Resource Group
-2. Virtual Network
+2. Virtual Network	
      Subnet
 3. Network Security Group
 4. OA
@@ -416,10 +416,397 @@ Add-Content -Path "C:\inetpub\wwwroot\iisstart.htm" -Value $("Hello LoadBalancer
 
 
 --------------------------------------------------------------------------------------------------------------
+ 
+FTPS Endpoint: ftps://waws-prod-blu-157.ftp.azurewebsites.windows.net/site/wwwroot
+Username: APP1447\$APP1447
+Password: HhTfC2EAl5ZGwC8Dxchv7mpNJHWRxshE61Ce6tAJhleGabC0MqSpklGg2mGD
+
+------------------------------------------------------------------------------------------------------------
+13/06/2020
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+------------------------------------------------------------------------------------------------------------
+21/06/2020
+
+$ az login --tenant 8472dafb-f62e-4879-b123-1e7d871ef9ab
+
+"cloudName": "AzureCloud",
+    "homeTenantId": "8472dafb-f62e-4879-b123-1e7d871ef9ab",
+    "id": "4b32eb0d-2356-47e9-a8db-088b3d2ac170",
+    "isDefault": true,
+    "managedByTenants": [],
+    "name": "Free Trial",
+    "state": "Enabled",
+    "tenantId": "8472dafb-f62e-4879-b123-1e7d871ef9ab",
+    "user": {
+      "name": "crsreddy15@outlook.com",
+      "type": "user"
+
+    "cloudName": "AzureCloud",
+    "homeTenantId": "8472dafb-f62e-4879-b123-1e7d871ef9ab",
+    "id": "4b32eb0d-2356-47e9-a8db-088b3d2ac170",
+    "isDefault": true,
+    "managedByTenants": [],
+    "name": "Free Trial",
+    "state": "Enabled",
+    "tenantId": "8472dafb-f62e-4879-b123-1e7d871ef9ab",
+    "user": {
+      "name": "crsreddy15@outlook.com",
+      "type": "user"
+
+ C:\WINDOWS\system32> az ad sp create-for-rbac -n "Rajaterraform"
+Changing "Rajaterraform" to a valid URI of "http://Rajaterraform", which is the required format used for service principal names
+Creating a role assignment under the scope of "/subscriptions/4b32eb0d-2356-47e9-a8db-088b3d2ac170"
+{
+  "appId": "13dd1236-dd6f-4deb-b92a-5df5ac3090cf",
+  "displayName": "Rajaterraform",
+  "name": "http://Rajaterraform",
+  "password": "7qmezFTP91rAT_IJs7AKdSL5h2C1J-Voj-",
+  "tenant": "8472dafb-f62e-4879-b123-1e7d871ef9ab"
+  }
+
+----------------
+Terraform commands
+az ad sp create-for-rbac -n "MyApp"
+$ terraform.exe init
+az vm list-sizes -l eastus -o table
+
+resource "azure_security_group_rule" "azraj" {
+  name                        = "RDP"
+  priority                    = 110
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "3389" #443 80
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.azraj.name
+  network_security_group_name = azurerm_network_security_group.azraj.name
+}
+
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/4b32eb0d-2356-47e9-a8db-088b3d2ac170"
+
+No available provider "azure" plugins are compatible with this Terraform version.
+
+From time to time, new Terraform major releases can change the requirements for
+plugins such that older plugins become incompatible.
+
+Terraform checked all of the plugin versions matching the given constraint:
+    (any version)
+
+Unfortunately, none of the suitable versions are compatible with this version
+of Terraform. If you have recently upgraded Terraform, it may be necessary to
+move to a newer major release of this provider. Alternatively, if you are
+attempting to upgrade the provider to a new major version you may need to
+also upgrade Terraform to support the new version.
+
+Consult the documentation for this provider for more information on
+compatibility between provider versions and Terraform versions.
+
+
+Error: no available version is compatible with this version of Terraform
+------------------------------------
+22/06/2020
+Multiple VMS in TerrFORM
+https://docs.microsoft.com/en-us/azure/developer/terraform/create-vm-cluster-with-infrastructure
+https://docs.microsoft.com/en-us/azure/developer/terraform/create-linux-virtual-machine-with-infrastructure
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+choco install visualstudio2019buildtools
+goto msbuild extension in c programs
+set path of MSBuild.exe in environment variables
+
+Run MSBuild.exe #to check the variable path working or not
+
+choco install git.install
+
+create a folder and clone git
+
+$ git clone https:// abc.crsreddy.git -----> example
+
+
+---------------------------------------------------------
+24/06/2020
+Build A Project
+CICD Build Process:
+
+Traditional -
+ Dotnet : Build Engine (MSBuild -- microsoft build engine)
+		: Restore engine (Nuget -- nuget package manager which pull the required packaes from internet)
+		: Project (ASP.Net MVC 5)
+		: getting the source code from github repo into local work space
+		    1) Restore application dependencies using nuget.exe  ex: nuget restore "provide project name or solution (.sln)"
+			2) msbuild ".proj| .sln" 
+
+			
+Steps Involved:
+1)Create virtual machine with 4cpu's and 16gb ram
+2)Once vm is created, login into the vm
+3)Open the powershell as adminstrator and need to install the choco by executing the below script
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+4)Need to install the visualstudio2019buildtools in vm, run the below command in powershell
+choco install visualstudio2019buildtools
+
+5)After install, it will ask for reboot the vm, run the below command for reboot.
+restart-computer
+
+6)Once restarted, open the below path and check MSBuild.exe is there or not
+C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\
+
+7)Copy the MSBuild.exe path and right click on ThisPC(my computer)-> Properties -> click on Advanced System Settings -> click on Environment variables
+->select Path under System variables -> click on Edit -> click on New -> Paste the copied MSBuild.exe path -> click on ok
+
+8)Open powershell and run the below command
+MSBuild.exe /?
+
+*Q) on what basis u will recognize which plotform its running?
+based on configuration properties will say its running on x64 or x86
+
+9)Need to install github in vm, run the below command in powershell
+choco install git.install
+
+10)After install, type 'git' in powershell. sometimes getting error, to load need to restart the machine. Otherwise open cmd prompt as adminstrator and type 'git' and enter.
+
+11)Need to install nuget packages in vm, run the below command in powershell
+choco install nuget.commandline
+
+12)After install, type 'nuget.exe' in powershell
+
+13)Need to install google chrome in vm, run the below command in powershell
+choco install googlechrome
+
+14)Open googlechrome and search for 'asp.net mvc 5 projects in github' and select the project (ex:SmartStoreNet)
+
+15)Click on Clone in SmartStoreNet project and copy the url (https://github.com/smartstore/SmartStoreNET.git)
+
+16)Need to create new directory(folder), run the below command in powershell
+New-Item C:\GitHubProjects\Traditional -ItemType Directory
+
+17)Need to change the directory in cmd prompt to newly created directory, run the below command in cmd prompt
+cd C:\GitHubProjects\Traditional
+
+18)Need to clone(get) the project files from github into the newly created directory, run the below command in cmd prompt
+git clone <github url>
+git clone https://github.com/smartstore/SmartStoreNET.git
+
+19)After cloning, check all the project files are downloaded in directory(C:\GitHubProjects\Traditional)
+
+20)Now need to restore the nuget packages of the project, run the below command in powershell
+cd C:\GitHubProjects\Traditional\SmartStoreNET
+nuget restore src\SmartStoreNET.sln
+
+21) Restoring is failed due to missing of 'microsoft.webapplication.target' but packages are installed.
+
+22)Open Visual Studio Installer -> click on Modify ->
+select the below tools under WorkLoads
+	-C++ Build tools
+	-.NET desktop build tools
+	-Universal Windows Platoform build tools
+	-web development build tools
+	-Data storage and processing build tools
+	-Node.js build tools
+	-.NET core build tools
+select the below tools under Individual Components
+	-select all frameworks except EOL under .Net
+	-select nuget package manager under Code Tools
+	-select windows workflow foundation build tools under development activities
+click on modify
+
+Note: To avoid the above error, install all the above tools after visualstudio2019buildtools installation.
+
+*Q)how it know what are all packages installed?
+it will install based on package names in package.config file 
+
+22) After installed all the tools, need to restore the nuget packages again
+nuget restore src\SmartStoreNET.sln
+
+Note: Before restoring need to delete the packages folder in project
+
+23)After restoring nuget successfull, need to build the project with buildengine msbuild ".proj/.sln", run the below command in powershell
+msbuild src\SmartStoreNET.sln -t:build
+
+*Q)Build(compliation) completed where is the output?
+it will store in the bin of the same project but it will not accurate, we will set specifically the output folder
+
+24)run the below command in powershell
+msbuild src\SmartStoreNET.sln -t:build -p:configuration="Release" -p:platform="Any CPU" -p:outdir="C:/Test"
+
+25)output(atrifacts) stored in Test directory, 
+
+For Testing purpose, whether build is happened corectly.
+26)Install IIS in vm, execute the below command in powershell
+Install-WindowsFeature -Name web-server -IncludeManagementTools
+Install-WindowsFeature -Name web-server -IncludeAllSubFeature
+
+27)open IIS(inetmgr), create new website and add output(Test) path(C:\Test\_PublishedWebsites\SmartStore.Web) and run the site
+its throwing error "Could not find a part of the path 'C:\Test\_PublishedWebsites\SmartStore.Web\bin\roslyn\csc.exe'."
+
+28) copy the roslyn folder in proj folder and paste in bin of Test folder and re-run the website.(it working as excpected)
+
+https://github.com/jojozhuang/game-store-aspnet.git
+
+
+-----------------------------------------------------------------------------------------------------
+25/06/2020
+Token: 
+4k3sqayurwfeniquqbeurt4pzpvf7gxlx6tuaubtx7chhveg7pkq
+
+ON Remote Server
+
+Creation of PAT (Personal Access Token)
+
+Step1: LOgin into Dev.azure.com
+Step2: Top Right hand side select usersettings --> choose personal tokens -->Add token --> enter name , date time , choose full accesss--> save/add 
+Step3: Copy the token code before closing the windows ( we can't retrieve once closed. so careful)
+
+Step 4 :Agent setup example
+
+
+PS C:\AZAgent> .\config.cmd
+
+  ___                      ______ _            _ _
+ / _ \                     | ___ (_)          | (_)
+/ /_\ \_____   _ _ __ ___  | |_/ /_ _ __   ___| |_ _ __   ___  ___
+|  _  |_  / | | | '__/ _ \ |  __/| | '_ \ / _ \ | | '_ \ / _ \/ __|
+| | | |/ /| |_| | | |  __/ | |   | | |_) |  __/ | | | | |  __/\__ \
+\_| |_/___|\__,_|_|  \___| \_|   |_| .__/ \___|_|_|_| |_|\___||___/
+                                   | |
+        agent v2.170.1             |_|          (commit bb272bb)
+
+
+>> Connect:
+
+Enter server URL > https://dev.azure.com/az800/
+Enter authentication type (press enter for PAT) >
+Enter personal access token > ****************************************************
+Connecting to server ...
+
+>> Register Agent:
+
+Enter agent pool (press enter for default) > AZ800
+Enter agent name (press enter for Vm1) > Az800-Agent1
+Scanning for tool capabilities.
+Connecting to the server.
+Successfully added the agent
+Testing agent connection.
+Enter work folder (press enter for _work) > C:\Agent_workSpace
+2020-06-25 03:07:10Z: Settings Saved.
+Enter run agent as service? (Y/N) (press enter for N) > Y
+Enter User account to use for the service (press enter for NT AUTHORITY\NETWORK SERVICE) > azrajesh
+Enter Password for the account Vm1\azrajesh > ************
+Error reported in diagnostic logs. Please examine the log for more details.
+    - C:\AZAgent\_diag\Agent_20200625-030436-utc.log
+Granting file permissions to 'Vm1\azrajesh'.
+Service vstsagent.az800.AZ800.Az800-Agent1 successfully installed
+Service vstsagent.az800.AZ800.Az800-Agent1 successfully set recovery option
+Service vstsagent.az800.AZ800.Az800-Agent1 successfully set to delayed auto start
+Service vstsagent.az800.AZ800.Az800-Agent1 successfully configured
+Service vstsagent.az800.AZ800.Az800-Agent1 started successfully
+PS C:\AZAgent>
+
+===============>
+Steps
+login dev.azure.com
+>create organsation
+>create personal acces token     (found in organistional setting on icon peoples image)
+ personal token values:
+      name-venkat
+	  organisation-gmunna4444
+	  expiry date - max upto 1yr
+	  scope-full acces
+ >create> copy the token value in note pad
+oganisational setting
+agent pool
+Add newagent
+click on agent download for windows (in remote server)
+create new files in windows c
+copy downloded agent files into new folder
+
+>open powershell
+go to agent folder (Ex:Agent location C:\Agent)
+execute the following command in powershell
+cd C:\Agent #change directory to agent file location
+>.\config.cmd  # run this command
+enter server url
+> https://dev.azure.com/<oganisational name>
+ https://dev.azure.com/gmunna4444/  (url from organistional setting)
+ 
+>copy above personaal acces token from notepad
+>enter agent poolname  -
+>enter agent name      -your wish
+
+>enter a work folder in remote machine (example c:\project1)
+>press yes
+>enter your VM user id
+>enter your VM password
+>agent is strated succes fully
+>go to agent pool ,click on poolname-agent
+
+>go to your project -> click in repo -> import repository ->select git ->copy the git url click on input
+>pipeline >create new pipeline ->click on classic editor >slect on empty job->
+ 
+>Get sources -clean value to true-> clean option to all build directories->clickon agent job->save & continue->
+ 
 
 
 
 
+organisation sett
+create project
+create agents pool
 
+https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
+
+in option tab --> build number format --> $(Date:yyyyMMdd).$(Rev:r)-$(Build.DefinitionName)
+
+Build Parameters
+-t:build -p:outdir=$(Build.artifactstagingDirectory) -p:generateprojectspecificoutputfolder=true
+
+Token: bhfkiojkjeqgqidahenjdcn57pihrqec772teeabaj4d7o6cisrq
+zb5sumskhqxis2fn2zxd7hzffrqw6li6m4xd5h6ll7fhvaj3v2kq
+
+https://dev.azure.com/crsreddy-org/
+
+in option tab --> build number format --> $(Date:yyyyMMdd).$(Rev:r)-$(Build.DefinitionName)
+
+-t:build  -p:outdir=$(Build.artifactstagingDirectory) -p:generateprojectspecificoutputfolder=true
+
+
+------------------------------------------------------------------------------------------------------
+
+
+$packagespath="$(Build.artifactstagingDirectory)"
+$packages=(Get-ChildItem -Path $packagespath).Name
+New-item "$packagespath\Packages" -ItemType Directory -Force
+
+if($packages.Length -ne 0){
+    Foreach($package in $packages){
+        if(Test-path "$packagespath\$package\_Publishedwebsites")
+        {
+            $folderpath="$packagespath\$package\_Publishedwebsites\$package\*"
+            #zip the packages
+            Compress-Archive $folderpath -DestinationPath "$packagespath\packages\$package.zip" -Force 
+        }
+        else{
+            Write-Warning -Message "No published websites found in current package :$package folder "
+        }
+    }
+}
+else{
+    Write-Error -Message "No packages found in the current folder" -ErrorAction stop
+    exit 1
+}
+
+
+Artifact directory path
+$(Build.artifactstagingDirectory)\packages
+
+https://github.com/jojozhuang/game-store-aspnet.git
+https://github.com/arichika/AspNet.Identity.Oracle
+https://github.com/RickStrahl/Westwind.Web.Markdown
+https://github.com/saineshwar/WebTimeSheetManagement
 
 

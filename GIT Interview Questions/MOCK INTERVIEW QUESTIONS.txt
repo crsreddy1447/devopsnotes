@@ -1,15 +1,5 @@
 Interview Methods
 
-
- 
-
-
-####TERRAFORM:
-Technology stacks used in company --- terraform
-DF state in terraform
-
-
-
 ###AWS: 
 How you achieve Autoscaling in AWS
 How to copy file from windows to AWS machine
