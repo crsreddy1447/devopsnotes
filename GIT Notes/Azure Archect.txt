@@ -809,4 +809,121 @@ https://github.com/arichika/AspNet.Identity.Oracle
 https://github.com/RickStrahl/Westwind.Web.Markdown
 https://github.com/saineshwar/WebTimeSheetManagement
 
+C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Microsoft\VisualStudio\v16.0\WebApplications\Microsoft.WebApplication.targets(182,5) "Template\vendor\jquery-easing\jquery.easing.compatibility.js" 
+##[error]C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Microsoft\VisualStudio\v16.0\WebApplications\Microsoft.WebApplication.targets(182,5): Error MSB3030: Could not copy the file "Template\vendor\jquery-easing\jquery.easing.min.js" because it was not found.
+##[error]C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Microsoft\VisualStudio\v16.0\WebApplications\Microsoft.WebApplication.targets(182,5): Error MSB3030: Could not copy the file "Template\vendor\jquery-easing\jquery.easing.js" because it was not found.
+
+-----------------------------------------------------------------------------------------------------------------
+#service principal
+$user="xxxxxxxxxxxxxxx" # provide application_id as user id
+$secret=ConvertTo-SecureString -String "xxxxxxxxxxxxxxx" -AsPlainText -Force  # provide password as client secret
+$spcreds=New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($user, $secret)
+
+$tenant="xxxxxxxxxxxxxxx" # provide tenant ID
+
+Connect-AzAccount -ServicePrincipal -Credential $spcreds -Tenant $tenant
+
+# variables
+
+$resourcegroup="RG360"
+$location= "eastus"
+$vnetname="ubantu-vnet"
+$address_space="10.49.0.0/16"
+$subnet="ubantusubnet"
+$address_prefix="10.49.1.0/24"
+
+
+$vmName="ubantuvm"
+$vm_admin_user="azadmin"
+#user credentials
+$password=ConvertTo-SecureString ' ' -AsPlainText -Force
+
+$creds=New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($vm_admin_user, $password)
+
+# resource
+$rg=New-AzResourceGroup -Name $resourcegroup -Location $location
+
+#subnet
+$subnetconfig=New-AzVirtualNetworkSubnetConfig -Name $subnet -AddressPrefix $address_prefix
+
+#vnet
+$vnet=new-azvirtualNetwork -Name $vnetname -ResourceGroupName $rg.ResourceGroupName -Location $rg.Location -AddressPrefix $address_space -Subnet $subnetconfig 
+
+#public IP
+$pip=New-AzPublicIpAddress -Name "$vmName-ip" -ResourceGroupName $rg.ResourceGroupName `
+-Location $rg.Location -AllocationMethod Static
+
+# create inbound rule to connect via ssh
+$nsgSSHRule=New-AzNetworkSecurityRuleConfig -Name "sshrule" -Protocol Tcp -Direction Inbound `
+-Priority 550 -SourceAddressPrefix * -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 22 -Access Allow
+
+#create NSG
+$nsg=New-AzNetworkSecurityGroup -ResourceGroupName $rg.ResourceGroupName `
+-Location $rg.Location -Name "nsg630" -SecurityRules $nsgSSHRule
+
+#nic
+$nic= New-AzNetworkInterface -Name "$vmName-nic" -ResourceGroupName $rg.ResourceGroupName `
+-Location $rg.Location -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $pip.Id -NetworkSecurityGroupId $nsg.Id
+
+#create vm configuration
+$vmconfig= New-AzVMConfig -VMName $vmName -VMSize Standard_B2s | `
+Set-AzVMOperatingSystem -Linux -ComputerName $vmName -Credential $creds -DisablePasswordAuthentication |`
+Set-AzVMSourceImage -PublisherName Canonical -Offer UbuntuServer -Skus 18.04-LTS -Version latest| `
+Add-AzVMNetworkInterface -Id $nic.Id
+
+<#
+choco install openssh
+refreshenv
+Get-Service -Name ssh-agent | Set-Service -StartupType Manual
+start-service ssh-agent
+get-serviec ssh-agent # status should be running mode
+cd C:\users\your profile\.ssh
+ssh-keygen.exe pres enter
+again press enter key without supply any value
+press enter key without supply key
+
+Check for the files in your localpath C:\users\your profile\.ssh
+ls
+files will be listed like
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        6/28/2020  10:20 AM           1675 id_rsa
+-a----        6/28/2020  10:20 AM            423 id_rsa.pub
+-a----        9/16/2019  12:20 PM            191 known_hosts
+#>
+#configure SSH key
+
+$sshkey=Get-Content "$env:USERPROFILE\.ssh\id_rsa.pub"
+
+Add-AzVMSshPublicKey -VM $vmconfig -KeyData $sshkey -path "/home/$vm_admin_user/.ssh/authorized_keys"
+
+#create VM
+New-azVM -ResourceGroupName $rg.ResourceGroupName -Location $rg.Location -VM $vmconfig 
+
+--------------
+
+https://github.com/dotnet-architecture/eShopOnWeb
+https://github.com/EduardoPires/EquinoxProject
+-c "Release" -o $(build.artifactstagingDirectory)
+
+ASP CORE
+https://github.com/dotnet-architecture/eShopOnWeb
+https://github.com/EduardoPires/EquinoxProject
+
+ASP.Net Core Pipeline ===>
+Agent Jobs:
+Dotnet Restore   			Path to project: $(build.sourcesdirectory)\<.SLN name>
+Dotnet Build     			Path to project: $(build.sourcesdirectory)\<.SLN name>  Arguments: -c "Release"  # -c = Configuration
+Dotnet Publish   			Arguments : -c "Release" -o $(build.artifactstagingDirectory) ,Note: Zip Publish should be ticked, Add Project folder ticked   # -c=Configuration -o=output directory
+Dotnet Test		 			Path to project: $(build.sourcesdirectory)\<.SLN name>
+Publish Pipeline Artifact	File or Dir: $(Build.artifactstagingDirectory),  Artifact Name: Name 
+
+
+Ex: $(build.sourcesdirectory)\Equinox.sln
+
+https://github.com/dotnet/runtime
+
+
+
+
 

@@ -250,7 +250,13 @@ NOTE: $ git status -s  and $ git dif -name-only  both commands serves for same p
 
 What are hooks in Git
 Git hooks are scripts that run automatically every time a particular event occurs in a Git repository. 
+Git Hooks we will find in .git folder > hooks
+Two kind of Hooks
+1. Client Hooks - 
+2. Server Hooks - is used to call jenkins 
 
+Note: githhub will not use server hooks. Because we are not managing the server. It is controlled by GITHUB
+For this we will have Web hooks
   
 ///IMPORTANT Terms\\\\
 
@@ -266,8 +272,59 @@ git pull and git fetch are same but fetch will create a branch and sent it to
 									
 
 GIT FLOW---------------
+Master
+Develop
+Release
+Feature
+HotFix
 
 Master(Main) ---> Develop(Main)  ---> Release(Multiple Branches)  ---> Feature(Multiple Branches) ---> HotFix(Multiple Branches) 
+
+From master branch we will take develop branch
+Developer add features to feature branch once it is done he will merge it with develop branch
+From Develop branch they make releases with versions
+When release is good without any fixes then merge with master branch with a tag (give to customer) and also with developer branch.
+Master is a branch where customer releases are done
+Develop branch where developers work is kept
+Hot fix branch here customer feedback and issues are fixed. Once fix is done we merge it with both Master and Developer Branch
+
+Note: Developers work on feature Branch and Merge to Develop Branch
+For Code review before sending it to Developers branch Developers do Patching
+Ex: git diff <Develop Br> <Feature Br> >>../<ABC.patch>
+
+Devops Engineer creates Day Builds and Night Builds on Develop Branch by Poll SCM or git hookes
+Devops Engineer Has to create Release Branch and has to merge develop branch with Release Branch
+Every release will be a sprint Branch. We configure Night Build on Release or sprint Branches
+
+Day build is part where we give feedback to developer whether the code is merged correctly and working correctly or not. In day build we do basic testing
+Night builds is a part where we give the release code to testing which takes much time. Testing like selenium, pert all automatic testing
+
+Once release passes all tests then it is merged with Develop and master branch. 
+While merging with master branch tag also given
+
+
+All the developers take code from Develop Branch and create their own feature branch with feature number.
+They work on feature branch once done merge it to Develop branch. 
+Day builds are done on Develop branch if any build breaks its a high priority issues. Those are reverted back to developer for fixing.
+Once all the development is finished we create Release Branch, based on scrum Master/Project Manager instructions.
+Release Branch has to be very stable. Any fixes in release we work on it. After everything is ok we merge it to Develop and Merge Branch with a tag
+Customer will get release from master.
+Any fixes from customer is taken from master and pushed to Hot fix. Fixes there and again merge back to develop and master.
+
+All the release, Develop and Master Branches are configured from Jenkins
+
+Master Branch will always taken to Staging Environment and Production Environment
+Master Branch we do night builds for two - three weeks with manual trigger. we do deployment to Staging,UAT,Pre-Prod,Production
+
+Release branches we create night builds only when there is a change (manual trigger). Deploy to QA environment
+
+Develop Branch both Day and Night builds. We automate triggers. we config dev and component testing(done by scrum team tester).
+Day builds we do MVN package, testing and share test results  (project initial days only we create deploy)
+Night builds we do MVn Package, testing and deployment.
+
+
+
+
 
 
 
