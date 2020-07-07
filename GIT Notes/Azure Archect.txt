@@ -809,6 +809,23 @@ https://github.com/arichika/AspNet.Identity.Oracle
 https://github.com/RickStrahl/Westwind.Web.Markdown
 https://github.com/saineshwar/WebTimeSheetManagement
 
+ASP.Net Project IN Pipeline:
+Options: 
+ Build number format = $(Date:yyyyMMdd).$(Rev:r)-$(Build.DefinitionName)
+Tasks:
+Get Sources: Clean=True, Clean Option: All Build Directories
+Agent Job1:
+ Nuget Restore 				=>Command=restore, Path to Sol: **/*.sln
+ Build Solution 			=> Name=$(build.sourcesdirectory)\<.sln path>, Project= $(build.sourcesdirectory)\src\SmartStoreNet.sln
+                              Version=Lastest, Architect=MsBuilsx86, Platform=Any CPU, Configuration=Release,
+							  MsBuild Arguments=-t:build  -p:outdir=$(Build.artifactstagingDirectory) -p:generateprojectspecificoutputfolder=true
+ VsTest - Test Assemble 	=>No edits all default values
+ Powershell Script			=>Inline and paste the code
+ Publish Pipeline Artifacts =>File Or Dir Path=$(Build.artifactstagingDirectory)\<packages file name where zip files are packaged>
+                              Artif Name= Name. 
+
+
+
 C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Microsoft\VisualStudio\v16.0\WebApplications\Microsoft.WebApplication.targets(182,5) "Template\vendor\jquery-easing\jquery.easing.compatibility.js" 
 ##[error]C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Microsoft\VisualStudio\v16.0\WebApplications\Microsoft.WebApplication.targets(182,5): Error MSB3030: Could not copy the file "Template\vendor\jquery-easing\jquery.easing.min.js" because it was not found.
 ##[error]C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Microsoft\VisualStudio\v16.0\WebApplications\Microsoft.WebApplication.targets(182,5): Error MSB3030: Could not copy the file "Template\vendor\jquery-easing\jquery.easing.js" because it was not found.
@@ -900,7 +917,8 @@ Add-AzVMSshPublicKey -VM $vmconfig -KeyData $sshkey -path "/home/$vm_admin_user/
 #create VM
 New-azVM -ResourceGroupName $rg.ResourceGroupName -Location $rg.Location -VM $vmconfig 
 
---------------
+-----------------------------------------------------------------------------------
+
 
 https://github.com/dotnet-architecture/eShopOnWeb
 https://github.com/EduardoPires/EquinoxProject
@@ -922,6 +940,125 @@ Publish Pipeline Artifact	File or Dir: $(Build.artifactstagingDirectory),  Artif
 Ex: $(build.sourcesdirectory)\Equinox.sln
 
 https://github.com/dotnet/runtime
+
+https://github.com/nbarbettini/little-aspnetcore-todo
+https://github.com/aspnet/samples
+https://github.com/Speckoz/UniLinks.git
+
+mvn clean verify -PintegrationTests
+https://github.com/eirslett/frontend-maven-plugin
+https://github.com/joeferner/node-java-maven
+https://github.com/apache/maven
+
+https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+https://www.sonarqube.org/downloads/
+
+
+
+SELECT is_read_committed_snapshot_on FROM sys.databases WHERE name='sonar';
+
+ALTER DATABASE sonar SET READ_COMMITTED_SNAPSHOT ON WITH ROLLBACK IMMEDIATE;
+--------------------------------------------------------------
+04/07/2020
+https://github.com/terraform-providers/terraform-provider-azurerm/tree/master/examples/kubernetes
+
+{
+    "cloudName": "AzureCloud",
+    "homeTenantId": "3c32cea0-d906-40bc-b203-8c24f7f544f2",
+    "id": "1fdaf1b8-2436-4da1-8c0d-f668fd2b8014",
+    "isDefault": true,
+    "managedByTenants": [],
+    "name": "Free Trial",
+    "state": "Enabled",
+    "tenantId": "3c32cea0-d906-40bc-b203-8c24f7f544f2",
+    "user": {
+      "name": "crsreddy14@outlook.com",
+      "type": "user"
+
+az ad sp create-for-rbac -n "Raja"
+{
+  "appId": "0ee68b0b-6b37-445b-a692-7da74e2f6094",
+  "displayName": "RAJA",
+  "name": "http://RAJA",
+  "password": "jLIzw-0pp8lYgNJTd-em-G~4r.TQhEIZMD",
+  "tenant": "3c32cea0-d906-40bc-b203-8c24f7f544f2"
+}
+
+        client_id       = 0ee68b0b-6b37-445b-a692-7da74e2f6094
+        client_secret   = jLIzw-0pp8lYgNJTd-em-G~4r.TQhEIZMD
+
+az aks get-versions --location westus --output table
+
+1.18.2(preview)      None available
+1.18.1(preview)      1.18.2(preview)
+1.17.5(preview)      1.18.1(preview), 1.18.2(preview)
+1.17.4(preview)      1.17.5(preview), 1.18.1(preview), 1.18.2(preview)
+1.16.9 <----              1.17.4(preview), 1.17.5(preview)
+1.16.8               1.16.9, 1.17.4(preview), 1.17.5(preview)
+1.15.11              1.16.8, 1.16.9
+1.15.10              1.15.11, 1.16.8, 1.16.9
+1.14.8               1.15.10, 1.15.11
+1.14.7               1.14.8, 1.15.10, 1.15.11
+
+   1 az login
+   2 aks get-versions --location westus --output table
+   3 az aks get-versions --location westus --output table
+   4 cls
+   5 get-service ssh-agent
+   6 start-service ssh-agent
+   7 start-service ssh-agent
+   8 cls
+   9 get-service ssh-agent
+  10 start-service ssh-agent
+  11 Set-Service ssh-agent -StartupType Manual
+  12 start-service ssh-agent
+  13 get-service ssh-agent
+  14 ssh-keygen
+  C:\Users\Rajashekar\.ssh
+az ad sp create-for-rbac -n "Raja"  
+  
+terraform plan -out terrplan
+terraform apply
+terraform apply
+terraform.exe output kube_config_raw >> config
+az aks get-credentials -n <aks cluster name> -g <Resource group name>
+kubectl get nodes
+
+https://www.terraform.io/docs/providers/kubernetes/r/deployment.html
+https://www.terraform.io/docs/providers/kubernetes/guides/getting-started.html
+
+Install-Script -Name 'install-kubectl' -Scope CurrentUser -Force
+install-kubectl.ps1
+
+3d1337a120ee12fd4a3f4291cb1ecbb8de0caae6  = Token
+
+choco install sonarscanner-msbuild-net46
+https://docs.sonarqube.org/latest/analysis/coverage/
+https://community.sonarsource.com/t/azure-pipeline-code-coverage-0-in-sonarqube-maven-spring-boot-project/26227/6
+C:\sonar-scanner-msbuild\SonarScanner.MSBuild.exe begin /k:"smartstore" /v:"1.0" /n:"smartstore"
+nuget.exe restore .\src\SmartStoreNET.sln
+MSBuild.exe .\src\SmartStoreNET.sln
+MSBuild.exe .\src\SmartStoreNET.sln -t:build -p:configuration="release" -p:platform="any CPU"
+C:\sonar-scanner-msbuild\SonarScanner.MSBuild.exe end
+
+https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-azure-devops/
+https://solidify.se/blog/sonarqube-unittests-and-codecoverage-with-a-net-core-project-in-tfs-or-azure-devops
+https://docs.microsoft.com/en-us/azure/site-recovery/migrate-tutorial-on-premises-azure
+
+https://github.com/Ismaestro/angular9-example-app
+
+npm i
+npm run builds:prod
+npm run test
+npm run test
+npm run build:library
+
+
+	  
+	  
+
+
+
 
 
 

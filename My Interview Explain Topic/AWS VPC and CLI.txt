@@ -156,3 +156,14 @@ aws ec2 create-network-acl-entry --ingress --cidr-block 192.168.0.0/16
 aws ec2 create-network-acl-entry --egress --cidr-block 192.168.0.0/16 
 --network-acl-id acl-0e05c00ed549b2870 --port-range From=22,To=22 
 --protocol all --rule-action allow --rule-number 100		
+
+
+A public subnet is a subnet that's associated with a route table that has a route to an Internet gatewayInternet gateway. This connects the VPC to the Internet and to other AWS services.
+Internet gateway. This connects the VPC to the Internet and to other AWS services.
+public subnet with public IPv4 addresses that enable them to be reached from the Internet. private subnet are back-end servers that don't need to accept incoming traffic from the Internet and therefore do not have public IP addresses; however, they can send requests to the Internet using the NAT gateway
+NAT gateway with its own Elastic IPv4 address. Instances in the private subnet can send requests to the Internet through the NAT gateway
+A custom route table associated with the public subnet to communicate with other instances in the VPC and communicate with internet over IPv4.
+The main route table associated with the private subnet to communicate with other instances in VPC and communicate with the Internet through the NAT gateway over IPv4
+
+Security groups control inbound and outbound traffic for your instances, and network ACLs control inbound and outbound traffic for your subnets. In most cases, security groups can meet your needs; however, you can also use network ACLs if you want an additional layer of security for your VPC.
+

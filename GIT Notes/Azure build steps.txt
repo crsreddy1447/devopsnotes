@@ -1,0 +1,45 @@
+Dotnet Projects steps
+Build Engine = MSBuild
+Restore Engine = Nuget Package Manager
+Type  = ASP.net MVC
+Build File = .sln or .proj
+
+packages.conf = list of dependency packages to download from restore
+############################# Power Shell ###################################
+
+$ new-item c:\Aspproject -itemtype directory -force
+$ cd <project folder>
+$ git clone <URL>
+Next search for .sln file which has to be build
+$ Cd <sln file path>
+#Restore application using nuget
+$ nuget restore <.sln file>  
+#for installing specific softwares in nuget
+$ nuget Install <software>
+# Build the project with build engine
+$ msbuild <.sln path> -t:build -p:configuration="Release" -p:platform="Any CPU" -p:outdir="C:/Test"
+
+
+
+
+ASP.Net Core Projects
+Buildengine = Dotnet.exe Build
+Restore engine = Dotnet.exe restore
+Type = ASP.NET Core
+Build File = 
+Publish = Dotnet publish
+
+packages.json = list dependency packages
+or .sln file
+
+############################# Power Shell ###################################
+
+$ new-item c:\Coreproject -itemtype directory -force
+$ cd <project folder>
+$ git clone <URL>
+$ dotnet restore <project file>
+$ dotnet build <project file>
+$ dotnet publish <project file> -c "Release" -o "c:\core"
+
+
+
