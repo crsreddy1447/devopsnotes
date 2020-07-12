@@ -1053,14 +1053,70 @@ npm run test
 npm run test
 npm run build:library
 
+npm install -g sonarqube-scanner
 
+
+$packagespath="$(Build.artifactstagingDirectory)"
+$packages=(Get-ChildItem -Path $packagespath).Name
+New-item "$packagespath\Packages" -ItemType Directory -Force
+
+if($packages.Length -ne 0){
+    Foreach($package in $packages){
+        if(Test-path "$packagespath\$package\_Publishedwebsites")
+        {
+            $folderpath="$packagespath\$package\_Publishedwebsites\$package\*"
+            #zip the packages
+            Compress-Archive $folderpath -DestinationPath "$packagespath\packages\$package.zip" -Force -Verbose
+        }
+        else{
+            Write-Warning -Message "No published websites found in current package :$package folder "
+        }
+    }
+}
+else{
+    Write-Error -Message "No packages found in the current folder" -ErrorAction stop
+    exit 1
+}
+
+
+https://stackoverflow.com/questions/56459754/windows-machine-file-copy-devops-task-and-ip-address
+
+System.Management.Automation.ActionPreferenceStopException: The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: Connecting to remote server 52.254.15.224 failed with the following error message : The WinRM client cannot process the request. If the authentication scheme is different from Kerberos, or if the client computer is not joined to a domain, then HTTPS transport must be used or the destination machine must be added to the TrustedHosts configuration setting. Use winrm.cmd to configure TrustedHosts. Note that computers in the TrustedHosts list might not be authenticated. You can get more information about that by running the following command: winrm help config. For more information, see the about_Remote_Troubleshooting Help topic.
+LegacyVSTSPowerShellHost.exe completed with return code: -1.
 	  
-	  
+  Set-Item WSMan:\localhost\Client\TrustedHosts -Value "*" -Force -Verbose
+  
+  winrm quickconfig
+  Enable-PSRemoting -Force
+ 
+  Set-NetFirewallRule -Name 'WINRM-HTTP-In-TCP-PUBLIC' -RemoteAddress Any
+  Set-Item WSMan:\localhost\Client\TrustedHosts -Value "52.254.15.224" -Force -Verbose
+    $user="raja"
+    $password=ConvertTo-SecureString -String "Password@123" -AsPlainText -Force
+    $creds=New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($user, $password)
+    New-PSSession -ComputerName "52.254.15.224" -Credential $creds
+  
+  
+  New-PSSession -ComputerName "52.254.15.224" -Credential $creds
+  Restart-Service vstsagent.boppanarajeshdevops.RajPool.RajAgent -Verbose
+  Stop-Service vstsagent.boppanarajeshdevops.RajPool.RajAgent -Verbose
+  start-Service vstsagent.boppanarajeshdevops.RajPool.RajAgent -Verbose
+  Get-Service vstsagent.boppanarajeshdevops.RajPool.RajAgent
+  
+  Invoke-Command -ComputerName "52.254.15.224" -ScriptBlock {Get-PSDrive } -Credential $creds
+  Invoke-Command -ComputerName "52.254.15.224" -ScriptBlock {Get-ChildItem "D:\web" } -Credential $creds
+  
+  
+  
+  in portal --> vm -- > networking --> add inbound rules for winrm  with port 5986 (HTTPs) and custom port5985 (http)  and enable ICMP protocol	  
 
 
 
+$ErrorActionPreference="Stop";If(-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent() ).IsInRole( [Security.Principal.WindowsBuiltInRole] “Administrator”)){ throw "Run command in an administrator PowerShell prompt"};If($PSVersionTable.PSVersion -lt (New-Object System.Version("3.0"))){ throw "The minimum version of Windows PowerShell that is required by the script (3.0) does not match the currently running version of Windows PowerShell." };If(-NOT (Test-Path $env:SystemDrive\'azagent')){mkdir $env:SystemDrive\'azagent'}; cd $env:SystemDrive\'azagent'; for($i=1; $i -lt 100; $i++){$destFolder="A"+$i.ToString();if(-NOT (Test-Path ($destFolder))){mkdir $destFolder;cd $destFolder;break;}}; $agentZip="$PWD\agent.zip";$DefaultProxy=[System.Net.WebRequest]::DefaultWebProxy;$securityProtocol=@();$securityProtocol+=[Net.ServicePointManager]::SecurityProtocol;$securityProtocol+=[Net.SecurityProtocolType]::Tls12;[Net.ServicePointManager]::SecurityProtocol=$securityProtocol;$WebClient=New-Object Net.WebClient; $Uri='https://vstsagentpackage.azureedge.net/agent/2.171.1/vsts-agent-win-x64-2.171.1.zip';if($DefaultProxy -and (-not $DefaultProxy.IsBypassed($Uri))){$WebClient.Proxy= New-Object Net.WebProxy($DefaultProxy.GetProxy($Uri).OriginalString, $True);}; $WebClient.DownloadFile($Uri, $agentZip);Add-Type -AssemblyName System.IO.Compression.FileSystem;[System.IO.Compression.ZipFile]::ExtractToDirectory( $agentZip, "$PWD");.\config.cmd --deploymentgroup --deploymentgroupname "Raja" --agent $env:COMPUTERNAME --runasservice --work '_work' --url 'https://dev.azure.com/crsreddy14/' --projectname 'GitProject-1' --auth PAT --token zdrmuxilveyc2dbwmmfzl4li5lajgwp5rsypfm7demotjb35j5na; Remove-Item $agentZip;
 
+cmd /c'net use/y/delete*'
 
-
-
+c:\Project1_workspace\r1\a\Esmartstore\Project1-Artif to C:\Rajstore
+https://medium.com/@taithienbo/build-and-deploy-an-asp-net-core-app-running-on-iis-using-azure-pipelines-e675041f62d4
+https://docs.microsoft.com/en-us/azure/devops/pipelines/apps/cd/deploy-webdeploy-iis-deploygroups?view=azure-devops
 

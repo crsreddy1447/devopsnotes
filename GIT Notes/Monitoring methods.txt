@@ -1,0 +1,56 @@
+#########Azure Monitoring#############
+Azure Monitor collects metrics and logs. 
+Metric Explorer show all the graphical data
+Log data collected by Azure Monitor can be analyzed with queries
+Log Analytics in the Azure portal for log support
+It Monitors Application monitoring data, Guest OS monitoring data, Azure resource monitoring data, Azure subscription monitoring data
+Metrics tell you how the resource is performing and the resources that it's consuming.
+Metrics > Select resource group, >Which Resource> Which metrics
+Set alert rule> Scope > Condition > Action > Done
+
+########### AWS Monitoring #######################
+1.Create SNS -simple Notification Service
+  New Topic with a Name > Action > Subscribe to topic > Protocols> Email  
+2. Metrics > EC2 > per instance > cpu utiliza, disk space, > Click on alarm button > give values with periods of 1min > select Topic for mail > create
+
+Cloud watch Events  includes
+Event indicates change in environment
+Rules for thershold values if it reaches that value it goes to terget
+Target which process an event
+
+IAM > 
+Create policy > Action Start/stop> Resource> Name> create
+Role 
+create>lambda> select policy>name of role> create
+Lambda
+Create Function> Select Role> Create > Copy the code>
+           Configure> Give region and Instance id > Create
+Cloud watch > Events >Event Source		   
+
+########## NAGIOS MONITORING #########################
+type of monitoring Fail of cicd, Infrastructure, Application 
+Server-agent Architecture
+Server is on Host. And plugins will check local and remote service. All these plugins send data to Nagios Scheduler. It displays in GUI
+1. Hosts
+2. Services like Cpu utilization, ping, current load. ssh, current users etc
+host .cfg file  for custom
+NRPE-Nagios Remote plugin Executor on all remote machines.
+SSl connection between Remote and Server(Nagios)
+usr/local/nagios/etc/command.cfg
+
+  OBJECT CONFIGURATION FILE(S)
+          cfg_file=/usr/local/nagios/etc/objects/commands.cfg
+          cfg_file=/usr/local/nagios/etc/objects/contacts.cfg
+          cfg_file=/usr/local/nagios/etc/objects/timeperiods.cfg
+          cfg_file=/usr/local/nagios/etc/objects/templates.cfg
+		   
+cfg_dir=/nagios/Nagios/commands
+cfg_dir=/nagios/Nagios/contacts
+cfg_dir=/nagios/Nagios/hostgroups
+cfg_dir=/nagios/Nagios/other
+cfg_dir=/nagios/Nagios/services
+
+Host and Host group, Contact and Contact group etc
+
+
+

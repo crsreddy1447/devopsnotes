@@ -1,4 +1,4 @@
-Dotnet Projects steps
+*************************Dotnet Projects steps*************************************
 Build Engine = MSBuild
 Restore Engine = Nuget Package Manager
 Type  = ASP.net MVC
@@ -19,10 +19,11 @@ $ nuget Install <software>
 # Build the project with build engine
 $ msbuild <.sln path> -t:build -p:configuration="Release" -p:platform="Any CPU" -p:outdir="C:/Test"
 
+****************************************************************************************************************
 
 
+***********************ASP.Net Core Projects*****************************************
 
-ASP.Net Core Projects
 Buildengine = Dotnet.exe Build
 Restore engine = Dotnet.exe restore
 Type = ASP.NET Core
@@ -40,6 +41,21 @@ $ git clone <URL>
 $ dotnet restore <project file>
 $ dotnet build <project file>
 $ dotnet publish <project file> -c "Release" -o "c:\core"
+
+******************************************************************************************************************
+
+*****************************JAVA /Maven Projects**************************
+Build Engine = Maven 
+Type = java
+Build File = pom.xml
+
+###################### Power Shell #################################
+
+$ mvn compile
+$ mvn test package
+$ mvn clean package
+$ mvn clean verify -PintegrationTests
+
 
 
 

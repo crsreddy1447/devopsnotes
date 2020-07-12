@@ -361,10 +361,15 @@ Create and deletion of containers will be taken care by jenkins or You
 In jenkins once the build is success what will happen to that container.
 
 
-
-
-
-
+Integrate Jenkins with Github (Private repo):
+1. Generate your ssh keys using this blog by Github.
+2. Adding generated keys to the private Github repository created before.
+Go to your private Github repo -> Settings -> Deploy keys.
+3. Jenkins configuration to access private repo:
+Go to Jenkins dashboard -> Credentials -> System -> Global credentials -> Add credentials.
+Add ssh username with a private key
+4. Jenkins job setup: New item -> Freestyle Project. After this go to source code management -> git. Copy the ssh URL of your Github repo. As you have used ssh key you need to use ssh URL instead of https URL.
+5. Add the credentials you created before to the credentials section in source code management under the above Repository URL
 
 
 

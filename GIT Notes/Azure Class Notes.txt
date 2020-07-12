@@ -4786,4 +4786,24 @@ $sites = @()
     } 
 }
 
+-----------------------------------------------------------------------------------
+
+#for Pipeline automate
+
+param(
+
+    [string]$Jsonpath, #D:\Devops\AZ-800\apppool.json
+    [string]$components, # array object
+    [string]$packagespath  #$packagespath="D:\devops\az-800\packages"
+
+)
+function IIS-Deploy {
+    [cmdletbinding()]    
+    param(
+        [string]$Jsonpath, #D:\Devops\AZ-800\apppool.json
+        [string]$components, # array object
+        [string]$packagespath  #$packagespath="D:\devops\az-800\packages"
+
+    )
+
 

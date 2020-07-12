@@ -1,0 +1,17 @@
+
+Jenkins --- 2.204.1 (2019-12-18)  Latest 2.235.1 (2020-06-17)
+Docker Versions ---- 19.03.0 Date: 2019-07-22  latest version 19.03.11
+Kubernetes Version --- 1.16	Date: 22 October 2019 latest Version 1.18 
+Ansible Version  ----  2.4.6 (2018-07-05)  Latest 2.5.5
+terraform Version ---- 0.12.18  latest 0.12.28 
+Git Version ---  2.24	2019-11-04 Latest 2.27	2020-06-01
+Maven Version --- 2019-11-25	3.6.3 latest also
+Nagios Version ---
+
+841392300
+2919.80
+15/06/1991
+
+https://update-phones.com/android-updates/
+https://hexamob.com/tutorial-install-driver/
+https://apk.cafe/download?file_id=81446/update-software-latest
