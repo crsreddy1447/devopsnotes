@@ -1,0 +1,47 @@
+https://github.com/dotnet/runtime
+
+https://github.com/nbarbettini/little-aspnetcore-todo
+https://github.com/aspnet/samples
+https://github.com/Speckoz/UniLinks.git
+
+mvn clean verify -PintegrationTests
+https://github.com/eirslett/frontend-maven-plugin
+https://github.com/joeferner/node-java-maven
+https://github.com/apache/maven
+
+
+https://github.com/trailheadapps/dreamhouse-lwc.git
+
+-------------------------------------------
+*****************AWS related************
+git-maven-s3-ec2-tomcat-deploy
+https://samratpriyadarshi.com/deploy-a-simple-java-web-application-in-aws-using-github-actions/
+https://github.com/SamPriyadarshi/hello-world-war
+
+Deploying a React app to S3
+https://github.com/facebook/create-react-app.git
+https://www.newline.co/fullstack-react/articles/deploying-a-react-app-to-s3/
+
+Direct to S3 File Uploads in Node.js
+https://github.com/willwebberley/NodeDirectUploader
+https://devcenter.heroku.com/articles/s3-upload-node
+
+Using Amazon S3 for File Uploads with Java and Play 2
+https://github.com/heroku/devcenter-java-play-s3
+https://devcenter.heroku.com/articles/using-amazon-s3-for-file-uploads-with-java-and-play-2
+
+---------------------------------------------
+https://aws.amazon.com/getting-started/tutorials/continuous-deployment-pipeline/
+https://docs.aws.amazon.com/codepipeline/latest/userguide/tutorials-four-stage-pipeline.html
+https://docs.aws.amazon.com/codepipeline/latest/userguide/tutorials-simple-s3.html
+https://docs.aws.amazon.com/codepipeline/latest/userguide/tutorials-s3deploy.html
+https://docs.aws.amazon.com/codepipeline/latest/userguide/tutorials-AppConfig.html
+https://docs.aws.amazon.com/codebuild/latest/userguide/how-to-create-pipeline.html
+
+-----------------------------------------------------------
+************AZURE ****************
+https://medium.com/@tomershaiman/building-a-ci-cd-pipeline-on-azure-kubernetes-service-aks-part-1-5d2b3a7968ca
+https://azuredevopslabs.com/labs/vstsextend/kubernetes/
+
+
+

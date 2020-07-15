@@ -379,6 +379,7 @@ or
 $ adduser username
 **********To set a password for new and existing users***************
 $ passwd username
+$ sudo passwd <username>  --> to set a pwd for user
 **********To create a group****************
 $ groupadd groupname
 Note: While creating a user it also creates a group for users. 

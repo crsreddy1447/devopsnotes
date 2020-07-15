@@ -4,7 +4,8 @@ INSTALLATION PROCESS:
 
 java-->
 sudo apt-get update
-sudo apt-get install openjdk-8-jdk
+sudo apt-get install default-jdk
+sudo update-alternatives --config java
 sudo vi /etc/environment => add Java path JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 source /etc/environment
 echo $JAVA_HOME
@@ -33,14 +34,21 @@ sudo ufw status
 sudo ufw allow 8080
 sudo ufw status
 sudo ufw allow 8080
-sudo ufw allow OpenSSH
+sudo ufw allow OpenSSH (optional)
 sudo ufw enable
 sudo ufw allow 8080
 sudo ufw status
 cat /var/lib/jenkins/secrets/initialAdminPassword
+getent passwd
+sudo passwd jenkins  --> to set a pwd for user
+visudo
+Add this one = jenkins ALL=(ALL:ALL) NOPASSWD:ALL  ---> be a root user
 
+How to Configure Jenkins with SSL using an Nginx Reverse Proxy
+https://www.digitalocean.com/community/tutorials/how-to-configure-jenkins-with-ssl-using-an-nginx-reverse-proxy
 
-
+Access key : AKIA6JW66YIXEKYLOVSO
+AWS PWD : edG+VQh5AK8wfbsCvit5TzQCEIzuA69Na4sxdJwJ
 /////////////////////////////////******* ANSIBLE ********/////////////////////////////////////
 
 vi /etc/ssh/sshd_config
