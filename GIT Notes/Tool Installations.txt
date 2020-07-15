@@ -47,8 +47,7 @@ Add this one = jenkins ALL=(ALL:ALL) NOPASSWD:ALL  ---> be a root user
 How to Configure Jenkins with SSL using an Nginx Reverse Proxy
 https://www.digitalocean.com/community/tutorials/how-to-configure-jenkins-with-ssl-using-an-nginx-reverse-proxy
 
-Access key : AKIA6JW66YIXEKYLOVSO
-AWS PWD : edG+VQh5AK8wfbsCvit5TzQCEIzuA69Na4sxdJwJ
+
 /////////////////////////////////******* ANSIBLE ********/////////////////////////////////////
 
 vi /etc/ssh/sshd_config
