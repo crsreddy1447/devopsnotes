@@ -14,9 +14,22 @@ https://github.com/trailheadapps/dreamhouse-lwc.git
 
 -------------------------------------------
 *****************AWS related************
-git-maven-s3-ec2-tomcat-deploy
+=================git-maven-s3-ec2-tomcat-deploy======================================
 https://samratpriyadarshi.com/deploy-a-simple-java-web-application-in-aws-using-github-actions/
 https://github.com/SamPriyadarshi/hello-world-war
+Method:
+1. IAM permissions S3fullaccess, EC2full access and note down the access key and secret key.
+2. create Ec2, install java8, maven, tomcat, aws cli.
+3. $ mvn -B package --file pom.xml ---> note down the war file location ex: /home/runner/work/hello-world-war/hello-world-war
+4. create a bucket 
+5. $ aws configure and give access and secret key wit region
+6. $ aws s3 sync /home/runner/work/hello-world-war/hello-world-war/staging s3://<S3 Bucket Name>
+7. cd /opt/apache-tomcat-8.5.35/webapps/
+8. aws s3 cp s3://<S3BucketName>/hello-world-war-1.0.0.war .
+9. http://<IP>:8080/hello-world-war-1.0.0.war  ----> Deployed
+=========================================================================================
+
+
 
 Deploying a React app to S3
 https://github.com/facebook/create-react-app.git
@@ -41,6 +54,7 @@ https://aws.amazon.com/getting-started/tutorials/deploy-code-vm/
 
 -----------------------------------------------------------
 ************AZURE ****************
+https://github.com/tshaiman/hello-node
 https://medium.com/@tomershaiman/building-a-ci-cd-pipeline-on-azure-kubernetes-service-aks-part-1-5d2b3a7968ca
 https://azuredevopslabs.com/labs/vstsextend/kubernetes/
 https://docs.microsoft.com/en-in/azure/developer/jenkins/deploy-from-github-to-aks
@@ -50,3 +64,6 @@ https://github.com/simple-login/app
 https://github.com/kamiljava/SignUp-Login-Form-Java-MySQL
 https://github.com/exoplatform/chat-application
 
+
+
+https://jelastic.com/blog/scaling-kubernetes/
