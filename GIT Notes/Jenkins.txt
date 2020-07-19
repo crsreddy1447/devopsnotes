@@ -181,6 +181,7 @@ $ sudo ufw status
 $ sudo ufw allow OpenSSH
 $ sudo ufw enable
 
+
 $ getent passwd   ----> User Details
 
 Users details
@@ -189,6 +190,8 @@ O/P
 ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
 crsreddy15:x:1001:1002::/home/crsreddy15:/bin/bash
 jenkins:x:113:117:Jenkins,,,:/var/lib/jenkins:/bin/bash
+
+$ sudo passwd <username>  --> to set a pwd for user
 
 For Password
 

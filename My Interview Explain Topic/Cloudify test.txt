@@ -1,0 +1,52 @@
+1.default inventory file path ansible is /etc/ansible/hosts
+2.concerning the software architecture ansible has how many servers  5
+3. jenkins configuration and runtime data is contained  JENKINS_ROOT
+4. commands run jenkins from the command line  java -jar jenkins.war.
+5. The contents of the root filesystem must be adequate to boot, restore, recover, and/or repair the system.
+6. create a crontab entry $ crontab -e [ username ] ...
+7. command to create soft link in linux $ ln  -s [original filename] [link name] 
+8. docker container is an instance of an image with a specific configuration yes
+9. why do you need to write a dockerfile
+10. maven repository 1. Maven Remote Repository 2. Maven Central Repository 3. Maven Local Repository
+https://mkyong.com/maven/where-is-maven-local-repository/#:~:text=m2%2Frepository%20folder%20%3A,Users%5C%7Byour%2Dusername%7D%5C.
+11. maven default location of local repository ~/.m2/repository
+12. if a deployment is exposed publicly what happens with the network traffic Is load-balanced only to available instances (old or new)
+https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/#:~:text=Rolling%20updates%20overview&text=Similar%20to%20application%20Scaling%2C%20if,the%20users%20of%20the%20application.
+13. A Kubernetes volume is essentially a directory accessible to all containers running in a pod.
+14. SaaS labels a distribution model in which applications are hosted by a service provider and made available to users.
+15. best describes the goal of devops  One of the key goals of DevOps is to establish an environment where releasing more reliable applications faster and more frequently can occur.
+16. Trunk-Based Development is based on four simple rules:
+There is one branch called the 'trunk' where developers directly commit,
+A release manager can create release branches and no one can commit to those,
+Developers commit small changes as often as they can,
+Commits should be reviewed and tested and must not destroy the mainline.
+17. Which one of the following techniques makes DevOps a successful methodology to develop and deliver software?
+Choice-1: DevOps enables you to organize your teams around your organizational mission.
+Choice-2: DevOps enables you to create your software with built-in quality and monitoring.
+Choice-3: DevOps enables you to quickly identify, fix and learn from errors.
+18. What is a widely used reusable asset to reinforce information security of deliverables from your DevOps team?
+Choice-1: Data storage systems.
+Choice-2: Handling the logging of sensitive client information.
+Choice-3: Data transfer between clients and software.
+19. to compare two branches easily, you have to use the “git diff” command 
+20. two configuration properties in git 
+     $ git config --global user.name "John Doe"
+    $ git config --global user.email johndoe@example.com
+21. mongo looks for a database server listening on port 27017 on the localhost interface.
+22. Var in helms chart values.yaml
+23. Docker swarm uses bridge network
+24. Skaffold handles the workflow for building, pushing, and deploying your application, and provides building blocks for creating CI/CD pipelines.
+25. Volumes are stored in a part of the host filesystem which is managed by Docker ( /var/lib/docker/volumes/ on Linux).
+26. is it possible to run multiple stages on multiple agents using jenkins groovy script yes
+27. how to call environment variables in groovy script  VARIABLE_NAME=VALUE
+28. start jenkins using command line  jenkins.exec start
+29. Types of Kubernetes services 1. ClusterIP 2. NodePort 3. LoadBalancer 4. ExternalName
+https://www.bmc.com/blogs/kubernetes-services/
+30. The "automatic" mounting of file systems from /etc/fstab is actually implemented by executing a mount -a command in the /etc/rc.
+31. Linux Crontab Format  MIN HOUR DOM MON DOW
+
+
+
+
+
+
