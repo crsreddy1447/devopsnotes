@@ -1,5 +1,5 @@
 
-Jenkins --- 2.235.1  Latest 2.235.1 (2020-06-17)
+Jenkins --- 2.204.1 (2019-12-18)  Latest 2.235.1 (2020-06-17)
 Docker Versions ---- 19.03.0 Date: 2019-07-22  latest version 19.03.11
 Kubernetes Version --- 1.16	Date: 22 October 2019 latest Version 1.18 
 Ansible Version  ----  2.4.6 (2018-07-05)  Latest 2.5.5
@@ -21,3 +21,8 @@ https://www.threatstack.com/blog/101-aws-security-tips-quotes-part-3-best-practi
 https://www.threatstack.com/blog/101-aws-security-tips-quotes-part-2-securing-your-aws-environment
 
 
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+
+https://cloud.google.com/kubernetes-engine/docs/how-to/stateful-apps
+https://platform9.com/blog/stateful-applications-with-kubernetes/

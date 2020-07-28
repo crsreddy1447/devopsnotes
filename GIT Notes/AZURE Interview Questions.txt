@@ -1,0 +1,58 @@
+ci-cd part
+501 error from admim side. how to resolve
+404 error from app service. how to resolve
+Iaas, Paas, Saas examples and diff
+how many ways you can configure vm
+how to increase ram and cpu to overcome load? Whose approval is needed.
+storage types
+release tag how will you differentiate from one release to other by seeing file
+how to deploy .exe or .dll on to the server
+ 
+storage
+monitoring
+database
+error types 
+
+how you create docker image
+how you will create a brigde network
+Different stages of containers at any given of time
+rule to follow while creating docker image
+what is stateful and stateless application in kubernetes
+what is docker layer
+Docker vs Kubernetes diff
+company have large noof data systems with many containers. how do you manage using kubernetes
+Shifting from Monolithic to micro service which increase deployement how will you do.
+Impact of microservices
+object in s3 should not be accessed. How? What is the default option of access
+How you will deploy multi-tier on AWS
+What is .war and .jar
+What is Continous Delivery 
+Roles of quality team in devops or deployment
+Diff AWS and Azure
+
+1.How do you deploy a specific Web config file onto a specific environment
+2.Changes for webconfig is different for three different machine. How will you deploy on specific machine
+3.one config for connection string on three different machines. how you will you modify and configure the with different connetion names on three machines
+4.CICD automatically configuration or manual configuration
+5.What is the package you have deployed package.msi or war file
+6.How is your build pipeline is done? Have you implemented any checks likes security checks, static analysis, dependency checks
+7.how to deploy microsoft installers msi.exe, war files automatically.
+8.once cicd is setup done what is the next work you do?
+9.How to reuse the vms for application deployment by restarting apppool using automation or manual
+10.How to deploy multiple releases and how to switch back to good version
+11.how do you identify release1 and release2 apart from version number. Is there any change in the files of two
+12.how do you version dll .apx files
+13.How you will take the code coverage based on application or project wide. Daily you will take codecoverage?
+14.Recent challanges in your projects you faced. How you solved them
+
+https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal
+https://docs.microsoft.com/en-us/azure/storage/files/storage-how-to-create-file-share?tabs=azure-portal
+SALES FORCE PROJECT:
+https://github.com/forcedotcom/sfdx-simple
+
+https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro_sample_repo.htm
+https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm
+
+
+
+ 

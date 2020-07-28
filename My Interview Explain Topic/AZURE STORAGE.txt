@@ -1,0 +1,59 @@
+AZURE STORAGE
+Four Types
+1. Blob 
+2. File
+3. Queue
+4. Tables
+
+1.Blob Storage:
+Massively scalable object store for text and binary data
+Ideal for
+Serving images or documents to a browser like s3
+Streaming Video and audio
+Store data for backup and restore, archiving
+Storing files for distributed access
+
+
+Blobs are seperated into containers. Each container have file or files
+Blob storage Access Tier:
+Azure storage provides option for accessing block blob data
+1. Hot: For frequent access of objects
+2. Cool: Optimized for storing large amount of data that is infrequently accessedand stored for at least 30days
+3. Archive (Cheap): Optimized for data that can tolerate several hours of retrieval latency and will remain in the Archive tier for atleast 180 days
+
+*** Note: Blob Soft Delete is a option where we get versioning for all opertions. Even after delete we can get back them using versions.
+
+2.FILE STORAGE:
+Managed file shares for cloud or on-premises deployments.
+File storage are seperated into Shares. Each Share has a file or files and folders
+FileStorage is like creating of disk on a local machine where we can store data that is copied to that drive in Azure storage.
+Like backup drive where files are stored. Using SMB 3.0 method.
+Process: Create File Service > Click on created File Service one > Connect > Copy the connect code.
+It contains address of server + User Name + Key/Password
+After drive letters: is Address of server Ex: \\abcdemo.file.core.windows.net\myfile
+After /u: is User name and Key  Ex: /u:Azure\abcdemo wekfwwoIbcdsofOHJp:]DDSPDDCCODC.....
+
+My computer > right click on This PC > Map Network Drive > Assign Drive letter > Folder > Finish > Enter Username and Password(Key). > OK
+We can see a new drive in MYcomputer.
+
+
+3.STORAGE QUEUE:
+A messaging store for reliable messaging between application components.
+Storage ques are separated into Queues. Each queues consists of Messages.
+
+4.TABLE STORAGE:
+A NoSQL store for schemaless storage of structurd data
+Storage Tables seperated into Tables. Each Table is divided into Rows and Columns of Data.
+
+Storage Performancce Tier:
+1.Standard Performance Tier: For storing blobs, files, tables, queues and Azure virtual machine disks
+2.Premium Performance Tier: For storing unmanaged virtual machine disks only
+
+Data Redundancy:
+1.Local-redundant Storage (LRS): One Location one datacenter with replication in same datacenter
+2.Zone redundant Storage (ZRS): Different zones in one region with replications in all the zones
+3.Geo redundant storage (GRS): Different regions with replication in different regions.
+4.Read-access geo redundant storage (RA-GRS): Different regions with replication in different regions. But Replication region has only read acces.
+
+
+

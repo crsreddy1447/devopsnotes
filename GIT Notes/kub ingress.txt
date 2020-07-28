@@ -1,0 +1,46 @@
+create and configure ingresses, deploy stateless or stateful applications, and many other things.
+stateless or stateful applications
+
+
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+
+https://cloud.google.com/kubernetes-engine/docs/how-to/stateful-apps
+https://platform9.com/blog/stateful-applications-with-kubernetes/
+
+
+What is the default ip for brige network
+vm vs container
+Which kernel it shares
+windows machine centos container which kernel it shares
+docker version
+docker volumes
+how to restart docker multiple times
+$ docker run --restart=always redis  # restart always so that if the container exits.
+$ docker run --restart=on-failure:10 redis # restart policy of on-failure and a maximum restart count of 10
+
+docker storages
+how to configure a container with specific size and memory
+1. Limit Docker Container Memory Access
+There are several RAM limitations you can set for a Docker container. Some of them include:
+Configuring the maximum amount of memory a container can use.
+To limit the maximum amount of memory usage for a container, add the --memory option to the docker run command. Alternatively, you can use the shortcut -m.
+$ sudo docker run -it --memory=”[memory_limit]” [docker_image]
+**by the suffix b, k, m, or g (short for bytes, kilobytes, megabytes, or gigabytes)
+Ex: sudo docker run -it --memory=”2g” ubuntu
+2. Setting the soft limit for the amount of memory assigned to a container.
+you can set a soft limit (--memory-reservation) which warns when the container reaches the end of its assigned memory 
+$ sudo docker run -it --memory=”1g” --memory-reservation=”750m” ubuntu
+soft limit is always lower than the maximum space capacity.
+3. Limit Docker Container CPU Usage
+Giving containers unlimited CPU usage can lead to issues. So we have to definr the CPU resources from the host machine.
+$ sudo docker run -it --cpus=”1.5” ubuntu /bin/bash  # to use 1.5cpu from 2cpu
+
+kubernetes master components
+how many master and nodes you managed
+if all the three master are down? How will you up them.
+how to check process and their memory utilization
+One application is taking much memory. how to stop
+which deployment strategy are you following
+Daemonset
+lbs command

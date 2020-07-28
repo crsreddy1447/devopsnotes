@@ -1,0 +1,76 @@
+
+SFDX PROJECT
+https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro_sample_repo.htm
+https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_workspace_setup.htm
+https://dxatscale.gitbook.io/sfpowerscripts/azure-pipelines/task-specifications
+http://theapexhub.com/ci-cd-setup-using-azure-devops-salesforce-dx-and-visual-studio-code/
+
+Create a Sales force account 
+Login into the account goto Dev Hub and Enable Dev Hub. Remaining all are Disabled
+
+Goto Dev.azure.com 
+Organisation Settings > Extensions > Browse Market Place > Type sfpowerscripts and Install
+
+Import From Git 
+SALES FORCE PROJECT:
+https://github.com/forcedotcom/sfdx-simple
+
+GOTO Pipeline
+TASK1: NPM install
+       Command: install
+	   
+Task2: Install SFDX with sfpowerkit
+       SFDX CLI Version : latest
+       SFPowerkit Version: latest
+	   
+Task3: Authenticate a Salesforce Org
+       Authentication Method: ServiceConnection
+	   
+	   Salesforce Connection: 
+	      User Name= <salesfore account user name>
+		  Password = <salesfore account Pwd>
+# Security token. Right top corner click on our account image > settings> My personal Info > reset My security Token > Open Mail copy the token		  
+		  Security Token = < Copy security token from mail>
+		  Environment = Production/DevHub
+		  Service connection Name = DevHub or <Any Name>
+	   
+	   Alias: DevHub or <Any name>
+
+Task4: Deploy a Package (Source Format) to an Org
+       Alias or username of the target org: DevHub or <Any name which was provided in Alias in Task3>
+       Package Directory to be deployed: force-app
+	 **Uncheck -->Validate Deployment. Do  Not deploy.
+	   Test Level = NoTestRun
+	 **Check Break Build if the provided metadata folder is empty
+
+Task5: Trigger Apex Test in an Org
+       Alias or username of the target org: DevHub or <Any name which was provided in Alias in Task3>
+       Test Level: RunAllTestsInOrg
+	   
+**** If you face any errors in this pipeline change Task Versions to 6 or 7
+
+Use a Sample Repo to Get Started
+The quickest way to get going with Salesforce DX is to clone the dreamhouse-lwc GitHub repo. Use its configuration files and Salesforce application to try some commonly used Salesforce CLI commands.
+Open a terminal or command prompt window, and clone the dreamhouse-lwc GitHub sample repo using HTTPS or SSH.
+1
+git clone https://github.com/trailheadapps/dreamhouse-lwc.git
+
+Change to the dreamhouse-lwc project directory.
+--cd dreamhouse-lwc
+Authorize your Developer Hub (Dev Hub) org, set it as your default, and assign it an alias.
+sfdx force:auth:web:login --setdefaultdevhubusername --setalias DevHub
+Enter your Dev Hub org credentials in the browser that opens. After you log in successfully, you can close the browser.
+Create a scratch org using the config/project-scratch-def.json file, set the username as your default, and assign it an alias.
+sfdx force:org:create --setdefaultusername -f config/project-scratch-def.json --setalias my-scratch-org
+Push source and tests, located in the force-app directory, to the scratch org.
+sfdx force:source:push
+Assign the dreamhouse permission set to the default user.
+sfdx force:user:permset:assign -n dreamhouse
+Import sample data into the scratch org.
+sfdx force:data:tree:import -p data/sample-data-plan.json
+Run Apex tests.
+sfdx force:apex:test:run --resultformat human
+Open the scratch org and view the pushed metadata under Most Recently Used.
+sfdx force:org:open
+In App Launcher, find and open Dreamhouse.
+

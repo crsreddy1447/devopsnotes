@@ -1,0 +1,87 @@
+Azure SQL Database vs Azure SQL on VM
+PRICE:
+In SQL Server on Azure VMs, the price depends on the number of Cores and the SQL Edition. SQL Enterprise Edition, SQL Standard Edition and SQL Web Edition of which Enterprise edition is the most expensive.
+In Azure SQL Database, the prices depend on the Database Size and the DTUs. The DTU is the Data Transaction Unit, which measures the number of transactions supported per second in stress conditions.
+LEARN:
+The VM Machine in Azure is as difficult as a local machine. You need to work on the OS Administration as well as the traditional DBA tasks.
+QL Azure Database is a simple database. You do not need to worry about the Administration of the Database.
+SECURE:
+The VM Machine in Azure is more secure than the SQL Azure Database because you can configure and restrict the IPs that access to the VM Machines
+In SQL Azure Database, if you have the credentials you can basically stole all the information from any device by default.
+Access:
+The VM Machine in Azure can be accessed from any RDP and it has to be instslled if not present.
+If you have a browser, you can create, delete or administer your database. The connection is a straightforward process.
+DB SIZE:
+In the virtual machines in Azure, the maximum size in VMs above 12TB.
+The maximum size supported in Azure SQL Database is 1 TB. 
+Speed:
+SQL Server on Azure Virtual Machine is much faster than  Azure SQL database
+Azure SQL database is slightly slower than SQL Server on Azure Virtual Machine (in Standard Tier).
+BACKUP:
+Regarding SQL Server on Azure Virtual Machine, there is support available for automated backup and patching
+Where as we can have Geo location replication, Backup in Azure SQL DB
+
+When to use SQL Server on Azure Virtual Machines
+SQL Server on Azure Virtual Machines gives you the benefit of complete control over the SQL Server instance and underlying operating system. This option uses full versions of SQL Server, and you have full administrative rights to the SQL Server engine.
+your existing or new applications require large databases
+your existing or new applications require access to all features in SQL Server or Windows/Linux
+you want to avoid the time and expense of acquiring new on-premises hardware
+you want to migrate existing on-premises applications and databases to Azure 
+then SQL Server Virtual Machines are a good fit for your use case.
+
+
+SQL DATABASE:
+Relational DB are Perfect in managing structured data via 1. Schema, 2. Constraints, 3. Relationships
+It also includes rich query capability
+Azure offers three deployment models
+1. Single SQL DB fully managed and isolated
+2. Elastic Pool collection of single databases with shared set of resources
+3. SQL Managed instance is a fully managed instace of sql server
+
+Purchasing or Pricing Model:
+1. DTU based model
+2. VCore based model
+3. Serverless Vcore model
+
+Elastic POOL:
+Sharing of Multiple databases
+
+Serverless 
+AVG vcore used. Set min vcore to use. When where there is not usuage turn off the database.
+
+Sql DB offers
+1. Automatic Backup
+2. Point-in-time restores
+3. Active geo replications
+4. Auto failover groups
+5. Zone-redundant datadases
+
+Create DB
+Basic:
+DB Name, Server Name with user and Pwd, location
+want sql elastic pool (Multiple DB)
+Storage Default Gen5 2vcores 32gb storage  
+  General purpose, Hyperscale,  Business Critical  in VCore based model
+  Basic, standard,  Premium  in DTU based model  (Linear way) DTU increase storage increases Size is 1TB
+Networking:
+Connectivity methods No Access, Public Endpoint, Private endpoint.
+Firewall rules: Allow Azure services and resources to access this server, Add current client IP address
+Additional Settings:
+ DataSource: None, Backup, Sample
+
+Connect Azure DB with Sql Server Management Studio (SSMS)
+ 
+  
+  
+
+ 
+
+
+
+
+
+
+
+
+
+
