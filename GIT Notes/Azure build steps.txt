@@ -1,4 +1,4 @@
-*************************Dotnet Projects steps*************************************
+*************************Dotnet framework Projects steps*************************************
 Build Engine = MSBuild
 Restore Engine = Nuget Package Manager
 Type  = ASP.net MVC
@@ -76,6 +76,12 @@ $ mvn test package
 $ mvn clean package
 $ mvn clean verify -PintegrationTests
 
+
+
+
+
+Specify events that trigger pipelines and Trigger Types
+https://docs.microsoft.com/en-us/azure/devops/pipelines/build/triggers?view=azure-devops&tabs=classic
 
 
 

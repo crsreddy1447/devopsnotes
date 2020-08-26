@@ -1,0 +1,203 @@
+AZURE RESOURCE MANAGER TEMPLATES --ARM TEMPLATES
+ARM Templates:
+Resource Manager template - A JavaScript Object Notation (JSON) file that defines one or more resources to deploy to a resource group, subscription, management group, or tenant.
+ARM Templates are a way to declare the objects you want, the types, names and properties in a JSON file which can be checked into source control and managed like any other code file. 
+ARM Templates are what really gives us the ability to roll out Azure “Infrastructure as code”.
+It consists of 
+$schema: (Required)... Location of the JSON schema file
+parameters, --->(Optionl)..... Values of that has to be given. Ex: VM-name, Vm-size, nsg-name etc
+variables, (Optional).... Desired value not required as inputs. Different from Parameters
+functions, (Optional)... Specific function declaration
+resources, ---> (Required).... Resource to create. EX- VM, NSG, Storage, Vnet etc
+Output ---> (Optional).... Output declaration to display once it gets created.
+
+##########################------PARAMETERS------##############################
+Parameters:
+ To provide a input value in a resuable way we use parameter template.
+These value you can input in parameter file or input in portal while executing.
+
+Sample Format:
+"parameters": {
+        "SqlLogin": {
+            "type": "String",
+            "metadata": {
+                "description": "The login of the SqlServer."
+            }
+        },
+		"SqlPassword": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "The pwd of the SqlServer."
+            }
+        }
+	}	
+	
+<abc.parameters.json> parameter file name format.
+
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLogin": {
+            "value": "raja"
+        },
+        "administratorLoginPassword": {
+            "value": ******
+        },
+        "collation": {
+            "value": "SQL_Latin1_General_CP1_CI_AS"
+        }
+	}
+}
+
+
+###########################-------VARIABLES-------##########################
+
+Variables: Variables are already decided values or you want to hardcode some value.
+EX: VM size Standard B4ms.
+
+Format
+    "variables": {
+        "subscriptionId": "[subscription().subscriptionId]",
+        "resourceGroupName": "[resourceGroup().name]",
+        "uniqueStorage": "[uniqueString(variables('subscriptionId'), variables('resourceGroupName'), parameters('location'))]",
+        "privateEndpointTemplateName": "[concat('PrivateEndpoint-', if(parameters('enablePrivateEndpoint'), parameters('privateEndpointNestedTemplateId'), ''))]",
+        "deploymentTemplateApi": "2018-05-01",
+        "StorageBlobContributor": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]"
+    }
+
+###########################-------RESOURCES-------##########################
+
+Resource: 
+It is an array. So square brackets are present.
+Each resource in Resources can have:
+apiVersion -- Required Ex: "2018-09-01-preview"
+type -- Required  Ex: "Microsoft.Storage/storageAccounts"
+name -- Required From parameter or variable or direct value.
+        Ex: "[variables('storageName')]" or "[parameters('storageName')]"
+
+Location -- Optional Ex: "[parameters('location')]"
+Tags -- Optional
+DependsOn -- Optional if it depends on a specific resource we have to mention it
+             Ex: VM depends on Storage account and vhd disk
+"dependsOn": [
+               "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]",
+               "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+             ]						
+Properties -- Optional Other sections like os profile, hdd profile are set into properties.
+resources -- Optional Nested resource of main resource can be added here.
+
+FORMAT:
+"resources": [
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2019-06-01-preview",
+      "name": "[variables('sqlServerName')]",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "[variables('sqlServerName')]"
+      },
+      "kind": "v12.0",
+      "properties": {
+        "administratorLogin": "[parameters('sqlAdministratorLogin')]",
+        "administratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+        "version": "12.0",
+        "publicNetworkAccess": "Disabled"
+      },
+      "resources": [
+        {
+          "type": "databases",
+          "apiVersion": "2019-06-01-preview",
+          "name": "[parameters('sqlDBName')]",
+          "sku": {
+            "name": "Standard",
+            "tier": "Standard"
+          },
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', concat(parameters('serverName')))]"
+          ]
+        }
+      ]
+    }
+  ]
+
+### "location": "[resourceGroup().location]" ==> This means we get this value from resource group.
+### "name": "[parameters('sqlDBName')]" ==> This means we get this value from parameters
+### "name": "[variables('sqlServerName')]" ==> This means we get this value from Variables.
+
+
+
+########### HELPER FUNCTIONS ##########
+1. Resource Id -- Resource FUNCTIONS
+Format
+resourceId([subscriptionId], [resourceGroupName], resourceType, resourceName1,...)
+EX: ## To create in Specific resource group
+vnetId1: "[resourceId('raja-rg','Microsoft.Nerwork/virtualNetworks', parameters('VirtualNetworkName'))]"
+or ## To create in a same resource group
+vnetId1: "[resourceId('Microsoft.Nerwork/virtualNetworks', variables('VirtualNetworkName'))]"
+
+2. resourceGroup() -- Used to refer for which resource group we are deploying.
+Any ARM templat get deployed at resourceGroup by default.
+Ex: "location": "[resourceGroup().location]"
+
+3. subscription() -- Used to refer for which subscription we are deploying
+Ex:"subscriptionId": "[subscription().subscriptionId]"
+
+4. concat(array1, array2,...) -- Used to concat multiple values
+EX: "subnetref": "[concat(variables('vNetId'),'/subnets/',variables('subnetName'))]"
+
+********************************************************************************************************************
+
+
+Two ways to deploy
+-------------------
+==>1. Portal ---> Deploy a custom TEMPLATE
+Take the templates from git and change names
+https://github.com/Azure/azure-quickstart-templates
+template.json ---> Script to deploy with default values.
+Parameters.json ----> Individual Parameters are declared
+
+Upload both the above file to Deploy template.
+Click Deploy
+
+==>2. Visual Studio Code --> Deploy using powershell or Az cli
+step1: 
+Create Default template using auto intelligence
+or
+Copy the required template from github https://github.com/Azure/azure-quickstart-templates
+or 
+Copy the resource from azure document https://docs.microsoft.com/en-us/azure/templates
+
+Step2:
+Next Name the template as <name>.json
+
+Step3: 
+Attatch Parameter file if needed. Save as <name.parameter.json>
+
+Step4:
+Execute the file using powershell commands
+Create Resource Group
+$ New-AzResourceGroup -Name <Resource group name> -Location <Location name>
+Attatch a resource group to template file
+$ New-AzResourceGroupDeployment -ResourceGroupName <Resource group name> -TemplateFile <template file path> -TemplateParameterFile <parameter file path>
+Delete the resource
+Remove-AzResourceGroup -Name <Name of ResourceGroup>    
+
+POWERSHELL to CREATE VM
+New-AzVm `
+    -ResourceGroupName "raja" `
+    -Name "myVM" `
+    -Location "East US" `
+    -VirtualNetworkName "myVnet" `
+    -SubnetName "mySubnet" `
+    -SecurityGroupName "myNetworkSecurityGroup" `
+    -PublicIpAddressName "myPublicIpAddress" `
+    -OpenPorts 80,3389
+
+
+
+
+
+
+

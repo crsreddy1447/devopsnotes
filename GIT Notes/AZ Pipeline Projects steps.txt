@@ -109,6 +109,10 @@ TASK7: Publish Pipeline Artifacts
 
 ######################## ***** ANGULAR.JS PROJECT ******* ##########################
 https://medium.com/better-programming/deploy-angular-app-using-azure-devops-build-and-release-pipelines-f7f77ca28be4
+https://morioh.com/p/5ea709404583
+https://levelup.gitconnected.com/configure-ci-cd-pipelines-for-nodejs-applications-with-azure-devops-44e7425f5a99
+https://www.dotnetcurry.com/devops/1486/azure-devops-build-deploy-nodejs
+
 package.json  Build file
 web.config
 angular.json
@@ -180,8 +184,9 @@ TASK4: Publish build artifacts
 ###################### END OF MAVEN or JAVA PROJECT ##################################
 *************************************************************************************
 
-
-
+TERRAFORM IN PIPELINE
+https://medium.com/@gmusumeci/deploying-terraform-infrastructure-using-azure-devops-pipelines-step-by-step-d58b68fc666d
+https://github.com/terraform-providers/terraform-provider-azurerm/tree/master/examples
 
 
 

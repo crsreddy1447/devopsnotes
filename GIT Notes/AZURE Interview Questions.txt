@@ -52,6 +52,10 @@ https://github.com/forcedotcom/sfdx-simple
 
 https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro_sample_repo.htm
 https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_scratch_orgs.htm
+Copy-Item "$configpath\$ENV\$item\*.*" -Destination ("\\$srvr\$dest").Replace(":","$") -Force -Recurse -ErrorAction
+
+
+
 
 
 
