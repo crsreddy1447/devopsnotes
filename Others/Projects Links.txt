@@ -34,6 +34,9 @@ Method:
 Deploying a React app to S3
 https://github.com/facebook/create-react-app.git
 https://www.newline.co/fullstack-react/articles/deploying-a-react-app-to-s3/
+sudo npx -g install create-react-app
+sudo npm install -g serve
+
 
 Direct to S3 File Uploads in Node.js
 https://github.com/willwebberley/NodeDirectUploader
