@@ -1,0 +1,286 @@
+
+https://www.youtube.com/watch?v=_YGR9hOR_PI
+https://www.youtube.com/watch?v=8sFTdzz55KU
+
+SET MSBUILD ENV IN WINDOWS
+https://giordanolins.com/en/configuring-the-msbuild-that-comes-on-windows-by-default/
+
+SET JAVA ENV IN WINDOWS
+https://javatutorial.net/set-java-home-windows-10
+
+Sync Vscode with azure repo
+https://www.youtube.com/watch?v=ouNetY-9wJ0
+
+ARM EXTENSIONS 
+https://stackoverflow.com/questions/36948549/how-do-i-use-arm-outputs-values-another-release-task
+http://harvestingclouds.com/post/step-by-step-arm-templates-providing-powershell-scripts-to-run-after-vm-deployment-via-arm-template/
+https://stackoverflow.com/questions/51138840/how-to-run-same-script-multiple-times-in-arm-template
+https://github.com/Azure/azure-quickstart-templates/blob/master/201-vm-custom-script-output/nestedtemplates/customScriptExtension.json
+
+SQL PRIVATE ENDPOINT SYNC
+https://beingadba.com/2020/10/10/private-endpoint-for-azure-sql-database/
+https://docs.microsoft.com/en-us/azure/azure-sql/database/sql-data-sync-sql-server-configure#to-add-an-on-premises-sql-server-database
+https://www.xspdf.com/questions/25.shtml
+https://www.youtube.com/watch?v=KLwEJi6kbzE&ab_channel=PragmaticWorks
+https://www.youtube.com/watch?v=Kw94bP2WKWY&ab_channel=Kirby%27sSQLTalk
+
+DATA FACTORY self hosted integration runtime (IR)
+create a self hosted integration runtime (IR) with two nodes for high availability:
+https://www.powerupcloud.com/azure-data-factory-setting-up-self-hosted-ir-ha-enabled/
+
+https://github.com/krepko7/SQL-VM-copy-to-Azure-SQL-Database
+https://www.youtube.com/watch?v=A8PYljDcYq8
+
+NPM LAMBDA SERVER
+https://medium.com/@PhilipAndrews/how-to-use-custom-domain-with-aws-lambda-and-serverless-c7659ec79c84
+
+ARM AZURE --- Using Key Vault to Securely Provide Information in ARM Templates 
+http://harvestingclouds.com/post/step-by-step-arm-templates-using-key-vault-to-securely-provide-information-in-arm-templates/
+
+Use ARM outputs values in another release task
+https://stackoverflow.com/questions/36948549/how-do-i-use-arm-outputs-values-another-release-task
+https://gaunacode.com/deploying-arm-templates-from-azure-devops
+https://www.iditect.com/how-to/58915647.html
+https://adamtheautomator.com/arm-output-variables-in-azure-pipelines-powershell/   ***
+https://www.timmerman.it/index.php/using-values-from-your-arm-template-across-your-azure-devops-pipeline-with-powershell/
+https://medium.com/@jonoble/passing-variables-in-vsts-from-build-to-release-and-between-environments-640169588175
+
+ARM Template Outputs from Azure Pipelines
+https://gaunacode.com/deploying-arm-templates-from-azure-devops
+
+
+Azure-Pipelines-Parameters -runtime
+https://docs.microsoft.com/en-us/azure/devops/pipelines/process/runtime-parameters?view=azure-devops&tabs=script
+https://adamtheautomator.com/azure-devops-variables-complete-guide/
+https://developercommunity.visualstudio.com/content/problem/429990/azure-pipelines-passing-a-variable-as-a-parameter.html
+https://www.aaron-powell.com/posts/2019-05-24-azure-pipeline-templates-and-parameters/
+
+Azure Pipeline-SQL Scripts
+https://careers.centric.eu/nl/blog/net-development/custom-azure-devops-pipeline-task-execute-sql-script/
+https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment?view=azure-devops
+https://dzone.com/articles/deploying-databases-using-azure-devops-pipelines
+https://stackoverflow.com/questions/55936107/azure-devops-continuous-deployment-for-sql-script
+https://www.xspdf.com/resolution/52822377.html
+https://mohit1110.wordpress.com/2015/06/02/execute-sql-query-on-mutiple-sql-servers-or-databases-simultaneously/
+
+https://azuredevopslabs.com/labs/vstsextend/deploymentgroups/
+
+https://medium.com/multinetinventiv/automate-build-and-deployment-of-azure-sql-database-using-azure-devops-with-azure-pipelines-9cf9b576b5c1
+
+https://stackoverflow.com/questions/62678946/azure-devops-multitenant-database-deployment
+https://sqljana.wordpress.com/2017/06/20/sql-server-running-a-script-or-sql-on-multiple-instancesdatabases-with-powershell-level-100/
+https://www.mssqltips.com/sqlservertip/2660/iterating-through-sql-servers-and-database-objects-with-powershell/
+
+APP SERVICE DEPLOYMENT SLOTS 
+https://docs.microsoft.com/en-us/azure/app-service/deploy-staging-slots#add-a-deployment-slot
+https://medium.com/@vishal1909/multiple-ways-of-deploying-a-node-js-application-into-azure-app-service-51c0173f6731
+https://medium.com/@therealjordanlee/secrets-management-in-azure-app-services-aa367db85a3c
+
+AZURE DEPLOYMENT GROUP
+https://docs.microsoft.com/en-us/azure/devops/pipelines/release/deployment-groups/howto-provision-deployment-group-agents?view=azure-devops
+https://azure.github.io/AppService/2019/07/30/Key-Vault-References-with-Spring-Apps.html
+
+Spring Boot Project
+https://medium.com/@k32y/spring-boot-deployment-on-azure-app-service-zero-code-approach-88305c8d0818
+https://github.com/spring-guides/gs-spring-boot/blob/master/README.adoc
+
+Nodejs
+https://github.com/Azure-Samples/app-service-web-nodejs-get-started
+
+Multistage Pipeline with Deployment Slots in Azure DevOps
+https://www.youtube.com/watch?v=u9sYdmyXOek
+
+azure-key-vault-secrets-using-azure-functions and App services
+https://integration.team/blog/retrieve-azure-key-vault-secrets-using-azure-functions-and-managed-service-identity/
+https://docs.microsoft.com/en-us/azure/app-service/app-service-key-vault-references
+https://docs.microsoft.com/en-us/azure/key-vault/general/tutorial-net-create-vault-azure-web-app
+https://stackoverflow.com/questions/58105357/how-to-resolve-keyvault-references-to-secrets-via-application-settings-in-functi
+https://azuredevopslabs.com/labs/vstsextend/azurekeyvault/
+https://www.youtube.com/watch?v=8gVqYnGl0O0
+
+How to automatically build multiple test databases, from source control, and then fill them with standard test data sets, using SQL Change Automation, BCP and some PowerShell magic.
+https://www.red-gate.com/hub/product-learning/sql-change-automation/deploying-multiple-databases-source-control-using-sql-change-automation
+
+https://docs.microsoft.com/en-us/azure/devops/pipelines/targets/azure-sqldb?view=azure-devops&tabs=yaml
+
+AKS-webapp
+https://medium.com/swlh/how-to-deploy-an-asp-net-application-with-kubernetes-3c00c5fa1c6e
+
+AZURE DUMPS PRACTICE
+https://www.certification-questions.com/microsoft-dumps/az-900.html
+
+Azure SQL Connectivity Settings
+https://docs.microsoft.com/en-us/azure/azure-sql/database/connectivity-settings
+
+Azure SQL Database and Azure Synapse Analytics network access controls
+https://stackoverflow.com/questions/669372/not-connecting-to-sql-server-over-vpn
+https://docs.microsoft.com/en-us/azure/azure-sql/database/network-access-controls-overview
+
+How to Build and Deploy Docker Images from Azure DevOps to AWS ECR
+https://www.devguides.dev/how-to-build-and-deploy-docker-images-from-azure-devops-to-aws-ecr/
+
+EMAIL AZURE-DEVOPS
+https://4bes.nl/2020/01/19/send-email-from-powershell-with-sendgrid/
+https://dzone.com/articles/how-to-send-an-email-with-attachement-powershell-sendgrid-api
+https://stackoverflow.com/questions/50743590/microsoft-flow-add-outlook-attachment-to-vsts-work-item
+https://stackoverflow.com/questions/63011348/how-to-create-a-notification-in-azure-devops-that-sends-a-email-to-initiator
+
+HUGO website template generator
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-hugo-a-static-site-generator-on-ubuntu-14-04
+
+Multiple Ubuntu VM Deploy
+https://azure.microsoft.com/en-us/resources/templates/
+https://github.com/Buchatech/Multiple-Linux-VM-Deployment-ARM-Template/blob/master/MultipleVMDeploy.Ubuntu.json
+https://github.com/Azure/azure-quickstart-templates/blob/master/201-vm-new-or-existing-conditions/azuredeploy.json
+
+Python Version
+https://mothergeo-py.readthedocs.io/en/latest/development/how-to/venv.html
+
+RestApi to Other Code converter online
+https://reqbin.com/96xh3jkt
+
+
+AZURE SELF Hosted WIN/LINUX Agents
+https://github.com/mariuszdotnet/vsts-hosted-agents    **** Working one
+https://github.com/lwajswaj/azure-devops-self-hosted-agent
+http://raaviblog.com/how-to-create-linux-ubuntu-vsts-build-agent-using-arm-template-in-visual-studio-2017/
+https://github.com/JasperGilhuis/VSTS-RestAPI/blob/master/Get-LatestAgentDownload.ps1
+https://melcher.dev/2019/03/self-hosted-azure-devops-build/release-agent-with-terraform-windows-edition/
+https://github.com/Ba4bes/Create-AzDoAgents/blob/master/Set-CustomScriptExtention.ps1
+https://leandrowp.blog/2018/10/12/azure-devops-build-and-deploy-a-windows-self-hosted-agent/
+https://azure.microsoft.com/en-us/resources/templates/201-vm-vsts-agent/
+https://medium.com/wortell/build-your-own-azure-devops-agents-with-pipelines-95104be095d5
+https://andrewmatveychuk.com/how-to-run-azure-devops-self-hosted-agents-effectively/
+https://itnext.io/how-to-create-and-configure-azure-devops-pipelines-agent-88848763f109
+https://github.com/duracellko/azure-pipelines-agent-deployment/blob/master/docs/Create_build_agent_image.md
+https://github.com/Azure/azure-quickstart-templates/blob/master/201-vm-vsts-agent/azuredeploy.json
+
+React-App
+https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops
+https://github.com/bogminic/docker-react-node
+https://medium.com/@ericpwein/deploying-a-react-app-to-amazon-s3-with-bitbucket-pipelines-d93df3a324f9
+https://www.albertocorrales.com/2019/04/azure-devops-deploy-your-spa-on-aws-s3.html?m=1
+https://www.newline.co/fullstack-react/articles/deploying-a-react-app-to-s3/
+https://www.youtube.com/watch?v=D6qB7MEFOe0&ab_channel=AWSFull-Stack
+
+NPM/YARN NODE ENV
+https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/production/setnodeenv.md
+https://riptutorial.com/node-js/example/10101/setting-node-env--production-
+https://stackoverflow.com/questions/16978256/what-is-node-env-and-how-to-use-it-in-express
+https://github.com/nrwl/nx/issues/3610
+
+Docker
+https://towardsdatascience.com/15-docker-commands-you-should-know-970ea5203421
+jenkins-docker pass commands
+http://suleymanyildirim.org/continious-integration/publish-docker-image-to-aws-ecr-denied-requested-access-to-the-resource-is-denied/
+
+JENKINS to AZURE Pipelins
+https://www.youtube.com/watch?v=o6fMncjlrW8
+https://www.youtube.com/watch?v=Yb4pAEwr64g&ab_channel=DanParker  # Azure DevOps VSTS upload to AWS S3 and Invalidate Cloudfront
+https://docs.aws.amazon.com/vsts/latest/userguide/s3-upload.html
+https://docs.microsoft.com/en-us/learn/modules/create-multi-stage-pipeline/2-design-the-pipeline
+https://docs.microsoft.com/en-us/azure/devops/pipelines/migrate/from-jenkins?view=azure-devops
+
+
+NugetPackage Pipeline to generate NugetPackage
+https://www.blexin.com/en-US/Article/Blog/Creating-NuGet-packages-with-Azure-Pipelines-51
+https://medium.com/@dan.cokely/creating-nuget-packages-in-azure-devops-with-azure-pipelines-and-yaml-d6fa30f0f15e
+
+Secure DevOps Kit for Azure
+https://azsk.azurewebsites.net/
+https://github.com/azsk/DevOpsKit-docs
+https://www.slideshare.net/cheahengsoon/security-in-cicd
+
+Link Jenkins with Azure Pipeline
+https://azuredevopslabs.com/labs/vstsextend/Jenkins/
+
+Azure AKS GIt Frontend NPM
+https://github.com/MicrosoftDocs/mslearn-aks-workshop-ratings-web
+
+ARM AKS template method for Client ID, Secret Id
+https://community.spiceworks.com/how_to/162063-how-to-deploy-a-kubernetes-vmss-on-azure-from-an-arm-template
+
+AZURE DASHBOARDS
+https://docs.microsoft.com/en-us/azure/devops/boards/queries/set-query-permissions?view=azure-devops
+
+PrivateDNS and AKS
+https://www.rebeladmin.com/2019/12/step-step-guide-configure-azure-private-dns-powershell-guide/
+https://clemenssiebler.com/deploying-internal-applications-with-private-ips-on-azure-kubernetes-service-aks/
+
+ICMP ENABLE
+https://www.thomasmaurer.ch/2019/09/how-to-enable-ping-icmp-echo-on-an-azure-vm/#:~:text=So%20here%20is%20how%20you,network%20security%20group%20(NSG).&text=Change%20the%20protocol%20to%20ICMP,change%20the%20name%20and%20description.
+
+NODE-Version
+https://gist.github.com/DarrenN/8c6a5b969481725a4413
+https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
+
+AKS and KEY VAULT Integration
+https://microsoft.github.io/AzureTipsAndTricks/blog/tip245.html
+https://blog.nillsf.com/index.php/2020/05/11/accessing-key-vault-secrets-in-kubernetes-using-the-key-vault-csi-driver/
+https://azuredevopslabs.com/labs/vstsextend/azurekeyvault/#overview
+
+LINUX- DELIMITER for tokenize(). using IFS-internal field Separator
+https://bash.cyberciti.biz/guide/$IFS
+https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash
+https://www.tothenew.com/blog/groovy-tokenize-vs-split/
+http://grails.asia/groovy-string-tokenize-examples
+https://stackoverflow.com/questions/10586153/split-string-into-an-array-in-bash
+https://stackoverflow.com/questions/23816264/remove-all-special-characters-and-case-from-string-in-bash
+https://unix.stackexchange.com/questions/405997/sed-remove-special-characters-and-spaces-in-line
+
+#Common Rest API Error Codes
+https://docs.microsoft.com/en-us/rest/api/storageservices/common-rest-api-error-codes
+
+ACR-AKS complete project and issues
+https://stackoverflow.com/questions/58448317/unable-to-pull-new-image-with-aks-and-acr
+https://www.xspdf.com/resolution/58015175.html
+https://stackoverflow.com/questions/55574059/failed-to-pull-image-xx-azurecr-io-xxlatest-rpc-error-code-unknown-desc
+https://azuredevopslabs.com/labs/vstsextend/kubernetes/
+https://medium.com/faun/application-deployment-with-azure-kubernetes-service-and-azure-pipelines-a0bf43916746
+https://medium.com/polarsquad/check-your-kubernetes-deployments-46dbfbc47a7c
+https://acloudguru.com/blog/engineering/deploy-kubernetes-app-with-azure-devops
+https://github.com/paolosalvatori/service-fabric-acs-kubernetes-multi-container-app/blob/master/README.md
+
+C:\Users\raja\AppData\Local\Microsoft\AzSKLogs\Sub_Visual Studio Enterprise Subscription – MPN\20200901_074028_GRS
+
+https://github.com/azsk/DevOpsKit-docs/tree/master/07-Customizing-AzSK-for-your-Org#d-customizing-specific-controls-for-a-service
+https://pumpingco.de/blog/use-azure-keyvault-with-asp-net-core-running-in-an-aks-cluster-using-aad-pod-identity/
+
+AZURE SQL SERVER MANAGED INSTANCE
+https://docs.microsoft.com/en-us/azure/azure-sql/managed-instance/connectivity-architecture-overview#network-requirements
+https://github.com/reachabhishekroy/AzDevOps-AZSQLMI/blob/master/AZSQLMI/deploy.json
+https://abhishek-roy.com/deploy-azure-sql-mi-using-azure-devops/
+https://github.com/Azure/azure-quickstart-templates/blob/master/101-sql-managed-instance-azure-environment/azuredeploy.json
+https://docs.microsoft.com/en-us/azure/azure-sql/managed-instance/create-template-quickstart?tabs=azure-powershell
+https://www.youtube.com/watch?v=uYstv-t-am0&ab_channel=AbhijeetSrivastava --- Jumpboxvm --sql MI
+
+AZURE AD THEORY
+https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-how-subscriptions-associated-directory
+
+APP SERVICE DEPLOYMENT SLOTS Uses and How to work?
+https://stackify.com/azure-deployment-slots/
+https://dev.to/gyurisc/azure-deployment-slots-5-most-important-things-to-know-about-them-366a
+https://docs.microsoft.com/en-us/azure/azure-functions/functions-deployment-slots
+
+https://stackoverflow.com/questions/49547/how-do-we-control-web-page-caching-across-all-browsers
+https://gist.github.com/kellyrmilligan/e242d3dc743105fe91a83cc933ee1314
+https://stackoverflow.com/questions/28989605/add-metadata-headers-expires-cachecontrol-to-a-file-uploaded-to-amazon-s3-us
+https://stackoverflow.com/questions/10435334/set-cache-control-for-entire-s3-bucket-automatically-using-bucket-policies
+https://serverfault.com/questions/673467/access-denied-copying-files-using-s3-cli
+https://serverfault.com/questions/735054/access-denied-when-calling-the-createinvalidation-operation-on-aws-cli
+https://qiita.com/alokrawat050/items/56820afdb6968deec6a2
+
+
+https://docs.aws.amazon.com/vsts/latest/userguide/lambda-deploy.html
+https://mothergeo-py.readthedocs.io/en/latest/development/how-to/venv.html
+https://www.geeksforgeeks.org/sed-command-in-linux-unix-with-examples/
+
+https://operatingops.org/2020/03/08/azure-pipelines-if-statements/
+https://unix.stackexchange.com/questions/283407/can-sed-save-its-output-to-a-file
+https://developercommunity.visualstudio.com/idea/690246/azure-pipelines-yaml-set-variable-based-on-conditi.html
+
+
+
+
+
+
