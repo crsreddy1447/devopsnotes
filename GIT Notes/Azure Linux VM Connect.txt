@@ -1,0 +1,42 @@
+###### AZURE LINUX VM CONNECT ########
+
+SSH Method using existing public key from local.
+
+# Generate SSH key in local machine
+$ ssh-keygen -m PEM -t rsa -b 4096
+
+Both Public (.pem) publishfile C:\Users\username/.ssh/id_rsa.pem) and Private key (.ppk) C:\Users\username/.ssh/id_rsa)
+
+## Add this key in Linux Vm, ssh public key field while creating the VM 
+Select > SSh Public Key Source > Use Existing Public Key
+       > SSh Public Key > paste the public Key from local machine  present in C:\Users\username/.ssh/id_rsa.pem
+> Create VM
+
+#How to connect VM
+$ ssh -i <local private key path> <user name>@<vm IP>
+Ex: ssh -i C:\Users\Rajashekar\.ssh\id_rsa raja@138.91.254.155
+
+
+PAT: pvaggfzosp6at6o2itazkc5nn5afg32alx7uw4mheqnzrpftkweq
+URL https://dev.azure.com/CherukulaReddy0024/
+POOL default
+AGENT raja111
+
+### COnfigure Linux Agent from Pipeline
+mkdir -p $HOME/myagent/ && cd $HOME/myagent/
+wget https://vstsagentpackage.azureedge.net/agent/2.175.2/vsts-agent-linux-x64-2.175.2.tar.gz
+sudo chmod 777 vsts-agent-linux-x64-2.175.2.tar.gz
+tar -xf vsts-agent-linux-x64-2.175.2.tar.gz
+cd $HOME/myagent
+cat >> agent.sh << EOF
+if [ -x "$(command -v systemctl)" ]
+then 
+./config.sh --unattended --acceptteeeula --agent raja111 --url https://dev.azure.com/CherukulaReddy0024/ --auth pat --token pvaggfzosp6at6o2itazkc5nn5afg32alx7uw4mheqnzrpftkweq --pool default --work _work --runasservice; 
+sudo ./svc.sh install; 
+sudo ./svc.sh start; 
+else 
+./config.sh --acceptteeeula --agent raja111 --url https://dev.azure.com/CherukulaReddy0024/ --work _work; ./run.sh; 
+fi
+EOF
+sudo chmod +x agent.sh;
+./agent.sh

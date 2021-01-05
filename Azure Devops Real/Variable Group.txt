@@ -1,0 +1,76 @@
+####Update Variable from Variable Group (Library)#######
+
+https://stackoverflow.com/questions/61799711/impossible-to-update-variable-from-variable-group-library
+https://docs.microsoft.com/en-us/cli/azure/ext/azure-devops/pipelines/variable-group/variable?view=azure-cli-latest#ext-azure-devops-az-pipelines-variable-group-variable-update
+https://stackoverflow.com/questions/60159220/is-there-a-way-to-parametrize-dynamically-set-variable-group-names-in-azure-devo
+
+Types of variable. How to pass in Yaml
+https://adamtheautomator.com/azure-devops-variables-complete-guide/
+
+az pipelines variable-group variable update --group-id
+                                            --name
+                                            [--detect {false, true}]
+                                            [--new-name]
+                                            [--org]
+                                            [--project]
+                                            [--prompt-value {false, true}]
+                                            [--secret {false, true}]
+                                            [--value]
+											
+
+
+Logging Command:
+echo '##vso[task.setvariable variable=a]20'
+
+variables:
+- ${{ if eq(variables['build.SourceBranchName'], 'prod') }}:
+  - group: prod
+- ${{ if eq(variables['build.SourceBranchName'], 'staging') }}:
+  - group: staging
+- ${{ if not(and(eq(variables['build.SourceBranchName'], 'staging'), eq(variables['build.SourceBranchName'], 'prod'))) }}:
+  - group: test 
+  
+Define username and password variables for your pipeline. Password should be a devops token with read access to variables.
+
+steps:
+  - checkout: none
+
+  - task: PowerShell@2
+    name: setvars
+    inputs: 
+      pwsh: true
+      script: |
+        $region = "";
+        $env = ""
+        $workspace = ""
+        
+        switch ("$(envtarget)") {
+          "test" {
+            $region = "au"
+            $env = "dev"
+            $workspace = "test"
+            break;
+          }
+          #...
+        }
+
+        $username = $env:USERNAME
+        $password = "$(password)"
+
+        $groupName = "processing_$($region)_$($env)_$($workspace)"
+
+        $auth = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("$($userName):$password"))
+        $variableGroups = Invoke-WebRequest -Uri "https://dev.azure.com/yourtenant/yourproject/_apis/distributedtask/variablegroups?api-version=5.1-preview.1" -Headers @{"Authorization"="Basic $auth"} -UseBasicParsing | ConvertFrom-Json
+        $input = ($variableGroups.value | ? { $_.name -eq $groupName } | Select-Object -first 1).id
+        if ($input -eq $null) { exit 1 }
+        $group = Invoke-WebRequest -Uri "https://dev.azure.com/yourtenant/yourproject/_apis/distributedtask/variablegroups/$($input)?api-version=5.1-preview.1" -Headers @{"Authorization"="Basic $auth"} -UseBasicParsing | ConvertFrom-Json
+        $variables = $group.variables
+
+        $variables.psobject.properties | %{ 
+          Write-Host "##vso[task.setvariable variable=$($_.name);isOutput=true]$($_.value.value)"
+        }
+
+        Write-Host "##vso[task.setvariable variable=registry;isOutput=true]drawboard$($region)-registry"
+        Write-Host "##vso[task.setvariable variable=region;isOutput=true]$region"
+        Write-Host "##vso[task.setvariable variable=env;isOutput=true]$env"
+        Write-Host "##vso[task.setvariable variable=workspace;isOutput=true]$workspace"

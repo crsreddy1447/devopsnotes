@@ -1,0 +1,59 @@
+AZURE PIPELINE YAML
+
+A job is a linear series of steps. Steps can be tasks, scripts, or references to external templates.
+
+This hierarchy is reflected in the structure of a YAML file like:
+---
+Pipeline
+ -Stage A
+   Job 1
+    Step 1.1
+    Step 1.2
+...
+   Job 2
+    Step 2.1
+    Step 2.2
+...
+ -Stage B
+...
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    feedsToUse: 'select'
+    vstsFeed: 'my-vsts-feed' # A series of numbers and letters
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+  displayName: 'dotnet build $(buildConfiguration)'
+
+Build environment:
+Uses Azure Pipelines to build your projects on Windows, Linux, or macOS without needing to set up any infrastructure of your own.
+This Environment will be declared in "POOL"
+Example ==>
+pool:
+  vmImage: 'ubuntu-18.04' # examples of other options: 'macOS-10.15', 'windows-2019'
+
+Build your project
+
+Run your tests
+
+Collect code coverage
+
+Publish artifacts to Azure Pipelines
+
+
+
+

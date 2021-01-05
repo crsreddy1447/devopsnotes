@@ -1,0 +1,49 @@
+
+
+azcopy login --service-principal  --application-id application-id --tenant-id=tenant-id
+
+AzCopy /Dest:path_for_local_file /Source:path_for_blob /SourceKey:key_provided_for_storage_account
+
+azcopy copy "C:\local\path" "https://account.blob.core.windows.net/mycontainer1/?sv=2018-03-28&ss=bjqt&srt=sco&sp=rwddgcup&se=2019-05-01T05:01:17Z&st=2019-04-30T21:01:17Z&spr=https&sig=MGCXiyEzbtttkr3ewJIh2AR8KrghSy1DGM9ovN734bQF4%3D" --recursive=true
+
+Invoke-WebRequest https://azcopyvnext.azureedge.net/release20190517/azcopy_windows_amd64_10.1.2.zip -OutFile azcopyv10.zip <<Unzip here>>
+
+azcopy copy 'https://mystorageaccount.blob.core.windows.net/mycontainer/myBlobDirectory/*' 'C:\myDirectory'
+
+
+"resources": [
+              {
+                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                  "name": "[concat(variables('vmName'),'/CustomScriptExtension')]",
+                  "apiVersion": "[variables('apiVersion')]",
+                  "location": "[resourceGroup().location]",
+                  "dependsOn": [
+                      "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+                  ],
+                  "properties": {
+       	           "publisher": "Microsoft.Compute",
+       	           "type": "CustomScriptExtension",
+                     "typeHandlerVersion": "1.4",
+                     "settings": {
+						 "fileUris": [ 
+									"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1",
+									"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe",
+									"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
+								],
+						 "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ConfigureWinRM.ps1 ',variables('hostDNSNameScriptArgument'))]"
+                     }
+                 }
+              }
+            ]
+
+winrm quickconfig -q
+
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+
+winrm set winrm/config/service/auth '@{Basic="true"}'
+
+Start-Service WinRM set-service WinRM -StartupType Automatic
+
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled false
+
+

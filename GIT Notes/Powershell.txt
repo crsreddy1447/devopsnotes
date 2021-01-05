@@ -1,0 +1,42 @@
+POWERSHELL SCRIPTS
+Windows PowerShell commands, called cmdlets
+$HOME	Represents the full path of the user's home directory.
+$HOST	Represents an object that represents the current host application for PowerShell.
+$PSVERSIONTABLE	Represents a read-only hash table that displays details about the version of PowerShell that is running in the current session.
+
+
+Get-ExecutionPolicy
+Restricted— No scripts will be executed. This is the default setting in Windows, so you’ll need to change it. 
+AllSigned— You can only run scripts signed by a trusted developer. You will be prompted before running any script.
+RemoteSigned— You can run your own scripts or scripts signed by a trusted developer. 
+Unrestricted— You can run any script you want. This option should not be used, for obvious reasons.
+To start working with PowerShell scripts, you’ll need to change this policy setting. You should change it to ‘RemoteSigned’
+
+Set-ExecutionPolicy RemoteSigned
+VERB-NOUN. Typically the verbs are things like Get, Set, Add, Clear, Write and Read and the Nouns are the files, servers, or other items within your network and applications.
+
+Get-Command  is a discovery tool for exploring the commands available on your system.
+
+Test-Connection that returns same as ping but in structured way.
+
+stop-process 9212
+or
+stop-process -processname lync
+
+test-path <file path> Check if a File Exists
+
+##### TO DOWNLOAD AN EXE AND INSTALL .EXE FROM POWERSHELL
+
+$url = "https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe"
+$outpath = "$PSScriptRoot/autoit-v3-setup.exe"
+Invoke-WebRequest -Uri $url -OutFile $outpath
+$result = Start-Process -Wait -FilePath 'C:autoit-v3-setup.exe' -ArgumentList '/S' -PassThru 
+
+
+Create A DIRCTORY:
+$ new-item <path of directory suppose c:\dir1> -itemtype directory
+
+# Use the CreateDirectory method of system.io.directory object
+$ [system.io.directory]::CreateDirectory("path of directory suppose c:\test5")
+
+https://www.faqforge.com/powershell/create-directory-help-powershell/

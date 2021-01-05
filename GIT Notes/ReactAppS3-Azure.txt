@@ -1,0 +1,45 @@
+
+######REACT APP IN S3 BUCKET for static website###########
+https://www.youtube.com/watch?v=D6qB7MEFOe0&ab_channel=AWSFull-Stack
+
+TOOLS
+AZURE PIPELINE
+S3 BUCKET
+CLOUD FRONT
+ROUTE53
+SSL CERTIFICATE
+DNS NAME
+
+
+AZURE PIPELINE >>> Build
+Task1: NPM Install
+
+Task2: NPM Custom >> Run Build
+
+Task3: Publish Artifacts
+
+Release:
+Note Get AWS TOOL kit in Marketplace
+
+Task1: AWS S3 Bucket Upload
+
+------------------------------------------------------------------------
+
+AWS S3---CLOUDFRONT---Route53---SSL----DNS
+S3
+S3 bucket policy read only for anonomous user
+S3 static website on with index.html and error with error.html
+
+CLOUDFRONT
+Add the S3 bucket website link without http in cloudfront distribution
+Select Redirect Http to Https
+Next Add SSL certificate using custom SSL certificate
+
+Route53
+Add the DNS name to Route53
+attach server to dns name 
+
+------------------------------------------------------------------------
+
+
+

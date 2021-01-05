@@ -1,0 +1,25 @@
+Azure GIT Branch Commands
+
+
+$ git clone https:
+$ git branch
+#Create a branch and checkout to that branch
+$ git checkout -b feature/raja
+# Create the branch in remote
+$ git push origin feature/raja
+# Clone to feature branch from master
+$ git pull origin master
+# Add and Commit 
+$ git add -A
+$ git commit -m "added rajjj file"
+# Push to remote feature
+$ git push origin feature/raja
+Create a pull request and Merge the branch in Azure Repo
+# Delete local Branch
+$ git branch -d feature/raja
+# Delete remote branch
+$ git push origin --delete feature/raja
+
+
+
+ 

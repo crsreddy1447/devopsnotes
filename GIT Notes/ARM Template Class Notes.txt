@@ -1,0 +1,50 @@
+##### ARM DEPLOYMENTS CONCEPT #####
+Ref Link
+https://github.com/crsreddy1447/devopsnotes/blob/master/GIT%20Notes/ARM%20TEMPLATE.txt
+
+Way of using ARM template
+1. Portal
+  Deploy Custom scripts in search bar
+2. Azure pipeline (devops)
+  Keep json file in Repo
+  Build/release the template and parameter files
+  Infra will be deployed
+  Fields to edit in ARM plugin
+  1. Template file location
+  2. Parameter file location
+  3. Override parameters
+  
+3. Using Powershell or Azure cli
+   Save file in specific location
+   Give the command like
+   https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deployment-tutorial-local-template?tabs=azure-powershell
+
+required Syntax in ARM template
+
+It consists of 
+$schema: (Required)... Location of the JSON schema file
+parameters, --->(Optionl)..... Values of that has to be given. Ex: VM-name, Vm-size, nsg-name etc
+variables, (Optional).... Desired value not required as inputs. Different from Parameters
+resources, ---> (Required).... Resource to create. EX- VM, NSG, Storage, Vnet etc
+Output ---> (Optional).... Output declaration to display once it gets created.
+
+Required Files
+1. Template.json
+2. Parameters.json
+
+Deployment Modes
+1. Incremental Mode
+In incremental mode, Resource Manager leaves unchanged resources that exist in the resource group but aren't specified in the template. 
+Resources in the template are added to the resource group.
+2. COmplete Mode
+In complete mode, Resource Manager deletes resources that exist in the resource group but aren't specified in the template.
+
+Errors
+1. Resoure tags needed --- Tagging policy not given
+2. Resource not found  --- NO existing resoure with that name found
+3. Invalid template / Missing properties --- Invalid related to coding (, . } ])  Missing -- some required properties are missing in the template file.
+
+
+Note. Single Template file
+      Multiple Parmeters file based on ENV (Dev, qa, uat, prod, perf)
+	  
