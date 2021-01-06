@@ -1,0 +1,249 @@
+Projects... ASP and Dot net core 
+
+
+Hard Coded Method or Manual Method
+Build tools 2019  --- set ms build.exe environment variable
+Jave latest version 8 or more
+Powershell 5+ version
+Dotnet core 3.1
+
+
+Pipeline execution using Plugins
+
+Run on Microsoft agent --- Microsoft takes care
+
+Run on self agent  --- New created VM By us on which azure pipeline build agent is installed
+
+Nuget --- Dependencies will be installed.
+Mostly Organisation uses internal feed for Nuget Restore.
+These files will be in artifacts
+
+Pipeline tasks
+https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops
+
+
+############# **ASP.NET PROJECT PIPELINE** ###############
+ASP Project .sln file
+PIPELINE:
+Options==> Build number format: $(Date:yyyyMMdd).$(Rev:r)-$(Build.DefinitionName)
+Get sources ==> Clean: true Clean options: All Build Directories
+
+TASK1: NuGet 
+      Command: restore
+      Path to solution, packages.config, or project.json: **/*.sln
+      Feeds to use==> Check **Feeds I select here (For installing dependencies in .json file)
+	                  Feeds in my Nuget.config ( For installing custom feed from local file)
+     **check Use packages from NuGet.org
+
+TASK2: Prepare Analysis Configuration
+       SonarQube Server Endpoint: 
+* Add these details Server Url, Token, Service connection name  relatedto Sonarqube
+       Select Integrate with MSBuild
+	   Project Key: <Any Name>
+	   Project Name: <Any Name>
+	   Project Version: 1.0 or <Any>
+
+TASK3: MSBuild
+       Project: $(build.sourcesdirectory)\src\SmartStoreNet.sln
+	   MSBuild Version: Latest
+       MSBuild Architecture: MSBuild x86
+       Platform: Any CPU
+       Configuration: Release
+       MSBuild Arguments: -t:build  -p:outdir=$(Build.artifactstagingDirectory) -p:generateprojectspecificoutputfolder=true
+
+TASK4: Visual Studio Test   (No edits needed)
+       Select tests using: Test Assemblies 
+
+TASK5: Run Code Analysis  (No edits needed)
+
+TASK6: PowerShell
+       Type: Inline 
+	   Script: $packagespath="$(Build.artifactstagingDirectory)"
+               $packages=(Get-ChildItem -Path $packagespath).Name
+               New-item "$packagespath\Packages" -ItemType Directory -Force
+               if($packages.Length -ne 0){
+                  Foreach($package in $packages){
+                     if(Test-path "$packagespath\$package\_Publishedwebsites")
+                       {
+                         $folderpath="$packagespath\$package\_Publishedwebsites\$package\*"
+                          #zip the packages
+                         Compress-Archive $folderpath -DestinationPath "$packagespath\packages\$package.zip" -Force
+                       }
+                  else{
+                     Write-Warning -Message "No published websites found in current package :$package folder "
+                      }
+                   }
+                }
+             else{
+                 Write-Error -Message "No packages found in the current folder" -ErrorAction stop
+                 exit 1
+                 }
+
+TASK7: Publish Pipeline Artifacts
+       File or directory path: $(Build.artifactstagingDirectory)\packages
+       Artifact name: Project1-Artif
+
+###################### END OF ASP.NET MVC PROJECT ##################################
+*************************************************************************************
+
+######################## ***** DOTNET CORE PROJECT ******* ##########################
+https://medium.com/@ganeshgawande/azure-devops-pipeline-for-net-core-api-with-sonarqube-code-coverage-b91df248d1ee
+DOTNET: .sln or .csprojects
+
+TASK1: Prepare Analysis Configuration
+       SonarQube Server Endpoint: 
+* Add these details Server Url, Token, Service connection name  relatedto Sonarqube
+       Select Integrate with MSBuild
+	   Project Key: <Any Name>
+	   Project Name: <Any Name>
+	   Project Version: 1.0 or <Any>
+	   
+TASK2: .NET Core
+       Command: restore
+       Path to project(s): $(Build.sourcesDirectory)\eshoponweb.sln
+
+TASK3: .NET Core
+       Command: Build
+       Path to project(s): $(Build.sourcesDirectory)\eshoponweb.sln
+
+TASK4: .NET Core
+       Command: publish
+       Arguments: -c "Release" -o $(build.artifactstagingDirectory) 
+      *Check -- Zip published projects
+      *Check -- Add project's folder name to publish path
+
+TASK5: .NET Core
+       Command: test
+	  *Check -- Publish test results and code coverage
+
+TASK6: Run Code Analysis  (No edits needed)
+
+TASK7: Publish Pipeline Artifacts
+       File or directory path: $(Build.artifactstagingDirectory)
+       Artifact name: <Any name>
+
+
+
+###################### END OF DOTNET CORE PROJECT ##################################
+*************************************************************************************
+
+######################## ***** ANGULAR.JS PROJECT ******* ##########################
+https://medium.com/better-programming/deploy-angular-app-using-azure-devops-build-and-release-pipelines-f7f77ca28be4
+https://morioh.com/p/5ea709404583
+https://levelup.gitconnected.com/configure-ci-cd-pipelines-for-nodejs-applications-with-azure-devops-44e7425f5a99
+https://www.dotnetcurry.com/devops/1486/azure-devops-build-deploy-nodejs
+
+package.json  Build file
+web.config
+angular.json
+
+TASK1: npm
+       Command: Custom
+	   Command and arguments: install -g sonarqube-scanner
+
+TASK2: Prepare Analysis Configuration
+       SonarQube Server Endpoint: 
+* Add these details Server Url, Token, Service connection name  relatedto Sonarqube
+       Select Use Standalone scanner
+	   Mode: Manually Provided Configuration
+	   Project Key: <Any Name>
+	   Project Name: <Any Name>
+	   Project Version: 1.0 or <Any>
+	   Sources directory root: $(build.sourcesdirectory)
+
+TASK3: npm
+       Command: Install
+
+TASK4: npm
+       Command: Custom
+	   Command and arguments: run builds:prod
+
+
+TASK4: npm
+       Command: Custom
+	   Command and arguments: run test
+
+TASK5: Run Code Analysis (No Edit needed)
+
+TASK6: Publish build artifacts
+       Path to publish: $(Build.ArtifactStagingDirectory)
+       Artifact name: app
+
+
+###################### END OF ANGULAR.JS PROJECT ##################################
+*************************************************************************************
+
+
+######################## ***** MAVEN or JAVA PROJECT ******* ##########################
+Maven : Pom.xml
+https://dzone.com/articles/building-cicd-pipelines-for-java-using-azure-devop
+https://cedricleruth.com/how-to-create-a-ci-cd-pipeline-for-java-on-azure-devops/
+
+TASK1: Prepare Analysis Configuration
+       SonarQube Server Endpoint: 
+* Add these details Server Url, Token, Service connection name  relatedto Sonarqube
+       Select Integrate with Maven or Gradle
+	   
+TASK2: Maven
+       Maven POM file: pom.xml
+       Goal(s): package
+      *Check -- Publish to Azure Pipelines
+       Test results files: **/surefire-reports/TEST-*.xml
+	  *Check -- Run SonarQube or SonarCloud analysis (in Code analysis section)
+
+TASK3: Copy files
+       Source Folder: $(system.defaultworkingdirectory)
+       Contents: **/*.jar
+       Target Folder: $(build.artifactstagingdirectory)
+
+TASK4: Publish build artifacts
+       Path to publish: $(build.artifactstagingdirectory)
+       Artifact name: Maven-front
+
+
+###################### END OF MAVEN or JAVA PROJECT ##################################
+*************************************************************************************
+
+
+SQL DATABASES
+
+1. Vm with SQL db installed on the VM ----- Managed By us
+    SSMS - Sql Server management studio --
+	Authentication Window --- Windows credentials    Sql Authentication --- Seperate credentials for sql server
+	
+2. Azure Sql Server --- PAAS service
+   Managed by Azure.
+   Directly we can create Db and connect with them
+   
+3. Azure Sql Managed Instance
+  Vm is managed by Azure. Db is managed my us
+
+Elastic Pool: Multiple data bases connection
+
+
+What are the different PAAS services offered in Azure?
+What is the difference between Azure sql and Azure Managed Instance and sql Virtual Machine
+How you are connection DB -- SSMS Sql Server management studio
+How are you putting data in other db --- Generate seed files .sql and running the seed data on db
+What is the backup file for db --- .bak 
+How will you restore A DB --- All the .bak will be stored to Azure storage account. Using those we will restore the DB.
+
+
+https://docs.microsoft.com/en-us/azure/azure-sql/database/sql-database-paas-overview
+
+NugetPackage Pipeline to generate NugetPackage
+https://www.blexin.com/en-US/Article/Blog/Creating-NuGet-packages-with-Azure-Pipelines-51
+
+AZURE SQL SERVER MANAGED INSTANCE
+https://docs.microsoft.com/en-us/azure/azure-sql/managed-instance/connectivity-architecture-overview#network-requirements
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
