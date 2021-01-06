@@ -223,6 +223,11 @@ Elastic Pool: Multiple data bases connection
 
 What are the different PAAS services offered in Azure?
 What is the difference between Azure sql and Azure Managed Instance and sql Virtual Machine
+
+https://www.sqlshack.com/azure-sql-database-vs-sql-server-on-azure-vms/
+https://azure.microsoft.com/en-in/resources/videos/ignite-2018-azure-sql-database-managed-instance-comparison-to-azure-sql-database/#:~:text=Azure%20SQL%20Database%20brought%20many,%2C%20Query%20Store%2C%20and%20more.&text=Managed%20Instance%20helps%20bridge%20the,an%20instance%20scoped%20configuration%20model.
+
+
 How you are connection DB -- SSMS Sql Server management studio
 How are you putting data in other db --- Generate seed files .sql and running the seed data on db
 What is the backup file for db --- .bak 
@@ -236,6 +241,7 @@ https://www.blexin.com/en-US/Article/Blog/Creating-NuGet-packages-with-Azure-Pip
 
 AZURE SQL SERVER MANAGED INSTANCE
 https://docs.microsoft.com/en-us/azure/azure-sql/managed-instance/connectivity-architecture-overview#network-requirements
+	
 	
 	
 	
