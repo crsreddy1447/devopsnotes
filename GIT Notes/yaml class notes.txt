@@ -1,0 +1,147 @@
+
+yaml
+
+1. Pool wind, ubuntu
+2. Triggers -dev, test, release 
+triggers
+
+ stages 
+  Stage:  
+    dev, qa, prod, build (CI), deploy(CD)
+  jobs
+   job
+    steps
+	 - tasks
+
+stages:
+- stage: "BuildStage"
+  jobs:
+  - job: "BuildJob" 
+    pool:
+      vmImage: ubuntu-latest
+	  
+	  
+## to get code from other repository
+resources:
+  repositories:
+  - repository: string  # identifier (A-Z, a-z, 0-9, and underscore)
+    type: enum  # see the following "Type" topic
+    name: string  # repository name (format depends on `type`)
+    ref: string  # ref name to use; defaults to 'refs/heads/master'
+
+
+## When we are using environment we have to follow this pattern
+## Also for stage approval --QA approval goto environment >> QA >> three dots >>> Aprrovals and checks
+    environment: 'qa'
+    strategy:
+     runOnce:
+      deploy: 
+        steps:
+
+###Strategies
+The matrix and parallel keywords specify mutually exclusive strategies for duplicating a job.
+Matrix
+Use of a matrix generates copies of a job, each with different input. These copies are useful for testing against different configurations or platform versions.
+strategy:
+  matrix: { string1: { string2: string3 } }
+  maxParallel: 10
+
+https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops&tabs=schema
+
+
+5 dotnet projects
+each project different names
+Req: 1 yaml file
+
+Concept called
+################ RESUABLE YAML FILE FOR MULTIPLE PROJECTS
+
+template  ## To refer a specific yaml script
+ parameters almost similar to Variables
+ 
+ parameters:
+  - name: 'environment'
+    default: 'DEV'   ### this is required while automatic trigger
+    values:
+      - DEV
+      - QA
+      - UAT
+      - PROD
+      - TEST
+
+    steps:
+      - template: azure-pipelines-3.yml    ## Total pipeline steps will be in the referred template
+        parameters:
+		
+		
+### If you are using virtual machines in environment in azure pipeline >> Environment
+    environment:
+      name: ${{ parameters.environment }}
+      resourceType: VirtualMachine
+	  
+
+### Variable declaration
+
+    variables:
+      buildConfiguration: 'Release'
+	
+-------> In pipeline we will declare as $(buildConfiguration)	
+
+ parameters:
+  - name: 'buildConfiguration'
+    default: 'Release'  
+
+-------> In pipeline we will declare as ${{ parameters.buildConfiguration }}
+	
+#### To trigger a pipeline every dy at specific time. Then we use cronjob
+ 30  16  3  *  *  
+
+schedules:
+- cron: string # cron syntax defining a schedule
+  displayName: string # friendly name given to a specific schedule
+  branches:
+    include: [ string ] # which branches the schedule applies to
+    exclude: [ string ] # which branches to exclude from the schedule
+  always: boolean # whether to always run the pipeline or only if there have been source code changes since the last successful scheduled run. The default is false.
+
+
+  mm HH DD MM DW
+  
+  ## 6:30 pm sun
+  
+  30 18 * * 0   # Evey sunday 6:30 pm triggers the pipeline (UTC)
+  
+  *** In yaml you cant set the time zone. You only have to caluculate as per time zone and give that specific value.
+  
+  
+#### Build Required tasks
+
+ASP.NET MVC (.sln)
+ ## 1. Nuget version (Optional)
+    2. Nuget Restore  (Required)
+	3. Ms build (Required)
+	4. Vstest (Required)
+	5 Publish artifacts
+	
+DOT.NET CORE (.csproj/.sln)
+##  1. Dot.net restore 
+    2. Dotnet bulid
+	3. Dotnet Test
+	4. Dotnet publish
+	5. Artifacts
+	
+Java -- Maven (pom.xml)
+## 1. Maven build 
+   2. copy and Publish artifats
+   
+Node js/ NPM (package.json)
+## 1. Node js
+   2. NPM build (Any npm can be used as per package.json)
+   3. Artifact
+
+
+	
+	
+
+
+
