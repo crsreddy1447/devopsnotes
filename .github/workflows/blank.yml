@@ -1,10 +1,20 @@
 name: CI
-on:
+on: 
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ master ]
+    paths:
+      - 'infra/ARM/parameters/Env/QA/**'
+      - 'infra/ARM/templates/**'
+      - '.github/workflows/infra-deploy-QA.yml'
   workflow_dispatch:
+    inputs:
+      Deploy:
+        description: 'Manual deployment'     
+        required: true
+        default: 'Manual'
+permissions:
+      id-token: write
+      contents: read
 
 jobs: 
   Deploy-VM:
