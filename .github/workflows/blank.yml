@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs: 
+  Deploy-VM:
+    runs-on: ubuntu-latest
+    environment: QA
+    steps:
+      
+      - uses: actions/checkout@v3
+      
+      - name: Azure Login
+        uses: Azure/login@v1.4.5
+        with:
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          client-id:
+          tenant-id:
+          subscription-id:
+
+      - name: Deploy Azure Resource Manager (ARM) Template
+        uses: Azure/arm-deploy@v1.0.8
+        with:
+          subscriptionId:
+          resourceGroupName:
+          template: 
+          deploymentMode:
+          parameters:
