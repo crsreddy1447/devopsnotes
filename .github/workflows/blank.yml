@@ -2,10 +2,6 @@ name: CI
 on: 
   push:
     branches: [ master ]
-    paths:
-      - 'infra/ARM/parameters/Env/QA/**'
-      - 'infra/ARM/templates/**'
-      - '.github/workflows/infra-deploy-QA.yml'
   workflow_dispatch:
     inputs:
       Deploy:
@@ -22,7 +18,7 @@ jobs:
     environment: QA
     steps:
       
-      - uses: actions/checkout@v3
+      #- uses: actions/checkout@v3
       
       - name: Azure Login
         uses: Azure/login@v1.4.5
@@ -31,9 +27,16 @@ jobs:
           client-id: ${{secrets.CLIENTID}}
           tenant-id: ${{secrets.TENANTID}}
           subscription-id: ${{secrets.Subscription_ID}}
-      - name: 'Run az commands'
-        run: |
-          az account show
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az account show
+
+#       - name: 'Run az commands'
+#         run: |
+#           az account show
 
 #       - name: Deploy Azure Resource Manager (ARM) Template
 #         uses: Azure/arm-deploy@v1.0.8
