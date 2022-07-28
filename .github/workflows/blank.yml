@@ -18,7 +18,14 @@ jobs:
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZ_CRED }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+		      #enable-AzPSSession: true
+#       - name: 'Az CLI login'
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{ secrets.AZ_CRED }}
 
   
       - name: 'Run az commands'
