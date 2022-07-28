@@ -28,15 +28,18 @@ jobs:
         uses: Azure/login@v1.4.5
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-          client-id:
-          tenant-id:
-          subscription-id:
+          client-id: ${{secrets.CLIENTID}}
+          tenant-id: ${{secrets.TENANTID}}
+          subscription-id: ${{secrets.Subscription_ID}}
+      - name: 'Run az commands'
+        run: |
+          az account show
 
-      - name: Deploy Azure Resource Manager (ARM) Template
-        uses: Azure/arm-deploy@v1.0.8
-        with:
-          subscriptionId:
-          resourceGroupName:
-          template: 
-          deploymentMode:
-          parameters:
+#       - name: Deploy Azure Resource Manager (ARM) Template
+#         uses: Azure/arm-deploy@v1.0.8
+#         with:
+#           subscriptionId:
+#           resourceGroupName:
+#           template: 
+#           deploymentMode:
+#           parameters:
